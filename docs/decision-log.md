@@ -175,3 +175,112 @@ Discipline depends on running the commands. Forgetting `/end-session` can leave 
 ### Follow-up
 
 Revisit an always-on thin rule only if session hygiene repeatedly fails.
+
+---
+
+## DEC-006 — Manual n8n workflow build (learning-first)
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-24 |
+| Status | Active |
+
+### Context
+
+n8n is a core skill for the target AI Automation roles. Auto-generating or importing a finished workflow would skip the learning value of triggers, credentials, IF branches, error paths and node configuration.
+
+### Alternatives considered
+
+- Agent builds / imports complete workflow JSON
+- Pair-programming walkthrough where Mike builds every node in the UI
+- Mix: agent scaffolds JSON, Mike edits
+
+### Chosen approach
+
+**Manual guided build.** The agent provides step-by-step instructions, explains why each node exists, and waits while Mike configures the workflow in the n8n UI. Do **not** auto-create the business workflow or silently overwrite `n8n/workflows/*.json` unless Mike explicitly asks for an export/backup after he built it.
+
+### Reason
+
+Portfolio credibility and job readiness require real n8n fluency (branching, credentials, polling, error workflows), not only a working demo.
+
+### Trade-offs
+
+Slower than importing JSON. More session time on UI steps. Risk of small config mistakes — treated as learning/failure-log material.
+
+### Follow-up
+
+After the sales vertical slice works, export a sanitised workflow JSON for the repo as evidence. Optional later: compare Mike’s build to a reference export for review only.
+
+---
+
+## DEC-007 — Dedicated Gmail test inbox preferred over plus-alias
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-24 |
+| Status | Active |
+
+### Context
+
+Need a real Gmail source for OpsDesk without polluting a personal inbox or confusing OAuth demos.
+
+### Alternatives considered
+
+- New free Gmail account dedicated to OpsDesk
+- Plus-address / filter on existing Gmail (`you+opsdesk@gmail.com`)
+- Google Workspace shared mailbox / Group
+
+### Chosen approach
+
+**Prefer a separate free Gmail account** for the OpsDesk test inbox. Plus-addressing on an existing account is an acceptable short-term fallback if creating a new account is blocked.
+
+### Reason
+
+Cleaner OAuth consent, clearer demos, no risk of personal mail entering the workflow, easier to revoke project access later.
+
+### Trade-offs
+
+One more account to manage. Plus-alias fallback shares credentials with personal mail and needs strict Gmail search filters in n8n.
+
+### Follow-up
+
+Document the chosen address in `ACCOUNT_SETUP_CHECKLIST.md` once created (email only — never tokens in docs).
+
+**Update 2026-07-24:** Option B chosen in practice — `mikelow92+opsdesk@gmail.com` + label `OpsDesk` (dedicated Gmail blocked by Google verification while roaming on O2 UK in Brazil).
+
+---
+
+## DEC-008 — Temporary TLS verify disable for local n8n Docker (SSL interception)
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-24 |
+| Status | Active — local only |
+
+### Context
+
+Gmail OAuth from n8n in Docker fails after Google consent with: `unable to verify the first certificate` / Node `--use-system-ca` hint. Same class of issue previously seen with npm and git on this machine (TLS interception / custom root CA).
+
+### Alternatives considered
+
+- Mount corporate root CA into the container (`NODE_EXTRA_CA_CERTS`)
+- Run n8n on the Windows host with `--use-system-ca`
+- `NODE_TLS_REJECT_UNAUTHORIZED=0` inside Docker for local learning only
+- n8n Cloud trial (avoids local TLS, but not our target stack)
+
+### Chosen approach
+
+Set `NODE_TLS_REJECT_UNAUTHORIZED=0` in [`n8n/docker-compose.yml`](../n8n/docker-compose.yml) for **local development only**, so Lesson 1 OAuth can complete.
+
+### Reason
+
+Unblocks learning and the sales vertical slice immediately. Proper CA mounting needs the corp cert file and more setup time.
+
+### Trade-offs
+
+Disables TLS certificate verification for outbound HTTPS from the n8n container (MITM risk on hostile networks). Unacceptable for hosted/production. Must be removed or replaced with `NODE_EXTRA_CA_CERTS` before any shared deploy.
+
+### Follow-up
+
+Replace with mounted corporate CA when available. Never ship this env var to VPS/cloud. Revisit before Phase 10 portfolio “security” section — document honestly as a local network constraint.
+

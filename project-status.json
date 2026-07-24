@@ -4,36 +4,44 @@
   "phase": 1,
   "phaseName": "Local infrastructure",
   "milestone": "First working vertical slice",
-  "status": "in_progress",
-  "currentTask": "Install Docker Desktop and start n8n via n8n/docker-compose.yml (confirm persistence)",
+  "status": "paused",
+  "currentTask": "Resume Lesson 4: POST body use $('Edit Fields').item.json.*; verify true→insert / false→skip",
   "nextTasks": [
-    "Create Supabase project and apply initial schema migration",
-    "Complete Gmail, HubSpot, Slack and Gemini test accounts",
-    "Phase 2: Python seed script for synthetic Northline data"
+    "Finish duplicate guard test (same email skips; new email inserts)",
+    "Capture EVID-005–007 screenshots into docs/images/",
+    "HubSpot or Slack test account"
   ],
   "blockers": [
     {
-      "id": "docker",
-      "summary": "Docker Desktop not installed",
+      "id": "lesson4-json-ref",
+      "summary": "POST after Check used $json from check result; need Edit Fields refs",
       "owner": "Mike",
-      "nextAction": "Install Docker Desktop (+ WSL2), then docker compose -f n8n/docker-compose.yml up -d"
-    },
-    {
-      "id": "accounts",
-      "summary": "External test accounts not created",
-      "owner": "Mike",
-      "nextAction": "Follow docs/ACCOUNT_SETUP_CHECKLIST.md"
+      "nextAction": "Paste Edit Fields expressions into POST JSON body on resume"
     }
   ],
   "lastUpdated": "2026-07-24",
   "phase0Complete": true,
   "phase1Complete": false,
+  "phase2Complete": false,
+  "phase3Complete": false,
   "verticalSliceComplete": false,
-  "decisions": ["DEC-001", "DEC-002", "DEC-003", "DEC-004", "DEC-005"],
+  "estimatedOverallPercent": "12-15",
+  "estimatedVerticalSlicePercent": "35-40",
+  "decisions": ["DEC-001", "DEC-002", "DEC-003", "DEC-004", "DEC-005", "DEC-006", "DEC-007", "DEC-008"],
+  "failures": ["FAIL-001", "FAIL-002"],
   "evidence": ["EVID-001", "EVID-002", "EVID-003"],
+  "evidencePendingCapture": ["EVID-005", "EVID-006", "EVID-007", "EVID-008"],
+  "checks": {
+    "n8nContainer": "opsdesk-n8n Up",
+    "n8nHttp": 200,
+    "localEnvFile": true,
+    "regressionTestsAdded": false
+  },
   "notes": [
-    "Dashboard /api/health verified locally on port 3010",
-    "automation-api Zod classification schema stubbed",
-    "n8n docker-compose ready; awaiting Docker Desktop"
+    "Lessons 1-3 done: Gmail trigger, Edit Fields, Supabase POST confirmed in Table Editor",
+    "Lesson 4 paused: Check + Always Output Data + IF; POST body fix pending (FAIL-002)",
+    "Gmail: mikelow92+opsdesk@gmail.com / label OpsDesk (DEC-007 Option B)",
+    "Supabase project id ffcwzhntzdypketzfldo",
+    "DEC-008 NODE_TLS_REJECT_UNAUTHORIZED=0 local Docker only"
   ]
 }

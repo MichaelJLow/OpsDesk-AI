@@ -17,6 +17,10 @@ services:
       - NODE_ENV=production
       - WEBHOOK_URL=http://localhost:5678/
       - GENERIC_TIMEZONE=UTC
+      # LOCAL DEV ONLY (DEC-008): SSL interception on this machine breaks
+      # Google OAuth from inside the Linux container ("unable to verify the first certificate").
+      # Do not use this in any shared/hosted environment. Prefer mounting a corp CA later.
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
     volumes:
       - n8n_data:/home/node/.n8n
 

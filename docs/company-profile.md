@@ -31,7 +31,7 @@ Prospect → Trial → Customer → Expansion → Churn risk → Churned
 
 | Attribute | Value |
 |---|---|
-| Inbox | `ops@northline-cloud.test` (Gmail test inbox in development) |
+| Inbox | `mikelow92+opsdesk@gmail.com` (plus-alias into personal Gmail; label `OpsDesk`) |
 | Purpose | Single intake for sales, support and account/billing requests |
 | Pain | Mixed intents, manual CRM lookup, inconsistent routing, weak audit trail |
 

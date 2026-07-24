@@ -24,6 +24,13 @@ docker compose -f n8n/docker-compose.yml down
 
 Do not use `down -v` unless you intend to delete workflow data.
 
-## Export workflows
+## Local TLS note (DEC-008 / FAIL-001)
 
-Export sanitised JSON into `n8n/workflows/`. Never commit credentials.
+If Google OAuth or “Error fetching options from Gmail” appears with `unable to verify the first certificate`, this compose file sets `NODE_TLS_REJECT_UNAUTHORIZED=0` for **local learning only**. Recreate with:
+
+```powershell
+docker compose -f n8n/docker-compose.yml up -d --force-recreate
+```
+
+Do not use that setting on a hosted/shared n8n.
+

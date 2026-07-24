@@ -5,7 +5,7 @@
 **Project:** OpsDesk AI  
 **Current phase:** Phase 1 — Local infrastructure  
 **Current milestone:** First working vertical slice  
-**Overall status:** In progress  
+**Overall status:** Paused (end of session)  
 **Last updated:** 2026-07-24  
 **Next review:** 2026-07-31  
 **Remote:** https://github.com/MichaelJLow/OpsDesk-AI  
@@ -16,24 +16,23 @@
 
 ## This week's outcome
 
-> Finish Phase 1 exit condition: install Docker Desktop, start n8n with persistent volume, create Supabase and integration test accounts, then confirm the environment checklist.
+> Local n8n + Gmail intake + normalise + Supabase store working; duplicate IF branch started (POST body must use Edit Fields refs — pause mid Lesson 4).
 
 ## Current task
 
-- [ ] Install Docker Desktop and start n8n via `n8n/docker-compose.yml` (confirm workflow persists after restart).
+- [ ] Resume Lesson 4: fix POST body to use `$('Edit Fields').item.json.*`, then verify true→insert / false→skip.
 
 ## Next three tasks
 
-- [ ] Create Supabase project and apply `supabase/migrations/20260724000000_initial_schema.sql`
-- [ ] Complete Gmail, HubSpot, Slack and Gemini test accounts (see `docs/ACCOUNT_SETUP_CHECKLIST.md`)
-- [ ] Phase 2: Python seed script for synthetic Northline companies/contacts
+- [ ] Finish duplicate guard test (same email skips; new email inserts)
+- [ ] HubSpot + Slack + Gemini accounts
+- [ ] Lesson 5 preview: workflow_events timeline row
 
 ## Blockers
 
 | Blocker | Owner | Next action | Status |
 |---|---|---|---|
-| Docker Desktop not installed | Mike | Install Docker Desktop (+ WSL2), then `docker compose -f n8n/docker-compose.yml up -d` | Open |
-| External test accounts not created | Mike | Follow `docs/ACCOUNT_SETUP_CHECKLIST.md` | Open |
+| Lesson 4 incomplete — POST used wrong `$json` after Check | Mike | On resume: paste Edit Fields expressions into POST body | Paused |
 
 ---
 
@@ -56,25 +55,25 @@
 
 ## Phase 1 — Local infrastructure
 
-- [ ] Docker Desktop installed
-- [ ] n8n Community Edition running locally
+- [x] Docker Desktop installed
+- [x] n8n Community Edition running locally
 - [ ] n8n persistent volume confirmed
 - [x] Next.js application created
-- [ ] Supabase project created
-- [ ] Local database connection working
+- [x] Supabase project created
+- [x] Local database connection working
 - [x] `.env.example` created
 - [x] Secrets excluded from Git
 - [ ] HubSpot test account created
-- [ ] Gmail test inbox created
+- [x] Gmail test inbox created
 - [ ] Slack test workspace created
 - [x] Health-check endpoint working
 
-**Exit condition:** All local services and test accounts are available and the repository is clean.  
-**Progress 2026-07-24:** Dashboard scaffold + `/api/health` verified (`{"ok":true}`). Docker Compose file ready at `n8n/docker-compose.yml` but Docker Desktop is not installed on this machine. Supabase/HubSpot/Gmail/Slack/Gemini accounts remain manual — see `docs/ACCOUNT_SETUP_CHECKLIST.md`.
+**Exit condition:** All local services and test accounts are available and the repository is clean. **Not met** — HubSpot, Slack, Gemini still open; n8n volume persistence not formally re-verified after owner setup.  
+**Progress 2026-07-24 (end-session):** Docker + `opsdesk-n8n` Up (HTTP 200). Gmail plus-alias + OAuth in n8n working. Supabase schema applied on reused project `ffcwzhntzdypketzfldo`; insert into `requests` confirmed. Local `.env` present (gitignored).
 
 ## Phase 2 — Synthetic business environment
 
-- [ ] Database schema implemented
+- [x] Database schema implemented
 - [ ] Python seed script created
 - [ ] 30 companies generated
 - [ ] 60 contacts generated
@@ -85,13 +84,13 @@
 - [ ] Supabase seeded
 - [ ] Reset process tested
 
-**Exit condition:** The business environment can be recreated consistently from seed.
+**Exit condition:** The business environment can be recreated consistently from seed. **Not met** — schema only; no seed data yet.
 
 ## Phase 3 — First vertical slice
 
-- [ ] Gmail polling workflow created
-- [ ] Email normalisation completed
-- [ ] Raw request stored
+- [x] Gmail polling workflow created
+- [x] Email normalisation completed
+- [x] Raw request stored
 - [ ] Structured AI classification added
 - [ ] Zod validation added
 - [ ] Invalid output handled
@@ -103,7 +102,8 @@
 - [ ] Failed integration visible
 - [ ] Failed integration retryable
 
-**Exit condition:** One real sales enquiry completes the full path reliably.
+**Exit condition:** One real sales enquiry completes the full path reliably. **Not met.**  
+**Progress:** Lessons 1–3 done (trigger → Edit Fields → POST `requests`). Lesson 4 duplicate IF in progress (Always Output Data + IF wired; POST must use `$('Edit Fields')` refs — paused).
 
 ## Phase 4 — Operator dashboard
 
@@ -217,8 +217,8 @@
 
 ## First vertical slice
 
-- [ ] A real Gmail test email is received.
-- [ ] Raw email content is stored.
+- [x] A real Gmail test email is received.
+- [x] Raw email content is stored.
 - [ ] Structured model output is validated.
 - [ ] HubSpot is searched.
 - [ ] Slack is notified.
@@ -227,7 +227,7 @@
 - [ ] Duplicate processing is prevented.
 - [ ] Failure can be retried safely.
 - [ ] Evidence screenshots are captured.
-- [ ] Decision log is updated.
+- [x] Decision log is updated.
 - [ ] README progress section is updated.
 
 ---
@@ -242,6 +242,10 @@ Update this immediately after producing useful evidence.
 | EVID-002 | 2026-07-24 | Automated workflow mapped | `docs/images/automated-process.md` | Solution section | [x] source |
 | EVID-003 | 2026-07-24 | Architecture draft v0 | `docs/images/architecture-v0.md` | Technical section | [x] source |
 | EVID-004 | YYYY-MM-DD | Failed HubSpot step recovered safely |  | Reliability section | [ ] |
+| EVID-005 | 2026-07-24 | Gmail Trigger + OpsDesk label returns message | *capture screenshot from n8n* | Demo happy path | [ ] pending |
+| EVID-006 | 2026-07-24 | Edit Fields normalises to OpsDesk shape | *capture screenshot* | Technical section | [ ] pending |
+| EVID-007 | 2026-07-24 | Supabase `requests` row from n8n POST | *capture Table Editor* | Integrations | [ ] pending |
+| EVID-008 | 2026-07-24 | OAuth TLS failure then local workaround | FAIL-001 / DEC-008 | Reliability | [ ] pending |
 
 ## Evidence types to collect
 
@@ -273,6 +277,9 @@ Keep detailed entries in `docs/decision-log.md`. Use this table as the index.
 | DEC-003 | 2026-07-24 | Flatten monorepo; build pack under `docs/` | Active | `docs/decision-log.md#dec-003` |
 | DEC-004 | 2026-07-24 | `project-status.json` twin of Control Centre | Active | `docs/decision-log.md#dec-004` |
 | DEC-005 | 2026-07-24 | Cursor start/end session commands only | Active | `docs/decision-log.md#dec-005` |
+| DEC-006 | 2026-07-24 | Manual n8n workflow build (learning-first) | Active | `docs/decision-log.md#dec-006` |
+| DEC-007 | 2026-07-24 | Dedicated Gmail test inbox preferred | Active | `docs/decision-log.md#dec-007` |
+| DEC-008 | 2026-07-24 | Local n8n TLS verify disabled (SSL interception) | Active local-only | `docs/decision-log.md#dec-008` |
 
 A decision should be logged when it changes:
 
@@ -295,7 +302,8 @@ Keep detailed entries in `docs/failure-log.md`.
 
 | Failure | Date | What broke | Root cause | Fixed? | Regression test |
 |---|---|---|---|---|---|
-| FAIL-001 | YYYY-MM-DD | Duplicate CRM contact | Retry repeated successful write | [ ] | `duplicate-contact-01` |
+| FAIL-001 | 2026-07-24 | Gmail OAuth TLS verify in n8n Docker | SSL interception / untrusted CA in container | [x] local workaround | Re-test OAuth after compose recreate; ban env in prod |
+| FAIL-002 | 2026-07-24 | POST after Check used wrong `$json` | `$json` was check result, not Edit Fields | [ ] pending on resume | Manual: duplicate + new email paths |
 
 Every meaningful failure should produce at least one of:
 
@@ -365,49 +373,55 @@ Complete once per week.
 
 ## Week ending
 
-YYYY-MM-DD
+2026-07-24
 
 ## What shipped?
 
-- 
+- Phase 0 complete; Phase 1 mostly stood up (Docker, n8n, Next health, Supabase schema + keys)
+- n8n Lessons 1–3: Gmail → normalise → store in `requests`
+- DEC-006–008; FAIL-001–002
 
 ## What did not ship?
 
-- 
+- Lesson 4 duplicate guard finished
+- HubSpot / Slack / Gemini
+- Formal n8n persistence re-test
+- Portfolio screenshots filed under `docs/images/`
 
 ## Most important learning
 
-- 
+- Normalise early; after intermediate nodes, side effects must reference `$('Edit Fields')` not `$json`
+- Local Docker TLS interception requires an explicit local-only workaround (DEC-008)
 
 ## Most important failure
 
-- 
+- FAIL-001 Gmail OAuth TLS; FAIL-002 wrong `$json` on POST after Check
 
 ## Evidence captured
 
-- 
+- Mermaid sources EVID-001–003; EVID-005–008 still need screenshots filed
 
 ## Decisions made
 
-- 
+- DEC-006 manual n8n; DEC-007 plus-alias in practice; DEC-008 TLS verify off local-only
 
 ## Metrics changed
 
-- 
+- None measured (no evaluation run)
 
 ## Scope risks
 
-- 
+- Scope held to sales slice; do not jump to dashboard/support
 
 ## Next week's single outcome
 
-> 
+> Finish Lesson 4 duplicate guard and capture n8n/Supabase evidence screenshots.
 
 ## Three committed tasks
 
-- [ ] 
-- [ ] 
-- [ ] 
+- [ ] Resume Lesson 4 POST body fix + duplicate test
+- [ ] Capture EVID-005–007 screenshots
+- [ ] Create HubSpot or Slack test account
 
 ---
 
@@ -415,16 +429,16 @@ YYYY-MM-DD
 
 Complete this after every meaningful build session.
 
-- [ ] Current task status updated.
-- [ ] New decisions logged.
-- [ ] Failures logged.
-- [ ] Tests added or updated.
-- [ ] Evidence captured.
+- [x] Current task status updated.
+- [x] New decisions logged.
+- [x] Failures logged.
+- [ ] Tests added or updated. — none automated this session; manual checks only
+- [ ] Evidence captured. — sources yes; screenshots pending EVID-005–008
 - [ ] Useful screenshots renamed and filed.
-- [ ] Metric changes recorded.
+- [x] Metric changes recorded. — none; left blank honestly
 - [ ] README/progress section updated where relevant.
-- [ ] Next task written clearly.
-- [ ] Work committed to Git.
+- [x] Next task written clearly.
+- [ ] Work committed to Git. — recommend commit below; not pushed this close-out
 
 Recommended commit format:
 
