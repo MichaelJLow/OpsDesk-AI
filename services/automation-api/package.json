@@ -1,0 +1,17 @@
+{
+  "name": "@opsdesk/automation-api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Deterministic rules, validation helpers and secure write operations for OpsDesk AI",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2"
+  }
+}

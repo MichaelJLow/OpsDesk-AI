@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+.Python
+*.egg-info/
+dist/
+build/
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+*.pem
+credentials.json
+token.json
+
+# n8n local data
+n8n_data/
+.n8n/
+
+# Next.js / tooling
+.next/
+out/
+.turbo/
+coverage/
+.nyc_output/
+*.tsbuildinfo
+
+# IDE / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs and debug
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Sentry
+.sentryclirc
+
+# Test / temp
+tmp/
+temp/
+.cache/

@@ -1,0 +1,39 @@
+{
+  "project": "OpsDesk AI",
+  "repository": "https://github.com/MichaelJLow/OpsDesk-AI",
+  "phase": 1,
+  "phaseName": "Local infrastructure",
+  "milestone": "First working vertical slice",
+  "status": "in_progress",
+  "currentTask": "Install Docker Desktop and start n8n via n8n/docker-compose.yml (confirm persistence)",
+  "nextTasks": [
+    "Create Supabase project and apply initial schema migration",
+    "Complete Gmail, HubSpot, Slack and Gemini test accounts",
+    "Phase 2: Python seed script for synthetic Northline data"
+  ],
+  "blockers": [
+    {
+      "id": "docker",
+      "summary": "Docker Desktop not installed",
+      "owner": "Mike",
+      "nextAction": "Install Docker Desktop (+ WSL2), then docker compose -f n8n/docker-compose.yml up -d"
+    },
+    {
+      "id": "accounts",
+      "summary": "External test accounts not created",
+      "owner": "Mike",
+      "nextAction": "Follow docs/ACCOUNT_SETUP_CHECKLIST.md"
+    }
+  ],
+  "lastUpdated": "2026-07-24",
+  "phase0Complete": true,
+  "phase1Complete": false,
+  "verticalSliceComplete": false,
+  "decisions": ["DEC-001", "DEC-002", "DEC-003", "DEC-004", "DEC-005"],
+  "evidence": ["EVID-001", "EVID-002", "EVID-003"],
+  "notes": [
+    "Dashboard /api/health verified locally on port 3010",
+    "automation-api Zod classification schema stubbed",
+    "n8n docker-compose ready; awaiting Docker Desktop"
+  ]
+}
