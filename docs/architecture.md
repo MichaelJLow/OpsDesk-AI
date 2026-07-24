@@ -1,101 +1,43 @@
-# Architecture — OpsDesk AI (Draft v0)
+# Architecture — OpsDesk AI (Property vertical)
 
-## Purpose
-
-Initial architecture for Northline Cloud’s shared-inbox automation. Version one uses n8n for orchestration and integrations, TypeScript for deterministic rules and secure writes, Supabase for durable state, and a single LLM for interpretation and drafting.
-
-## Initial architecture (MVP)
+## Layers
 
 ```text
 Gmail
-  ↓
-n8n polling trigger
-  ↓
-normalise and store request (Supabase)
-  ↓
-structured LLM call
-  ↓
-Zod validation
-  ↓
-HubSpot lookup
-  ↓
-deterministic routing rules
-  ↓
-Slack notification + response draft
-  ↓
-Supabase workflow timeline
-  ↓
-Next.js dashboard (visibility; after vertical slice)
+  → n8n (intake, orchestration, integrations)
+  → Supabase (durable state + audit)
+  → TypeScript rules + Zod (deterministic control)
+  → LLM (extract / draft / propose only)
+  → HubSpot (CRM context) + Slack (notify)
+  → Next.js operator Control Centre
+  → Human approval when required
+  → Recovery queue on failure
 ```
+
+## Three conceptual layers
+
+1. **Reusable operational core**  
+2. **Vertical configuration** (property-maintenance now; inspection later)  
+3. **Client configuration** (real engagements — see `client-delivery/`)
 
 ## Responsibility split
 
 | Component | Responsibility |
 |---|---|
-| **n8n** | Triggers, event transport, branching, HubSpot/Slack/Gmail nodes, schedules, error workflows |
-| **TypeScript automation API** | Secure writes, permissions, deterministic rules, validation helpers, idempotency, state transitions |
-| **LLM** | Classification, structured extraction, contextual drafting — propose only |
-| **Supabase / PostgreSQL** | Companies, contacts, requests, extractions, proposed actions, approvals, workflow events, evaluations |
-| **Next.js dashboard** | Operator inbox, review, timeline, failure recovery, metrics |
+| n8n | Triggers, transport, HubSpot/Slack/Gmail, schedules, error workflows |
+| TypeScript / Next.js | Rules, approvals, safe writes, schemas, vertical config, UI |
+| Supabase | Source of truth for workflow state and audit |
+| HubSpot | Organisations/contacts — not request state |
+| LLM | Interpretation and drafting — propose only |
 
-## Later architecture
+## Agent policy
 
-```text
-Gmail / webhook
-       ↓
-n8n integration layer
-       ↓
-TypeScript automation API
-       ↓
-PostgreSQL workflow state
-       ↓
-AI interpretation and retrieval
-       ↓
-deterministic policy checks
-       ↓
-human review
-       ↓
-approved external actions
-       ↓
-audit, monitoring and evaluation
-```
+No Mastra/LangGraph in v1. Optional later **Resolution Planner** (bounded tools, structured plan, no autonomous spend/dispatch). Not required for first slice.
 
-## Agent-framework policy
+## Historical note
 
-Version one does **not** use Mastra, LangGraph, CrewAI or similar.
+Earlier diagrams under `docs/images/*` describing a SaaS sales/support/billing inbox are **historical** (pre–Quayside pivot). Property diagrams should be versioned as new sources (e.g. `manual-process-quayside.md`).
 
-Add a separate framework only when:
+## Sequence (property)
 
-- the model needs repeated bounded tool selection;
-- stateful agent loops are genuinely required;
-- n8n and typed calls become hard to maintain;
-- the reason is logged in `docs/decision-log.md`.
-
-## Data stores (outline)
-
-Primary tables: `companies`, `contacts`, `requests`, `request_extractions`, `proposed_actions`, `approvals`, `workflow_events`, `evaluation_cases`, `evaluation_results`.
-
-Full field list: `OpsDesk_AI_Master_Build_Brief.md` §7.
-
-## Integrations
-
-| System | Role in MVP |
-|---|---|
-| Gmail | Inbound test inbox (polling locally) |
-| HubSpot | CRM lookup (and later controlled writes) |
-| Slack | Team notifications |
-| Gemini (initial) | Structured classification and drafting |
-| Sentry | Error monitoring (wired in later phases) |
-| Vercel | Dashboard hosting (later) |
-
-## Security boundaries
-
-- Secrets only in environment variables; never committed.
-- Model output never executes sensitive writes directly.
-- Recommendation → approval → execution are separate states.
-- Least-privilege tokens for each integration.
-- Synthetic PII only in this simulation.
-
-## Diagram source
-
-Mermaid draft for portfolio export: `docs/images/architecture-v0.md`.
+Inbound → normalise → store → extract → validate → CRM + site context → rules → draft/propose → approve if needed → execute → audit → recover on failure.

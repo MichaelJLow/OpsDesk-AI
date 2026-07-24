@@ -1,54 +1,64 @@
-# Project Brief
+# Project Brief — OpsDesk AI
 
 ## Project
 
-**OpsDesk AI — AI-powered request-to-resolution automation for shared business inboxes**
+**OpsDesk AI** — a reusable, vertical-configurable request-to-resolution system.
+
+**First vertical:** Property maintenance (Quayside Property Services).  
+**Post-MVP proof:** Technical inspection services (same core, different config).
+
+## One-line description
+
+An AI-assisted property-maintenance operations desk that turns messy inbound requests into structured, routed and auditable work.
 
 ## Target roles
 
-- AI Automation Engineer
-- AI Automation Specialist
-- AI Solutions Engineer
-- Automation Engineer
-- Applied AI Automation Builder
+- AI Automation Engineer  
+- AI Automation Specialist  
+- AI Solutions Engineer  
+- Automation Engineer  
 
 ## Goal
 
 Demonstrate the ability to:
 
-- map a messy business process;
-- identify high-value automation opportunities;
-- use n8n and custom code appropriately;
-- connect email, CRM, Slack and a database;
-- use LLMs selectively;
-- maintain human approval for sensitive actions;
-- handle failures;
-- measure outcomes;
-- document and hand over the system.
+- map a messy operational workflow;
+- separate AI interpretation from deterministic controls;
+- integrate Gmail, HubSpot, Slack and a database;
+- preserve human approval for high-risk or chargeable actions;
+- handle failures safely;
+- evaluate behaviour with labelled scenarios;
+- document a path from synthetic demo to real-client delivery.
 
-## Fictional operating environment
+## Three request categories (property maintenance)
 
-A B2B SaaS company receives mixed requests through one operations inbox.
+1. **Routine maintenance** — e.g. boiler rattling, access available tomorrow.  
+2. **Urgent / hazardous** — e.g. water near electrics; deterministic escalation.  
+3. **Controlled / chargeable / authorisation-sensitive** — e.g. replace flooring and invoice tenant; human approval required.
 
-The project handles:
+Fallback: unknown / ambiguous → human triage.
 
-1. Sales enquiries.
-2. Customer-support requests.
-3. Sensitive account or billing changes.
+## First vertical slice
 
-The company data is synthetic. The integration and automation engineering is real.
+Routine boiler-maintenance email: Gmail → store → extract → validate → HubSpot + property lookup → routine route → Slack → draft → timeline.
 
-## Success statement
+## Adaptability
 
-A hiring manager should be able to conclude:
+Build seams now; build only property workflow now; validate inspection later. Do not build two industries at once.
 
-> Mike could enter a business team, understand a manual workflow, design a reliable automation, integrate the existing tools, preserve human control and demonstrate measurable results.
+## Real-world client delivery
+
+The repo includes a `client-delivery/` methodology (discovery → audit → pilot → shadow mode → rollout → handover). Synthetic demo ≠ claimed client results.
 
 ## Non-goals
 
-- no generic chatbot;
-- no full CRM;
-- no multi-agent swarm;
-- no elaborate agent framework in version one;
-- no attempt to automate every department;
-- no UI polishing before the workflow works.
+- Generic chatbot or multi-agent swarm  
+- Full property-management / CRM product  
+- Inspection vertical during MVP  
+- No-code workflow/rules builder  
+- Autonomous spend, dispatch or safety decisions  
+- UI polish before the first slice works  
+
+## Success statement
+
+> Mike can enter a messy operational environment, map how work moves, use AI where language is messy, keep deterministic control where risk matters, integrate existing tools and prove outcomes with evaluation—and show how that method transfers to a real company.

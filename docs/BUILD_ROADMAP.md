@@ -1,111 +1,88 @@
-# Build Roadmap
+# Build Roadmap — OpsDesk AI (Quayside / property)
+
+## Active implementation sequence (scope control)
+
+1. Finish Lesson 5 — `workflow_events` after store  
+2. Structured extraction for routine boiler request  
+3. HubSpot contact + Supabase property lookup  
+4. Deterministic routine routing  
+5. Slack notify + response draft  
+6. Harden first vertical slice  
+7. Minimum operator dashboard  
+8. Context retrieval  
+9. Urgent + controlled-action workflows  
+10. Reliability + evaluation  
+11. Property portfolio release  
+12. **Track A** inspection portability (post-MVP)  
+13. **Track B** client-delivery toolkit (docs can exist now)
+
+Do not build property + inspection simultaneously.
+
+---
 
 ## Phase 0 — Define and document
 
-- Create repository.
-- Add project brief.
-- Write fictional company profile.
-- Draw current and future workflows.
-- Define three request categories.
-- Define success metrics.
-- Start decision, failure and screenshot logs.
+- [x] Repository / brief structure  
+- [x] Quayside company profile (pivot 2026-07-24)  
+- [x] Process audit (property)  
+- [x] Adaptability + client-delivery docs  
+- [x] Decision / failure logs  
 
-## Phase 1 — Local setup
+## Phase 1 — Local infrastructure
 
-- Install Docker Desktop.
-- Run n8n Community Edition with persistent storage.
-- Create Next.js app.
-- Create Supabase project.
-- Connect local environment.
-- Create HubSpot test account.
-- Create Gmail test inbox.
-- Create Slack test workspace.
+- [x] Docker + n8n local  
+- [x] Next.js health  
+- [x] Supabase project + initial schema  
+- [x] Gmail test path  
+- [ ] HubSpot / Slack / Gemini accounts  
+- [ ] Formal n8n persistence re-check  
 
-## Phase 2 — Seed the business
+## Phase 2 — Synthetic Quayside environment
 
-- Define data model.
-- Write Python seed script.
-- Create 30 companies and 60 contacts.
-- Curate 10 edge-case accounts.
-- Create policy and support documents.
-- Load data into HubSpot and Supabase.
+- [x] Initial schema (generic tables present)  
+- [ ] Sites/assets/contractors/agreements seed (migration review first)  
+- [ ] 25 orgs / 50 sites / 60 contacts / 12 contractors  
+- [ ] Edge cases + policies  
 
-## Phase 3 — Build the first vertical slice
+## Phase 3 — First vertical slice (routine boiler)
 
-- Poll Gmail.
-- Normalise email.
-- Store raw request.
-- Run structured LLM classification.
-- Validate output.
-- Look up CRM record.
-- Send Slack notification.
-- Create response draft.
-- Store timeline.
+- [x] Gmail poll + normalise + store + duplicate guard  
+- [ ] Timeline event (Lesson 5)  
+- [ ] Structured extraction + Zod  
+- [ ] HubSpot + property lookup  
+- [ ] Routine route + Slack + draft  
 
-## Phase 4 — Build the dashboard
+## Phase 4 — Operator dashboard
 
-- Operations Inbox.
-- Request Workspace.
-- CRM context.
-- Structured extraction.
-- Draft response.
-- Workflow Timeline.
+Reusable components; property panels first.
 
-## Phase 5 — Add support workflow
+## Phase 5 — Context & grounded resolution
 
-- Support classification.
-- Document retrieval.
-- Severity rules.
-- Grounded draft.
-- Escalation.
+History, warranty, agreements, citations.
 
-## Phase 6 — Add account-change workflow
+## Phase 6 — Safety, approval, controlled execution
 
-- Authorisation check.
-- Policy retrieval.
-- Human approval.
-- Controlled execution.
-- Before-and-after audit.
+Urgent/hazard + chargeable approval queue.
 
 ## Phase 7 — Reliability
 
-- Idempotency.
-- Duplicate handling.
-- Structured-output retry.
-- Integration retry.
-- Rate-limit handling.
-- Partial-failure state.
-- Recovery queue.
-- Safe replay.
+Idempotency, recovery, safe replay, no duplicate jobs.
 
 ## Phase 8 — Evaluation
 
-- 50 labelled cases.
-- Development/test split.
-- Batch runs.
-- Accuracy, safety, latency and cost metrics.
-- Regression suite.
+Property fixtures + shared reliability cases.
 
-## Phase 9 — Security and handover
+## Phase 9 — Security & handover
 
-- RBAC.
-- RLS.
-- Least privilege.
-- PII notes.
-- Operator guide.
-- Runbook.
-- Training video.
+Isolation, least privilege, runbooks; shadow-mode planning.
 
 ## Phase 10 — Portfolio release
 
-- Project page.
-- Demo video.
-- Live demo mode.
-- Architecture diagram.
-- Evaluation report.
-- GitHub README.
-- CV bullets.
+Property case study + synthetic-to-real methodology.
+
+### Post-MVP Track A — Inspection portability proof  
+### Post-MVP Track B — Client-delivery toolkit  
 
 ## Stop rule
 
-Finish one phase before expanding the next. The first major milestone is one sales email completing the full path successfully and visibly.
+Finish the routine boiler slice before expanding.

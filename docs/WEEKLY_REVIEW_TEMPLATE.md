@@ -52,8 +52,10 @@
 ## Scope review
 
 - Did anything expand beyond the agreed scope?
-- Does the addition directly strengthen the target job evidence?
-- What should be postponed or removed?
+- Did we stay on the **property-maintenance** vertical?
+- Did any abstraction get added before it was needed?
+- What reusable seam was validated?
+- What assumption would need validation with a real client?
 
 ## Portfolio review
 

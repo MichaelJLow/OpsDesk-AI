@@ -1,26 +1,36 @@
-# Start Here
+# Start Here — OpsDesk AI
 
-This repository contains **OpsDesk AI**, a flagship AI automation portfolio project.
+**OpsDesk AI** is a reusable request-to-resolution system, demonstrated first as a **property-maintenance operations desk** for fictional **Quayside Property Services**.
 
-## Recommended order
+## Three layers
 
-1. Read `docs/PROJECT_BRIEF.md`.
-2. Read `docs/BUILD_ROADMAP.md`.
-3. Read `docs/TECHNICAL_ARCHITECTURE.md`.
-4. Read `docs/PROJECT_CONTROL_CENTRE.md` and `project-status.json`.
-5. Use Cursor commands `/start-session` and `/end-session`.
-6. Begin with Phase 0 and Phase 1 only (Phase 0 is complete).
-7. Keep `docs/PORTFOLIO_AND_DEMO_PLAN.md` open throughout the build.
-8. Complete manual accounts via `docs/ACCOUNT_SETUP_CHECKLIST.md`.
+1. Reusable OpsDesk core  
+2. Property-maintenance vertical (active)  
+3. Future inspection portability + client-delivery methodology  
 
-## Critical rule
+## Read in order
 
-Do not expand the project into a large multi-agent platform.
+1. [`PROJECT_BRIEF.md`](PROJECT_BRIEF.md)  
+2. [`company-profile.md`](company-profile.md)  
+3. [`BUILD_ROADMAP.md`](BUILD_ROADMAP.md)  
+4. [`TECHNICAL_ARCHITECTURE.md`](TECHNICAL_ARCHITECTURE.md)  
+5. [`PROJECT_CONTROL_CENTRE.md`](PROJECT_CONTROL_CENTRE.md) + root `project-status.json`  
+6. [`OpsDesk_AI_Master_Build_Brief.md`](OpsDesk_AI_Master_Build_Brief.md)  
+7. [`client-delivery/README.md`](../client-delivery/README.md)  
 
-The goal is one reliable, well-documented request-to-resolution automation that hiring managers can understand quickly.
+## Working method
 
-## Best handoff to another chat
+- `/start-session` and `/end-session`  
+- One current task; preserve scope  
+- Manual n8n learning path: [`N8N_MANUAL_LEARNING_PATH.md`](N8N_MANUAL_LEARNING_PATH.md)  
 
-Point the agent at this repository and say:
+## Current implementation (honest)
 
-> Use the docs folder as the source of truth for the project. Help me build it one phase at a time. Preserve the defined scope, architecture and portfolio requirements. Do not introduce extra frameworks or features unless they solve a documented problem. Start by running /start-session.
+Done: local n8n, Gmail intake, normalise, Supabase `requests` store, duplicate guard.  
+Next: `workflow_events` timeline → boiler structured extraction → HubSpot/property lookup → route → Slack → draft.
+
+## Critical rules
+
+Do not build inspection vertical during property MVP.  
+Do not add agent frameworks in v1.  
+Do not invent metrics or claim real-client results.

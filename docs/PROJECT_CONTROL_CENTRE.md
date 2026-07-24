@@ -2,10 +2,10 @@
 
 > This is the living source of truth for the project. Update it at the end of every meaningful build session.
 
-**Project:** OpsDesk AI  
-**Current phase:** Phase 1 — Local infrastructure  
-**Current milestone:** First working vertical slice  
-**Overall status:** Paused (end of session)  
+**Project:** OpsDesk AI — Quayside Property Services (property-maintenance vertical)  
+**Current phase:** Phase 1 / early Phase 3  
+**Current milestone:** First working vertical slice (routine boiler maintenance)  
+**Overall status:** Paused — resume at Lesson 8 (HubSpot)  
 **Last updated:** 2026-07-24  
 **Next review:** 2026-07-31  
 **Remote:** https://github.com/MichaelJLow/OpsDesk-AI  
@@ -16,23 +16,23 @@
 
 ## This week's outcome
 
-> Local n8n + Gmail intake + normalise + Supabase store working; duplicate IF branch started (POST body must use Edit Fields refs — pause mid Lesson 4).
+> Lessons 1–7 done through Zod validation of boiler extraction. Next: HubSpot + property lookup.
 
 ## Current task
 
-- [ ] Resume Lesson 4: fix POST body to use `$('Edit Fields').item.json.*`, then verify true→insert / false→skip.
+- [ ] Lesson 8: HubSpot contact lookup.
 
 ## Next three tasks
 
-- [ ] Finish duplicate guard test (same email skips; new email inserts)
-- [ ] HubSpot + Slack + Gemini accounts
-- [ ] Lesson 5 preview: workflow_events timeline row
+- [ ] Lesson 9: Supabase property/site lookup
+- [ ] Lesson 10: Routine route + Slack `#maintenance-intake`
+- [ ] Lesson 11: Response draft + store
 
 ## Blockers
 
 | Blocker | Owner | Next action | Status |
 |---|---|---|---|
-| Lesson 4 incomplete — POST used wrong `$json` after Check | Mike | On resume: paste Edit Fields expressions into POST body | Paused |
+| HubSpot / Slack accounts | Mike | ACCOUNT_SETUP_CHECKLIST — needed for Lessons 8–10 | Open |
 
 ---
 
@@ -51,7 +51,7 @@
 - [x] Failure log started
 - [x] Evidence folders created
 
-**Exit condition:** The problem, scope, workflow and portfolio story are clear before implementation starts. **Met 2026-07-24** (Mermaid sources in `docs/images/`; PNG export still recommended for portfolio).
+**Exit condition:** The problem, scope, workflow and portfolio story are clear before implementation starts. **Met 2026-07-24**; **re-validated 2026-07-24** after Quayside property-maintenance pivot (company, audit, adaptability, client-delivery docs). Historical SaaS diagrams retained as versioned history under `docs/images/`.
 
 ## Phase 1 — Local infrastructure
 
@@ -91,19 +91,18 @@
 - [x] Gmail polling workflow created
 - [x] Email normalisation completed
 - [x] Raw request stored
-- [ ] Structured AI classification added
-- [ ] Zod validation added
-- [ ] Invalid output handled
+- [x] Structured AI classification added
+- [x] Zod validation added
+- [x] Invalid output handled
 - [ ] HubSpot lookup added
 - [ ] Slack notification added
 - [ ] Draft response created
-- [ ] Workflow event timeline stored
-- [ ] Duplicate email blocked
+- [x] Workflow event timeline stored
+- [x] Duplicate email blocked
 - [ ] Failed integration visible
 - [ ] Failed integration retryable
 
-**Exit condition:** One real sales enquiry completes the full path reliably. **Not met.**  
-**Progress:** Lessons 1–3 done (trigger → Edit Fields → POST `requests`). Lesson 4 duplicate IF in progress (Always Output Data + IF wired; POST must use `$('Edit Fields')` refs — paused).
+**Progress:** Lessons 1–7 done (through Zod + `validation_status=valid`). Lesson 8 = HubSpot contact lookup. Invalid branch wired (Mark invalid) but not formally regression-tested with bad JSON yet.
 
 ## Phase 4 — Operator dashboard
 
@@ -246,6 +245,8 @@ Update this immediately after producing useful evidence.
 | EVID-006 | 2026-07-24 | Edit Fields normalises to OpsDesk shape | *capture screenshot* | Technical section | [ ] pending |
 | EVID-007 | 2026-07-24 | Supabase `requests` row from n8n POST | *capture Table Editor* | Integrations | [ ] pending |
 | EVID-008 | 2026-07-24 | OAuth TLS failure then local workaround | FAIL-001 / DEC-008 | Reliability | [ ] pending |
+| EVID-009 | 2026-07-24 | Gemini structured boiler extraction JSON | *capture n8n Extract output* | Demo happy path | [ ] pending |
+| EVID-010 | 2026-07-24 | `request_extractions` + `validation_status=valid` | *capture Table Editor* | Reliability / Zod | [ ] pending |
 
 ## Evidence types to collect
 
@@ -280,6 +281,14 @@ Keep detailed entries in `docs/decision-log.md`. Use this table as the index.
 | DEC-006 | 2026-07-24 | Manual n8n workflow build (learning-first) | Active | `docs/decision-log.md#dec-006` |
 | DEC-007 | 2026-07-24 | Dedicated Gmail test inbox preferred | Active | `docs/decision-log.md#dec-007` |
 | DEC-008 | 2026-07-24 | Local n8n TLS verify disabled (SSL interception) | Active local-only | `docs/decision-log.md#dec-008` |
+| DEC-009 | 2026-07-24 | Property maintenance (Quayside) is first vertical | Active | `docs/decision-log.md#dec-009` |
+| DEC-010 | 2026-07-24 | Reusable core + vertical configuration | Active | `docs/decision-log.md#dec-010` |
+| DEC-011 | 2026-07-24 | Inspection services = post-MVP portability proof | Active | `docs/decision-log.md#dec-011` |
+| DEC-012 | 2026-07-24 | Client-delivery methodology separate from synthetic build | Active | `docs/decision-log.md#dec-012` |
+| DEC-013 | 2026-07-24 | Prefer generic core entities over property-only foundations | Active | `docs/decision-log.md#dec-013` |
+| DEC-014 | 2026-07-24 | No schema migration until reviewed | Active | `docs/decision-log.md#dec-014` |
+| DEC-015 | 2026-07-24 | Gemini 2.5 Flash for free-tier extraction | Active | `docs/decision-log.md#dec-015` |
+| DEC-016 | 2026-07-24 | Zod via local automation-api `:3040` | Active | `docs/decision-log.md#dec-016` |
 
 A decision should be logged when it changes:
 
@@ -303,7 +312,11 @@ Keep detailed entries in `docs/failure-log.md`.
 | Failure | Date | What broke | Root cause | Fixed? | Regression test |
 |---|---|---|---|---|---|
 | FAIL-001 | 2026-07-24 | Gmail OAuth TLS verify in n8n Docker | SSL interception / untrusted CA in container | [x] local workaround | Re-test OAuth after compose recreate; ban env in prod |
-| FAIL-002 | 2026-07-24 | POST after Check used wrong `$json` | `$json` was check result, not Edit Fields | [ ] pending on resume | Manual: duplicate + new email paths |
+| FAIL-002 | 2026-07-24 | POST after Check used wrong `$json` | Intermediate node output | [x] `$('Edit Fields')` refs | New email inserts cleanly |
+| FAIL-003 | 2026-07-24 | Duplicate guard IF not skipping | Check used anon key → empty GET | [x] service_role on Check | Same email → false, no POST |
+| FAIL-004 | 2026-07-24 | Gemini 2.0 Flash `limit: 0` | Deprecated model on free tier | [x] use `gemini-2.5-flash` | Extraction JSON returns |
+| FAIL-005 | 2026-07-24 | IF boolean vs string `true` | Wrong IF value type | [x] Boolean compare | Valid path reaches Mark |
+| FAIL-006 | 2026-07-24 | PATCH extraction id / stuck `pending` | Array response; bad `.id` expr | [x] `[0].id` / re-test | `validation_status=valid` |
 
 Every meaningful failure should produce at least one of:
 
@@ -377,33 +390,35 @@ Complete once per week.
 
 ## What shipped?
 
-- Phase 0 complete; Phase 1 mostly stood up (Docker, n8n, Next health, Supabase schema + keys)
-- n8n Lessons 1–3: Gmail → normalise → store in `requests`
-- DEC-006–008; FAIL-001–002
+- Quayside Property Services docs pivot + `client-delivery/` toolkit
+- n8n Lessons 1–7: Gmail → store → duplicate guard → timeline → Gemini extract → parse → `request_extractions` → Zod → `validation_status=valid`
+- `automation-api` HTTP validate on `:3040`
+- DEC-009–016; FAIL-001–006
 
 ## What did not ship?
 
-- Lesson 4 duplicate guard finished
-- HubSpot / Slack / Gemini
-- Formal n8n persistence re-test
-- Portfolio screenshots filed under `docs/images/`
+- HubSpot / Slack accounts
+- Lessons 8–11 (lookup, route, Slack, draft)
+- Formal bad-JSON invalid-path regression
+- Portfolio screenshots EVID-005–010 filed
 
 ## Most important learning
 
-- Normalise early; after intermediate nodes, side effects must reference `$('Edit Fields')` not `$json`
-- Local Docker TLS interception requires an explicit local-only workaround (DEC-008)
+- Reference named nodes (`$('Edit Fields')`, `$('Insert request')`); Supabase representation often returns arrays (`[0].id`)
+- Duplicate HTTP nodes instead of retyping Supabase headers
+- Free-tier Gemini model ids go stale — pin current Flash (2.5)
 
 ## Most important failure
 
-- FAIL-001 Gmail OAuth TLS; FAIL-002 wrong `$json` on POST after Check
+- FAIL-004 model quota 0; FAIL-006 PATCH left status `pending` until id expression fixed
 
 ## Evidence captured
 
-- Mermaid sources EVID-001–003; EVID-005–008 still need screenshots filed
+- Mermaid sources EVID-001–003; screenshots EVID-005–010 still pending
 
 ## Decisions made
 
-- DEC-006 manual n8n; DEC-007 plus-alias in practice; DEC-008 TLS verify off local-only
+- DEC-009–016 (Quayside, seams, Gemini 2.5, Zod via automation-api)
 
 ## Metrics changed
 
@@ -411,17 +426,17 @@ Complete once per week.
 
 ## Scope risks
 
-- Scope held to sales slice; do not jump to dashboard/support
+- Do not start inspection vertical; do not migrate schema without review
 
 ## Next week's single outcome
 
-> Finish Lesson 4 duplicate guard and capture n8n/Supabase evidence screenshots.
+> Lesson 8 HubSpot contact lookup, then property/site lookup toward routine Slack notify.
 
 ## Three committed tasks
 
-- [ ] Resume Lesson 4 POST body fix + duplicate test
-- [ ] Capture EVID-005–007 screenshots
-- [ ] Create HubSpot or Slack test account
+- [ ] Create HubSpot test account + Quayside contact
+- [ ] Lesson 8 HubSpot lookup by sender email
+- [ ] Capture EVID-009–010 (extraction + valid status)
 
 ---
 

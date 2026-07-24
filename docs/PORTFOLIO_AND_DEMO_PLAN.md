@@ -1,94 +1,45 @@
-# Portfolio and Demo Plan
-
-## Portfolio objective
-
-The project page must show business thinking, not only n8n nodes.
+# Portfolio and Demo Plan — OpsDesk AI
 
 ## Homepage card
 
 **OpsDesk AI**
 
-*An AI-powered customer-operations workflow that turns inbound emails into routed, reviewed and completed actions.*
+*An AI-assisted property-maintenance operations desk that turns messy inbound requests into structured, routed and auditable work.*
 
 Highlights:
 
-- Gmail, HubSpot and Slack integration;
-- AI classification and structured extraction;
-- human approval for sensitive actions;
-- recoverable failures and audit history;
-- evaluated against labelled scenarios.
+- Gmail, HubSpot and Slack integration  
+- Structured extraction with validated schemas  
+- Deterministic safety and approval rules  
+- Human approval for chargeable / high-risk actions  
+- Recoverable failures and audit timeline  
+- Evaluated scenarios; synthetic Quayside data  
 
-## Project page
+## Case-study structure
 
-1. Hero.
-2. Problem.
-3. Manual process.
-4. Workflow audit.
-5. Automated solution.
-6. Architecture.
-7. Sales scenario.
-8. Support scenario.
-9. Sensitive account-change scenario.
-10. Human approval.
-11. Failure handling.
-12. Evaluation.
-13. Security.
-14. Technical decisions.
-15. Iteration.
-16. Limitations.
-17. Demo and repository.
+1. Problem (Quayside shared inbox)  
+2. Manual process audit  
+3. Automated solution  
+4. Architecture (core + vertical)  
+5. Routine boiler scenario  
+6. Urgent hazard scenario  
+7. Chargeable approval scenario  
+8. Failure and recovery  
+9. Evaluation  
+10. Adaptability (inspection portability — later)  
+11. From synthetic to real implementation  
+12. Limitations  
 
-## Four-minute demo
+## Demo (property-first)
 
-### 0:00–0:25
+1. Routine boiler happy path  
+2. Water near electrics → escalation  
+3. Unauthorised chargeable work → approval  
+4. Integration failure → recovery  
+5. Evaluation metrics  
 
-Explain manual problem.
-
-### 0:25–1:25
-
-Run sales happy path.
-
-### 1:25–2:25
-
-Run sensitive account change and approval.
-
-### 2:25–3:15
-
-Show integration failure and recovery.
-
-### 3:15–3:45
-
-Show evaluation metrics.
-
-### 3:45–4:00
-
-Close with:
-
-> I understand the workflow first, use AI selectively, integrate the systems already in place, preserve human control and design for failure rather than only the happy path.
-
-## Live demo mode
-
-Offer five safe seeded scenarios:
-
-- sales enquiry;
-- support request;
-- billing change;
-- missing information;
-- CRM failure.
-
-Do not expose live credentials.
-
-## Evidence to collect
-
-- screenshots of every phase;
-- architecture versions;
-- decision log;
-- failure log;
-- metric history;
-- short screen recordings;
-- user-testing notes;
-- before-and-after process maps.
+Inspection demo is **post-MVP** and separate.
 
 ## Limitations statement
 
-> OpsDesk AI is a production-style simulation built with real APIs, workflows and failure handling. The company and customer records are synthetic so the project can be demonstrated publicly without exposing confidential information.
+> OpsDesk AI is a production-style simulation with real APIs and synthetic Quayside property data. It does not claim real-client outcomes or autonomous property management.

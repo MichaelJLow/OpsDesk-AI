@@ -39,6 +39,14 @@ What was sacrificed?
 
 What should be revisited later?
 
+### Optional session tags
+
+- Active vertical:
+- Shared-core change? (y/n)
+- Vertical-specific change? (y/n)
+- Client-delivery artifact?
+- Synthetic assumption / real-world validation required?
+
 ---
 
 ## Failure Log

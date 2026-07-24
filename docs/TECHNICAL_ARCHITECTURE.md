@@ -1,118 +1,69 @@
-# Technical Architecture
+# Technical Architecture — OpsDesk AI
 
-## Core stack
+## Stack
 
-- n8n Community Edition
-- Next.js
-- React
-- TypeScript / Node.js
-- Zod
-- Supabase / PostgreSQL
-- Gmail
-- HubSpot
-- Slack
-- Gemini, OpenAI or Anthropic API
-- Python
-- GitHub Actions
-- Sentry
-- Vercel
+n8n CE · Next.js/React/TS · Zod · Supabase/PostgreSQL · Gmail · HubSpot · Slack · one LLM · Python seeds/eval · Docker · GitHub Actions · Sentry · Vercel
 
-## Responsibility split
+## Boundaries
 
 ### n8n
+Intake, normalisation plumbing, orchestration, external API calls, schedules, retries coordination, error workflows. **Not** sole business-logic or state store.
 
-- triggers;
-- event transport;
-- branching;
-- sub-workflows;
-- integrations;
-- scheduled jobs;
-- error workflows.
-
-### TypeScript service
-
-- secure write operations;
-- permissions;
-- deterministic rules;
-- validation;
-- idempotency;
-- business-state transitions.
-
-### LLM
-
-- language classification;
-- structured extraction;
-- contextual drafting;
-- retrieval-assisted recommendation.
+### TypeScript application
+Deterministic rules, Zod validation, approvals, protected execution endpoints, idempotency, vertical config packs, tool allowlists, operator UI.
 
 ### Supabase
+Durable entities and events. Planned extensions: sites, assets, jobs, agreements, documents, service_providers (migration reviewed separately).
 
-- business source of truth;
-- workflow state;
-- audit history;
-- approvals;
-- evaluation records.
+### Vertical config (code-based)
 
-### Dashboard
-
-- operator visibility;
-- human review;
-- failure recovery;
-- metrics.
-
-## Initial architecture
-
-```text
-Gmail
-  ↓
-n8n polling trigger
-  ↓
-normalise and store request
-  ↓
-structured LLM call
-  ↓
-Zod validation
-  ↓
-HubSpot lookup
-  ↓
-routing rules
-  ↓
-Slack + response draft
-  ↓
-Supabase timeline
-  ↓
-Next.js dashboard
+```ts
+type VerticalConfig = {
+  id: string;
+  displayName: string;
+  requestCategories: string[];
+  extractionSchemaVersion: string;
+  rulePackVersion: string;
+  workflowRoutes: string[];
+  approvalTypes: string[];
+  enabledTools: string[];
+  slackChannels: Record<string, string>;
+  terminology: {
+    organisation: string;
+    site: string;
+    asset: string;
+    job: string;
+    serviceProvider: string;
+    deliverable: string;
+  };
+};
 ```
 
-## Later architecture
+Property: `property-maintenance` / Quayside labels (Property, Work Order, Contractor…).  
+Inspection: post-MVP config only.
+
+## Shared vs vertical extraction
+
+Base Zod object for shared fields; `verticalData` + vertical-specific `.extend()` schemas. Rules consume structured facts—not free-text prompts alone.
+
+## Reusable states
+
+`NEW` → `INTAKE_PROCESSING` → `NEEDS_INFORMATION` → `READY_FOR_REVIEW` → `AWAITING_APPROVAL` → `APPROVED` → `JOB_CREATED` → `SCHEDULED` → `IN_PROGRESS` → `AWAITING_DELIVERABLE` → `RESOLUTION_REVIEW` → `COMPLETED` | `FAILED`
+
+UI maps labels per vertical.
+
+## Proposed repo seams (future; not forced now)
 
 ```text
-Gmail / webhook
-       ↓
-n8n integration layer
-       ↓
-TypeScript automation API
-       ↓
-PostgreSQL workflow state
-       ↓
-AI interpretation and retrieval
-       ↓
-deterministic policy checks
-       ↓
-human review
-       ↓
-approved external actions
-       ↓
-audit, monitoring and evaluation
+src/core/{requests,approvals,jobs,audit,evaluation}/
+src/verticals/{property-maintenance,inspection-services}/
+src/integrations/
 ```
 
-## Agent-framework policy
+## Security
 
-Version one does not require Mastra or LangGraph.
+Secrets in env only; model cannot execute protected writes; approval ≠ execution; least privilege; synthetic data for demos; DEC-008 TLS workaround is local-only.
 
-Add a separate framework only when:
+## Agent frameworks
 
-- the model needs repeated bounded tool selection;
-- stateful agent loops are genuinely required;
-- n8n and typed calls become difficult to maintain;
-- the reason is documented in the decision log.
+Forbidden in v1 unless a logged decision proves n8n + typed calls insufficient.

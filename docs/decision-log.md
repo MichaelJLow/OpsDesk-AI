@@ -274,7 +274,7 @@ Set `NODE_TLS_REJECT_UNAUTHORIZED=0` in [`n8n/docker-compose.yml`](../n8n/docker
 
 ### Reason
 
-Unblocks learning and the sales vertical slice immediately. Proper CA mounting needs the corp cert file and more setup time.
+Unblocks learning and the first Gmail intake vertical slice immediately. Proper CA mounting needs the corp cert file and more setup time.
 
 ### Trade-offs
 
@@ -283,4 +283,154 @@ Disables TLS certificate verification for outbound HTTPS from the n8n container 
 ### Follow-up
 
 Replace with mounted corporate CA when available. Never ship this env var to VPS/cloud. Revisit before Phase 10 portfolio “security” section — document honestly as a local network constraint.
+
+---
+
+## DEC-009 — Property maintenance (Quayside) is the first vertical
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-24 |
+| Status | Active |
+
+### Context
+
+SaaS shared-inbox narrative was weaker for portfolio storytelling and for Mike’s operational background. Need a concrete small-company workflow.
+
+### Alternatives considered
+
+- Keep B2B SaaS sales/support/billing  
+- Property maintenance only (no adaptability story)  
+- Property maintenance first + inspection portability later  
+
+### Chosen approach
+
+**Quayside Property Services** — property maintenance as first vertical; rename away from Northline Cloud.
+
+### Reason
+
+Clearer ops story; safer/approval patterns map well; harbour-themed brand for portfolio.
+
+### Trade-offs
+
+Docs rewrite; historical SaaS screenshots must stay labelled historical.
+
+### Follow-up
+
+Draw Quayside-specific process diagrams; do not relabel old evidence.
+
+---
+
+## DEC-010 — Reusable core + vertical configuration
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-24 |
+| Status | Active |
+
+### Context
+
+Future consultancy use needs transferability without building two full products now.
+
+### Chosen approach
+
+Three layers: reusable core, vertical config packs, client config (documented). Build seams now; implement property only.
+
+### Trade-offs
+
+Some abstraction overhead; mitigated by forbidding simultaneous inspection build.
+
+---
+
+## DEC-011 — Inspection services is post-MVP portability proof
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-24 |
+| Status | Active |
+
+### Chosen approach
+
+Track A after property slice is reliable and evaluated. Same engine; config/rules/schema extensions only.
+
+---
+
+## DEC-012 — Client-delivery methodology separate from synthetic build
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-24 |
+| Status | Active |
+
+### Chosen approach
+
+`client-delivery/` templates and playbooks. No prices; no claimed client results.
+
+---
+
+## DEC-013 — Prefer generic core entities over property-only foundations
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-24 |
+| Status | Active |
+
+### Chosen approach
+
+organisations/sites/assets/jobs/service_providers as concepts; property labels in UI/config. Avoid `tenant_name` on core workflow tables.
+
+---
+
+## DEC-014 — No schema migration until reviewed
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-24 |
+| Status | Active |
+
+### Chosen approach
+
+Documentation pass only. Keep existing `companies`/`requests`/… tables. Propose sites/assets/jobs migration later with explicit approval.
+
+---
+
+## DEC-015 — Use Gemini 2.5 Flash (not 2.0) for free-tier extraction
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-24 |
+| Status | Active |
+
+### Context
+
+`gemini-2.0-flash` returned free-tier quota `limit: 0` (deprecated / unavailable).
+
+### Chosen approach
+
+Call `gemini-2.5-flash` via `generativelanguage.googleapis.com` with `responseMimeType: application/json`.
+
+### Trade-offs
+
+Model ids change; pin version in prompt_version / model_name fields on `request_extractions`.
+
+---
+
+## DEC-016 — Zod validation via local automation-api HTTP
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-24 |
+| Status | Active |
+
+### Context
+
+n8n must not silently accept LLM JSON. Validation belongs in TypeScript (Zod), not only in the workflow UI.
+
+### Chosen approach
+
+`services/automation-api` listens on `:3040`; `POST /v1/validate/extraction`. n8n (Docker) calls `http://host.docker.internal:3040/...`. IF on boolean `valid`; PATCH `request_extractions.validation_status`.
+
+### Trade-offs
+
+Must run automation-api locally during n8n tests. Later: containerise or deploy beside app.
 

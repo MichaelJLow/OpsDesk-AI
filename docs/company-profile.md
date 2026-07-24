@@ -1,62 +1,61 @@
-# Company Profile — Northline Cloud
+# Company Profile — Quayside Property Services
 
 ## Overview
 
-**Northline Cloud** is a fictional B2B SaaS company that sells a mid-market operations platform for professional services firms.
+**Quayside Property Services** is a fictional small property-maintenance and facilities business used as the first vertical for OpsDesk AI.
 
-OpsDesk AI automates Northline’s shared operations inbox. All customer and company data used in this project is synthetic. Integrations, workflows, approvals and evaluation are real.
+OpsDesk AI automates Quayside’s shared operations inbox. All company and customer data in this project is synthetic. Integrations, workflows, approvals and evaluation are real.
 
-## Product
-
-| Attribute | Value |
-|---|---|
-| Product name | Northline Ops Platform |
-| Category | B2B SaaS — operations / workflow |
-| Ideal customer | Professional services firms, 20–500 employees |
-| Pricing model | Seat-based subscription |
-
-### Plan tiers
-
-| Plan | Typical seats | Support tier |
-|---|---|---|
-| Starter | 1–25 | Standard |
-| Growth | 26–100 | Priority |
-| Enterprise | 100+ | Premium |
-
-### Lifecycle stages (CRM)
-
-Prospect → Trial → Customer → Expansion → Churn risk → Churned
-
-## Shared operations inbox
+## Business snapshot
 
 | Attribute | Value |
 |---|---|
-| Inbox | `mikelow92+opsdesk@gmail.com` (plus-alias into personal Gmail; label `OpsDesk`) |
-| Purpose | Single intake for sales, support and account/billing requests |
-| Pain | Mixed intents, manual CRM lookup, inconsistent routing, weak audit trail |
+| Industry | Property maintenance & facilities services |
+| Size | ~12 internal staff |
+| Clients | ~25 client organisations (landlords, managing agents, small commercial) |
+| Portfolio | ~50 managed sites/properties (residential + light commercial) |
+| Contacts | ~60 (landlords, PMs, tenants/occupants, internal) |
+| Contractors | ~12 approved trades (plumbing, heating, electrical, roofing, general) |
+| Inbox | Shared Gmail operations inbox (dev: `mikelow92+opsdesk@gmail.com` / label `OpsDesk`) |
 
-## Internal teams and Slack channels
+## Roles
 
-| Team | Owns | Slack channel |
-|---|---|---|
-| Sales | New opportunities and demos | `#sales-enquiries` |
-| Customer Support | Product issues and how-to | `#customer-support` |
-| Billing / Account Ops | Sensitive account changes | `#billing-approvals` |
-| Automation | Workflow alerts and failures | `#automation-alerts` |
+| Role | Responsibility |
+|---|---|
+| Operations manager | Escalations, approvals, contractor decisions |
+| Maintenance coordinators | Triage inbox, book contractors, chase updates |
+| Client / property managers | Client relationship, chargeable-work decisions |
+| Finance / approval | Threshold approvals for spend |
+| External contractors | Attend, quote, complete, evidence |
 
-## Account ownership
+## Systems (fictional current state + OpsDesk target)
 
-- Each company has an **account owner** (internal AE or CSM).
-- Contacts may or may not be **authorised for account changes**.
-- Unauthorised billing requests must never execute without human review.
+| System | Role |
+|---|---|
+| Shared Gmail | Primary inbound channel |
+| HubSpot | Client organisations and contacts (not request state) |
+| Slack | Internal routing / urgent / approvals |
+| Spreadsheets + email search | Current-state history and tracking (pain) |
+| Supabase | OpsDesk source of truth for requests, sites, assets, jobs, audit |
+| Photos / PDFs | Attachments: leaks, boilers, invoices, reports |
 
-## Synthetic environment size (Phase 2)
+## Who sends requests
 
-- 30 companies
-- 60 contacts
-- 10 curated edge-case accounts
-- Internal policy and support documents
+- Landlords and freeholders  
+- Property / managing agents  
+- Tenants or occupants  
+- Commercial clients  
+- Internal staff  
+- Approved contractors (updates, quotes, completion notes)
+
+## What arrives
+
+Email text, forwards, photos, invoices, contractor reports, quotes, access notes, tenancy/service documents, phone-call notes typed into email.
 
 ## Public description
 
-> OpsDesk AI is a production-style simulation of Northline Cloud’s shared-inbox operations, built with real APIs and synthetic company data so the full workflow can be demonstrated without exposing confidential information.
+> OpsDesk AI is a production-style simulation of Quayside Property Services’ operations desk, built with real APIs and synthetic property data so the full request-to-resolution workflow can be demonstrated without exposing confidential information.
+
+## Vertical note
+
+Property maintenance is the **first vertical configuration**. A later **inspection-services** portability proof reuses the same core without forking the engine. See Master Build Brief and `client-delivery/`.

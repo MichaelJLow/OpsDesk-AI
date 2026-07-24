@@ -1,62 +1,59 @@
-# Scope and Success Metrics
+# Scope and Success Metrics — OpsDesk AI
 
-## In scope (version one)
+## In scope (version one — property maintenance)
 
-1. **Sales enquiries** — classify, extract, HubSpot lookup, Slack notify, draft reply, timeline.
-2. **Customer-support requests** — grounded drafts, severity rules, escalation (after sales slice).
-3. **Sensitive account / billing changes** — authorisation checks, human approval, controlled execution, audit (after support).
-4. Real integrations: Gmail, HubSpot, Slack, Supabase, one LLM provider.
-5. Durable workflow state, audit trail, idempotent side effects, recoverable failures.
-6. Labelled evaluation set (≥50 scenarios by Phase 8).
-7. Operator dashboard sufficient for hiring-manager demos.
-8. Portfolio evidence captured while building.
+1. Routine maintenance request path (first vertical slice).  
+2. Urgent/hazard path with deterministic escalation (after slice).  
+3. Controlled/chargeable path with human approval (after slice).  
+4. Real integrations: Gmail, HubSpot, Slack, Supabase, one LLM.  
+5. Durable state, audit, idempotent side effects, recoverable failures.  
+6. Labelled evaluation for property scenarios (+ shared reliability cases).  
+7. Operator dashboard with reusable components; property panels first.  
+8. Documentation of reusable core + vertical configuration seams.  
+9. Client-delivery methodology templates (not a real client deployment).  
 
-## Non-goals
+## Explicitly out of scope (now)
 
-- Generic chatbot or multi-agent swarm
-- Mastra / LangGraph / CrewAI in version one
-- Full CRM replacement
-- Automating every company department
-- Model training or deep ML research
-- Kubernetes or fashionable extra infrastructure
-- Autonomous sensitive actions without human approval
-- Pixel-perfect UI before the workflow works
-- Expanding beyond the three request categories without a logged decision
+- Inspection-services vertical implementation (post-MVP Track A only)  
+- Visual workflow / rules builder  
+- Multi-tenant SaaS product / agency website  
+- Full PMS, CRM, contractor marketplace  
+- Autonomous spend, dispatch or safety decisions  
+- Mastra / LangGraph / multi-agent theatre  
+- pgvector until keyword/metadata retrieval is insufficient  
+- Schema renames/migrations until reviewed and approved  
 
-## Success statement
+## Adaptability (design now, build property only)
 
-A hiring manager should conclude:
+Reusable core: ingestion, orgs/contacts, sites/assets, requests, extractions, proposed actions, approvals, jobs, workflow events, recovery, evaluation, timeline UI.
 
-> Mike could enter a business team, understand a manual workflow, design a reliable automation, integrate the existing tools, preserve human control and demonstrate measurable results.
+Vertical-specific: terminology, extraction extensions, rule packs, tools allowlist, document namespaces, seed data, evaluation fixtures, domain panels.
 
-## Success metrics (targets)
-
-Only record measured values in the Control Centre. Targets:
+## Success metrics (targets — measure later, never invent)
 
 | Metric | Target |
 |---|---|
-| Classification accuracy | 90%+ |
+| Category / request-type accuracy | 90%+ |
+| Site/property match accuracy | Track + improve |
+| Emergency-escalation recall | High (safety-critical) |
 | Approval-gating accuracy | 100% |
-| Unsafe-action rate | 0% |
+| Unsafe / prohibited-action rate | 0% |
 | Workflow success rate | 95%+ |
 | Recovery success rate | 100% |
-| Average end-to-end latency | < 15s |
-| Model cost per request | Track only |
-| Human override rate | Track only |
+| Latency | Track (&lt; 15s aspirational) |
+| Cost per request | Track only |
 
-## MVP definition of done (first vertical slice)
+## Client-delivery measures (methodology — not current results)
 
-- Real Gmail test email received
-- Raw content stored
-- Structured model output validated
-- HubSpot searched
-- Slack notified
-- Draft reply created
-- Every step recorded
-- Duplicate email blocked
-- Failed integration visible and retryable
-- Evidence captured; Control Centre updated
+- Baseline captured before pilot  
+- Shadow-mode comparison completed  
+- Operator acceptance criteria met  
+- Handover documentation completed  
+
+## First vertical slice definition of done
+
+See Master Brief: real Gmail → store → validated extraction → HubSpot + property match → routine route → Slack → draft → timeline; failures visible; evidence captured.
 
 ## Stop rule
 
-Finish one phase before expanding the next. Do not begin support, billing or advanced dashboard work until the sales vertical slice exit condition is demonstrated.
+One phase at a time. Do not build inspection or dashboard depth before the routine boiler slice works.

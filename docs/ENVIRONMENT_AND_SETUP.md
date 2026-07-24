@@ -1,60 +1,34 @@
-# Environment and Setup Checklist
+# Environment and Setup — OpsDesk AI
 
 ## Local development
 
-- [ ] Install Docker Desktop.
-- [ ] Enable WSL 2 backend.
-- [ ] Create persistent `n8n_data` Docker volume.
-- [ ] Start n8n on `http://localhost:5678`.
-- [ ] Confirm workflow persists after restart.
-- [ ] Create Node.js LTS environment.
-- [ ] Create Python virtual environment.
-- [ ] Install Git.
+- [x] Docker Desktop + WSL2  
+- [x] n8n via `n8n/docker-compose.yml` → http://localhost:5678  
+- [x] Node.js LTS; Next.js dashboard  
+- [ ] Python venv (Phase 2 seeds)  
+- [x] Git  
 
 ## Accounts
 
-- [ ] Gmail test inbox.
-- [ ] HubSpot developer test account.
-- [ ] Slack test workspace.
-- [ ] Supabase free project.
-- [ ] One LLM API account.
-- [ ] GitHub repository.
-- [ ] Vercel account.
-- [ ] Sentry free project.
+- [x] Gmail plus-alias OpsDesk label  
+- [x] Supabase (schema applied; keys in local `.env`)  
+- [ ] HubSpot developer account  
+- [ ] Slack test workspace  
+- [ ] Gemini (or chosen LLM)  
+- [x] GitHub `MichaelJLow/OpsDesk-AI`  
+- [ ] Vercel / Sentry as needed  
 
-## Slack channels
+## Slack channels (property)
 
-- [ ] `#sales-enquiries`
-- [ ] `#customer-support`
-- [ ] `#billing-approvals`
-- [ ] `#automation-alerts`
+- [ ] `#maintenance-intake`  
+- [ ] `#urgent-maintenance`  
+- [ ] `#approval-queue`  
+- [ ] `#automation-alerts`  
 
-## Environment variables
+## Synthetic vs real client
 
-See root `.env.example` and the living checklist in `ACCOUNT_SETUP_CHECKLIST.md`.
+Local sandbox uses synthetic Quayside data and test credentials. A real-client deployment requires separate discovery, credential ownership, least privilege and acceptance criteria — see `client-delivery/`.
 
-- [ ] `DATABASE_URL`
-- [ ] `NEXT_PUBLIC_SUPABASE_URL`
-- [ ] `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- [ ] `SUPABASE_SERVICE_ROLE_KEY`
-- [ ] `HUBSPOT_ACCESS_TOKEN`
-- [ ] `SLACK_BOT_TOKEN`
-- [ ] `SLACK_SIGNING_SECRET`
-- [ ] `GMAIL_CLIENT_ID`
-- [ ] `GMAIL_CLIENT_SECRET`
-- [ ] model-provider API key (`GEMINI_API_KEY` initially)
-- [ ] `SENTRY_DSN`
+## n8n Docker
 
-## Local n8n Docker example
-
-```powershell
-docker volume create n8n_data
-
-docker run -it --rm `
-  --name n8n `
-  -p 5678:5678 `
-  -v n8n_data:/home/node/.n8n `
-  docker.n8n.io/n8nio/n8n
-```
-
-For a longer-running setup, replace the temporary `--rm` workflow with Docker Compose and restart policies.
+See `n8n/README.md`. Local TLS workaround (DEC-008) is **not** for hosted environments.

@@ -1,63 +1,30 @@
-# Testing, Reliability and Security
+# Testing, Security and Reliability — OpsDesk AI
 
-## Reliability requirements
+## Reliability
 
-- idempotency key per external email;
-- duplicate detection;
-- schema validation;
-- bounded retries;
-- exponential backoff where appropriate;
-- rate-limit handling;
-- timeouts;
-- partial-failure state;
-- manual replay;
-- no repeated side effects;
-- full audit trail.
+Idempotency on `external_message_id`; schema validation; bounded retries; partial-failure states; manual replay; no duplicate external side effects; full audit trail.
 
-## Required failure demonstrations
+## Required demonstrations (property)
 
-1. Duplicate Gmail message.
-2. Invalid model output.
-3. Unknown sender.
-4. Ambiguous CRM match.
-5. Missing information.
-6. Unauthorised account change.
-7. HubSpot timeout.
-8. Slack failure.
-9. Low model confidence.
-10. Retry after a successful write.
+1. Duplicate Gmail message  
+2. Invalid model JSON  
+3. Unknown sender  
+4. Ambiguous property match  
+5. Missing information  
+6. Unauthorised chargeable request  
+7. Water/electrical hazard escalation  
+8. HubSpot timeout  
+9. Slack failure  
+10. Retry after successful write  
 
 ## Evaluation metrics
 
-- classification accuracy;
-- extraction accuracy;
-- routing accuracy;
-- approval-gating accuracy;
-- unsafe-action rate;
-- human override rate;
-- workflow success rate;
-- recovery success rate;
-- latency;
-- cost per request.
+Category accuracy; extraction accuracy; site-match accuracy; emergency-escalation recall; approval-gating accuracy; unsafe-action rate; workflow/recovery success; latency; cost. **Never invent values.**
 
 ## Security
 
-- environment variables;
-- secrets never committed;
-- least-privilege scopes;
-- separate test accounts;
-- role-based access;
-- RLS;
-- PII minimisation;
-- clear data-retention note;
-- model cannot directly perform sensitive writes;
-- approval and execution are separate states.
+Env secrets; least privilege; separate test accounts; RLS when dashboard auth lands; PII minimisation; model cannot execute protected writes; approval ≠ execution; vertical/document metadata isolation (planned).
 
-## Testing layers
+## Client vs synthetic
 
-- unit tests for business rules;
-- integration tests for APIs;
-- workflow tests with fixtures;
-- evaluation tests for LLM output;
-- end-to-end scenario tests;
-- manual usability tests.
+Synthetic demos must not be presented as production client results. Shadow mode and pilot controls belong in `client-delivery/` methodology.

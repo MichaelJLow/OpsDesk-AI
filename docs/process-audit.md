@@ -1,118 +1,105 @@
-# Process Audit — Northline Operations Inbox
+# Process Audit — Quayside Property Services
 
 ## Problem statement
 
-Northline Cloud receives sales, support and account-change requests through one shared inbox. Staff manually identify the sender, search HubSpot, find the correct procedure, decide ownership, draft a reply, update systems and chase follow-up. The process is slow, inconsistent and hard to audit.
+Quayside receives maintenance requests through one shared inbox. Staff manually identify the property, check who is asking and whether they can approve spend, search HubSpot and old emails, judge urgency from experience, chase contractors and leave weak audit trails. Work stalls without a clear owner or next action.
 
-## Manual workflow (before)
+## Current-state (manual) workflow
 
 ```text
-Inbound email arrives in shared Gmail inbox
+Inbound email / forward / photo arrives in shared Gmail
         ↓
-Someone notices it (or it sits unread)
+Someone notices it (or it waits)
         ↓
-Open email → guess intent from subject/body
+Guess property, unit, asset and urgency from messy text
         ↓
-Search HubSpot for sender / company (often incomplete)
+Search HubSpot / spreadsheets / previous mail
         ↓
-Ask Slack / colleagues who owns it
+Ask Slack who owns the client or site
         ↓
-Find policy or support article (ad hoc)
+Check warranty / agreement / access (ad hoc)
         ↓
-Draft reply in Gmail
+Draft reply or call contractor
         ↓
-Manually update HubSpot / create task
+Chase updates; evidence in random folders
         ↓
-Notify team in Slack (sometimes)
-        ↓
-No reliable timeline or recovery if a step fails
+No reliable timeline, ownership or approval record
 ```
 
 ### Bottlenecks
 
-1. **Discovery delay** — emails wait until someone checks the inbox.
-2. **Intent ambiguity** — sales vs support vs billing mixed together.
-3. **CRM friction** — repeated HubSpot searches; duplicate contacts risk.
-4. **Tribal knowledge** — routing depends on who is online.
-5. **Weak audit** — hard to prove what was decided or changed.
-6. **Unsafe writes** — billing changes can be executed without a clear approval gate.
-7. **No recovery path** — partial failures leave systems inconsistent.
+1. Discovery delay in the shared inbox  
+2. Ambiguous property / unit / asset references  
+3. Unclear requester authority for chargeable work  
+4. Tribal knowledge for urgency and contractor choice  
+5. Missing photos or access details  
+6. Weak audit of decisions and approvals  
+7. Inconsistent customer updates  
+8. No safe recovery when a step fails mid-flight  
 
 ### Why automate
 
-Automation should remove repetitive lookup and drafting work, enforce routing and approval rules, and leave a complete timeline — without handing irreversible actions to an LLM.
+Remove repetitive lookup and drafting; enforce safety and authorisation rules; leave a complete timeline—without letting an LLM dispatch contractors or approve spend.
 
 ---
 
-## Automated workflow (after)
+## Future-state (OpsDesk) workflow
 
 ```text
-Inbound Gmail message
+Inbound maintenance request (Gmail)
         ↓
-n8n receives and normalises (message ID, sender, subject, body, timestamp)
+n8n receives and normalises
         ↓
 Raw request stored in Supabase (idempotent on external_message_id)
         ↓
-LLM classifies intent and extracts structured fields
+AI extracts organisation, requester, site, asset, issue,
+urgency, access, safety indicators, missing information
         ↓
-Zod validates structured output (invalid → retry / human triage)
+Zod validates structured output
         ↓
-HubSpot customer/contact lookup
+HubSpot client/contact lookup
         ↓
-Policy or support context retrieved when needed
+Supabase site/asset/history/agreement context
         ↓
-Deterministic rules calculate route and approval requirements
+Deterministic rules: safety, authority, route, approval
         ↓
-LLM drafts response and proposes actions (propose only)
+AI proposes resolution plan + drafts communications
         ↓
-Slack notification to the owning team
+Human approval when risk, cost, ambiguity or authority requires it
         ↓
-Human approval where required (account changes)
+Slack / Gmail / HubSpot / work-order actions execute
         ↓
-Approved HubSpot / Gmail / Slack side effects execute
+Workflow events, decisions, evidence stored
         ↓
-Audit history, metrics and outcome stored
-        ↓
-Failures route to a recovery queue (safe replay, no duplicate writes)
+Failures → visible recovery queue
 ```
 
-### What AI does
+### Central question
 
-- Interpret messy language
-- Extract structured fields
-- Retrieve relevant context (later phases)
-- Draft replies and propose actions
+> Where is this request now, what is blocking it, and who or what must act next?
 
-### What deterministic logic does
+### AI vs rules vs humans
 
-- Schema validation
-- Routing constraints and thresholds
-- Authorisation for account changes
-- Idempotency and retry safety
-- Separation of recommendation, approval and execution
-
-### What humans do
-
-- Approve sensitive account changes
-- Handle low-confidence or ambiguous cases
-- Resolve exceptions and recovery queue items
+| Layer | Owns |
+|---|---|
+| **AI** | Interpret language, extract fields, retrieve context, draft, propose plans |
+| **Deterministic rules** | Safety escalation, authority, spend thresholds, blocked actions, routing constraints |
+| **Humans** | Approvals, ambiguity, exceptions, high-risk dispatch and spend |
 
 ---
 
-## First vertical slice (MVP)
+## First vertical slice
 
-Sales enquiry only:
+Routine boiler request only (see Master Brief §20). Urgent and chargeable flows follow after that path is reliable.
 
-```text
-Gmail → n8n → store → classify/extract → validate → HubSpot lookup
-  → route → Slack `#sales-enquiries` → draft → timeline
-```
+## Inspection portability (later)
 
-Support retrieval, billing approval and the full dashboard come after this path is reliable.
+The same audit structure applies to an inspection company; only vertical config, rule packs and domain panels change. Not in MVP build scope.
 
 ## Evidence
 
-| ID | Artefact | Location |
-|---|---|---|
-| EVID-001 | Manual process map | `docs/images/manual-process.md` (Mermaid source; PNG when exported) |
-| EVID-002 | Automated process map | `docs/images/automated-process.md` |
+| ID | Artefact |
+|---|---|
+| EVID-001 | Earlier generic manual map (historical) — `docs/images/manual-process.md` |
+| EVID-pm-01 | Property current-state map — to capture / version as Quayside diagrams |
+| EVID-pm-02 | Property future-state map |
