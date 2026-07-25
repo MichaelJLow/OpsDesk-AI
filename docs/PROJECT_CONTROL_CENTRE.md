@@ -3,9 +3,9 @@
 > This is the living source of truth for the project. Update it at the end of every meaningful build session.
 
 **Project:** OpsDesk AI — Quayside Property Services (property-maintenance vertical)  
-**Current phase:** Phase 1 / early Phase 3  
+**Current phase:** Phase 3 (happy path working; not exit-complete)  
 **Current milestone:** First working vertical slice (routine boiler maintenance)  
-**Overall status:** Paused — resume at Lesson 8 (HubSpot)  
+**Overall status:** Paused — resume tomorrow (polish / Phase 4 / approvals)  
 **Last updated:** 2026-07-24  
 **Next review:** 2026-07-31  
 **Remote:** https://github.com/MichaelJLow/OpsDesk-AI  
@@ -16,23 +16,23 @@
 
 ## This week's outcome
 
-> Lessons 1–7 done through Zod validation of boiler extraction. Next: HubSpot + property lookup.
+> Lessons 1–11 done — first Quayside routine boiler vertical slice end-to-end (Gmail → draft in `proposed_actions` + Slack notify).
 
 ## Current task
 
-- [ ] Lesson 8: HubSpot contact lookup.
+- [ ] Next session: choose polish (urgent route IF / evidence) vs human approval vs Phase 4 dashboard.
 
 ## Next three tasks
 
-- [ ] Lesson 9: Supabase property/site lookup
-- [ ] Lesson 10: Routine route + Slack `#maintenance-intake`
-- [ ] Lesson 11: Response draft + store
+- [ ] Optional: route IF on `suggestedRoute` → `#urgent-maintenance`
+- [ ] Capture one finished-workflow screenshot when ready for portfolio
+- [ ] Human approval gate or operator dashboard (Phase 4)
 
 ## Blockers
 
 | Blocker | Owner | Next action | Status |
 |---|---|---|---|
-| HubSpot / Slack accounts | Mike | ACCOUNT_SETUP_CHECKLIST — needed for Lessons 8–10 | Open |
+| None for happy path | — | — | Cleared (HubSpot + Slack done) |
 
 ---
 
@@ -94,15 +94,15 @@
 - [x] Structured AI classification added
 - [x] Zod validation added
 - [x] Invalid output handled
-- [ ] HubSpot lookup added
-- [ ] Slack notification added
-- [ ] Draft response created
+- [x] HubSpot lookup added
+- [x] Slack notification added
+- [x] Draft response created
 - [x] Workflow event timeline stored
 - [x] Duplicate email blocked
 - [ ] Failed integration visible
 - [ ] Failed integration retryable
 
-**Progress:** Lessons 1–7 done (through Zod + `validation_status=valid`). Lesson 8 = HubSpot contact lookup. Invalid branch wired (Mark invalid) but not formally regression-tested with bad JSON yet.
+**Progress:** Lessons 1–11 DONE — routine boiler path: Gmail → store → timeline → Gemini extract → Zod → HubSpot → site → Slack → draft → `proposed_actions`. Slice not formally “Phase 3 complete” until evidence/demo checklist and remaining Phase 3 items reviewed.
 
 ## Phase 4 — Operator dashboard
 
@@ -247,6 +247,9 @@ Update this immediately after producing useful evidence.
 | EVID-008 | 2026-07-24 | OAuth TLS failure then local workaround | FAIL-001 / DEC-008 | Reliability | [ ] pending |
 | EVID-009 | 2026-07-24 | Gemini structured boiler extraction JSON | *capture n8n Extract output* | Demo happy path | [ ] pending |
 | EVID-010 | 2026-07-24 | `request_extractions` + `validation_status=valid` | *capture Table Editor* | Reliability / Zod | [ ] pending |
+| EVID-011 | 2026-07-24 | Slack `#maintenance-intake` notify | *capture Slack message* | Demo happy path | [ ] pending |
+| EVID-012 | 2026-07-24 | `proposed_actions` draft_reply row | *capture Table Editor* | Demo happy path | [ ] pending |
+| EVID-013 | 2026-07-24 | Finished n8n canvas (full slice) | *capture when ready* | Portfolio | [ ] pending |
 
 ## Evidence types to collect
 
@@ -289,6 +292,7 @@ Keep detailed entries in `docs/decision-log.md`. Use this table as the index.
 | DEC-014 | 2026-07-24 | No schema migration until reviewed | Active | `docs/decision-log.md#dec-014` |
 | DEC-015 | 2026-07-24 | Gemini 2.5 Flash for free-tier extraction | Active | `docs/decision-log.md#dec-015` |
 | DEC-016 | 2026-07-24 | Zod via local automation-api `:3040` | Active | `docs/decision-log.md#dec-016` |
+| DEC-017 | 2026-07-24 | Minimal `sites` table for Lesson 9 lookup | Active | `docs/decision-log.md#dec-017` |
 
 A decision should be logged when it changes:
 
@@ -317,6 +321,9 @@ Keep detailed entries in `docs/failure-log.md`.
 | FAIL-004 | 2026-07-24 | Gemini 2.0 Flash `limit: 0` | Deprecated model on free tier | [x] use `gemini-2.5-flash` | Extraction JSON returns |
 | FAIL-005 | 2026-07-24 | IF boolean vs string `true` | Wrong IF value type | [x] Boolean compare | Valid path reaches Mark |
 | FAIL-006 | 2026-07-24 | PATCH extraction id / stuck `pending` | Array response; bad `.id` expr | [x] `[0].id` / re-test | `validation_status=valid` |
+| FAIL-007 | 2026-07-24 | Supabase site lookup PGRST100 `filter (*)` | Query Name/Value swapped in n8n | [x] URL-style filters | Riverside Court row returns |
+| FAIL-008 | 2026-07-24 | Draft Gemini grey / “node unexecuted” | Fake wire or solo execute | [x] Re-hook + full run | Draft + `proposed_actions` |
+| FAIL-009 | 2026-07-24 | Store draft “JSON Body” was a URL | URL pasted into body field | [x] Body = action JSON | Row in `proposed_actions` |
 
 Every meaningful failure should produce at least one of:
 
@@ -390,35 +397,37 @@ Complete once per week.
 
 ## What shipped?
 
-- Quayside Property Services docs pivot + `client-delivery/` toolkit
-- n8n Lessons 1–7: Gmail → store → duplicate guard → timeline → Gemini extract → parse → `request_extractions` → Zod → `validation_status=valid`
-- `automation-api` HTTP validate on `:3040`
-- DEC-009–016; FAIL-001–006
+- Quayside docs pivot + `client-delivery/` toolkit (prior)
+- n8n Lessons 1–11 happy path: Gmail → store → timeline → Gemini extract → Zod → HubSpot → `sites` → Slack → draft → `proposed_actions`
+- HubSpot Legacy Private App + Slack OpsDesk Lab workspace
+- Minimal `sites` migration + Riverside Court seed
+- DEC-015–017; FAIL-004–009
 
 ## What did not ship?
 
-- HubSpot / Slack accounts
-- Lessons 8–11 (lookup, route, Slack, draft)
+- Phase 3 exit (failures visible/retryable; full evidence pack)
+- Human approval before send
+- Urgent-route channel split
+- Operator dashboard (Phase 4)
 - Formal bad-JSON invalid-path regression
-- Portfolio screenshots EVID-005–010 filed
 
 ## Most important learning
 
-- Reference named nodes (`$('Edit Fields')`, `$('Insert request')`); Supabase representation often returns arrays (`[0].id`)
-- Duplicate HTTP nodes instead of retyping Supabase headers
-- Free-tier Gemini model ids go stale — pin current Flash (2.5)
+- Lab day ≠ client engagement calendar; price outcome not raw n8n hours
+- n8n: verify connection hooks; prefer URL query for Supabase filters; use `.first()` across IF branches
+- Client delivery: they own n8n + OAuth/Private App/bot tokens
 
 ## Most important failure
 
-- FAIL-004 model quota 0; FAIL-006 PATCH left status `pending` until id expression fixed
+- FAIL-007/008/009 late-slice wiring and body mix-ups (all fixed)
 
 ## Evidence captured
 
-- Mermaid sources EVID-001–003; screenshots EVID-005–010 still pending
+- Working demo in n8n/Slack/Supabase; screenshots EVID-005–013 still pending file
 
 ## Decisions made
 
-- DEC-009–016 (Quayside, seams, Gemini 2.5, Zod via automation-api)
+- DEC-017 minimal sites table; pricing discussion (not a DEC) — opening UK SMB pilot ~£4.5k band
 
 ## Metrics changed
 
@@ -426,17 +435,17 @@ Complete once per week.
 
 ## Scope risks
 
-- Do not start inspection vertical; do not migrate schema without review
+- Do not mark Phase 3 complete; do not auto-send email or dispatch contractors
 
 ## Next week's single outcome
 
-> Lesson 8 HubSpot contact lookup, then property/site lookup toward routine Slack notify.
+> Polish slice for demo (approval or evidence) or start Phase 4 dashboard — pick one.
 
 ## Three committed tasks
 
-- [ ] Create HubSpot test account + Quayside contact
-- [ ] Lesson 8 HubSpot lookup by sender email
-- [ ] Capture EVID-009–010 (extraction + valid status)
+- [ ] Choose next track: urgent IF / approval gate / dashboard
+- [ ] Capture EVID-011–013 when convenient
+- [ ] Keep client-delivery pricing notes mental model (~£4–5k pilot)
 
 ---
 

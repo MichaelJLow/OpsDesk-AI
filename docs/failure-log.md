@@ -101,4 +101,43 @@ Meaningful failures found while building OpsDesk AI. Index also maintained in `P
 | Regression test | Full workflow → Table Editor shows `valid` on latest extraction |
 | Evidence | Manual hard-coded PATCH then expression fix (2026-07-24) |
 
+### FAIL-007 — Site lookup query params Name/Value swapped
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-24 |
+| Scenario | Lesson 9 — Lookup site HTTP GET |
+| Symptom | PGRST100 `failed to parse filter (*)` |
+| Root cause | n8n query field **Name** held `eq.Riverside Court` and **Value** held `*`, producing `?eq.Riverside Court=*` |
+| Production risk | All PostgREST filters fail silently in UI misconfig |
+| Fix | Prefer full URL `.../sites?name=eq.Riverside%20Court` (or Name=`name`, Value=`eq.…`) |
+| Regression test | Lookup returns Riverside Court row |
+| Evidence | n8n 400 + screenshot of swapped fields |
+
+### FAIL-008 — Draft node grey despite “connected”
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-24 |
+| Scenario | Lesson 11 — Draft reply with Gemini after Slack |
+| Symptom | Workflow green through Slack; Draft never executes; solo execute says Parse extraction unexecuted |
+| Root cause | Connection looked attached but arrow not hooked; solo step cannot see upstream nodes |
+| Production risk | Silent missing draft/notify steps in “completed” runs |
+| Fix | Re-hook Slack → Draft; always **Execute workflow** end-to-end to verify |
+| Regression test | Draft green; text in Gemini output |
+| Evidence | Canvas screenshot with grey Draft |
+
+### FAIL-009 — Store draft JSON body contained URL
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-24 |
+| Scenario | Lesson 11 — Store proposed_actions |
+| Symptom | `JSON Body` not valid JSON; starts with `https://ff…` |
+| Root cause | Supabase URL pasted into body field when duplicating HTTP node |
+| Production risk | Failed writes; confusing errors at end of long workflows |
+| Fix | URL field = `.../proposed_actions`; body = action fields / JSON |
+| Regression test | Row appears in `proposed_actions` with `draft_reply` |
+| Evidence | n8n NodeOperationError text |
+
 

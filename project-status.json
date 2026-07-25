@@ -4,41 +4,34 @@
   "vertical": "property-maintenance",
   "repository": "https://github.com/MichaelJLow/OpsDesk-AI",
   "phase": 3,
-  "phaseName": "First vertical slice (in progress)",
+  "phaseName": "First vertical slice (happy path working)",
   "milestone": "First working vertical slice — routine boiler maintenance",
   "status": "paused",
-  "currentTask": "Lesson 8: HubSpot contact lookup",
+  "currentTask": "Next session: polish (urgent IF / evidence) vs approval gate vs Phase 4 dashboard",
   "nextTasks": [
-    "Lesson 9: Supabase property/site lookup",
-    "Lesson 10: Routine route + Slack #maintenance-intake",
-    "Lesson 11: Response draft + store"
+    "Optional suggestedRoute IF to #urgent-maintenance",
+    "Capture finished-workflow + Slack + proposed_actions screenshots",
+    "Human approval gate or operator dashboard"
   ],
-  "blockers": [
-    {
-      "id": "accounts",
-      "summary": "HubSpot / Slack not created",
-      "owner": "Mike",
-      "nextAction": "docs/ACCOUNT_SETUP_CHECKLIST.md"
-    }
-  ],
+  "blockers": [],
   "lastUpdated": "2026-07-24",
   "phase0Complete": true,
   "phase1Complete": false,
   "phase2Complete": false,
   "phase3Complete": false,
-  "verticalSliceComplete": false,
+  "verticalSliceHappyPathComplete": true,
   "inspectionVerticalStarted": false,
-  "estimatedOverallPercent": "22-25",
-  "estimatedVerticalSlicePercent": "60-65",
-  "decisions": ["DEC-001", "DEC-002", "DEC-003", "DEC-004", "DEC-005", "DEC-006", "DEC-007", "DEC-008", "DEC-009", "DEC-010", "DEC-011", "DEC-012", "DEC-013", "DEC-014", "DEC-015", "DEC-016"],
-  "failures": ["FAIL-001", "FAIL-002", "FAIL-003", "FAIL-004", "FAIL-005", "FAIL-006"],
+  "estimatedOverallPercent": "30-35",
+  "estimatedVerticalSlicePercent": "85-90",
+  "decisions": ["DEC-001", "DEC-002", "DEC-003", "DEC-004", "DEC-005", "DEC-006", "DEC-007", "DEC-008", "DEC-009", "DEC-010", "DEC-011", "DEC-012", "DEC-013", "DEC-014", "DEC-015", "DEC-016", "DEC-017"],
+  "failures": ["FAIL-001", "FAIL-002", "FAIL-003", "FAIL-004", "FAIL-005", "FAIL-006", "FAIL-007", "FAIL-008", "FAIL-009"],
   "evidence": ["EVID-001", "EVID-002", "EVID-003"],
-  "evidencePendingCapture": ["EVID-005", "EVID-006", "EVID-007", "EVID-008", "EVID-009", "EVID-010"],
+  "evidencePendingCapture": ["EVID-005", "EVID-006", "EVID-007", "EVID-008", "EVID-009", "EVID-010", "EVID-011", "EVID-012", "EVID-013"],
   "notes": [
-    "Session paused 2026-07-24 after Lessons 1-7; resume at Lesson 8 HubSpot",
-    "Quayside docs pivot + client-delivery/ toolkit",
-    "automation-api validate on :3040 (must be running for Zod step)",
-    "Duplicate Supabase HTTP nodes instead of retyping headers",
-    "No schema migration applied"
+    "End-session 2026-07-24 evening: Lessons 1-11 happy path complete",
+    "HubSpot + Slack + minimal sites + proposed_actions draft_reply",
+    "UK SMB pilot pricing discussion ~£4-5k fixed (not a DEC)",
+    "automation-api :3040 required for Zod; n8n local Docker",
+    "Phase 3 exit not met (retry/failure UX, evidence pack)"
   ]
 }

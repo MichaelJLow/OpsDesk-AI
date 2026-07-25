@@ -22,8 +22,8 @@ Fictional company: **Quayside Property Services** (property-maintenance vertical
 | GitHub OpsDesk-AI | [x] | |
 | Supabase | [x] | Project `ffcwzhntzdypketzfldo`; schema applied |
 | Gmail OpsDesk label | [x] | `mikelow92+opsdesk@gmail.com` |
-| HubSpot | [ ] | Client orgs/contacts for Quayside |
-| Slack | [ ] | `#maintenance-intake` `#urgent-maintenance` `#approval-queue` `#automation-alerts` |
+| HubSpot | [x] | Free CRM + contact; Legacy Private App token in `.env` |
+| Slack | [x] | Workspace + OpsDesk AI app; bot in `#maintenance-intake`; token in `.env` |
 | Gemini (or chosen LLM) | [x] | API key in local `.env` (`GEMINI_API_KEY`) |
 | Vercel / Sentry | [ ] | Later |
 

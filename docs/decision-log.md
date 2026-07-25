@@ -434,3 +434,24 @@ n8n must not silently accept LLM JSON. Validation belongs in TypeScript (Zod), n
 
 Must run automation-api locally during n8n tests. Later: containerise or deploy beside app.
 
+---
+
+## DEC-017 — Minimal `sites` table for property lookup
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-24 |
+| Status | Active |
+
+### Context
+
+Lesson 9 needed a Supabase property match for `siteReference` (Riverside Court). Full sites/assets/jobs migration still deferred.
+
+### Chosen approach
+
+Small `sites` table + unique lower(name) index + seed Riverside Court (`supabase/migrations/20260725000000_sites_minimal.sql`). Lookup via GET URL filters (not n8n query-fields UI).
+
+### Trade-offs
+
+Not the full vertical schema; companies table unused for site match. Expand later with reviewed migration.
+
