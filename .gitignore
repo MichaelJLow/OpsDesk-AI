@@ -25,6 +25,7 @@ n8n_data/
 .next/
 out/
 .turbo/
+.vercel/
 coverage/
 .nyc_output/
 *.tsbuildinfo

@@ -75,8 +75,10 @@ const server = createServer(async (req, res) => {
   send(res, 404, { error: "Not found" });
 });
 
-server.listen(port, () => {
-  console.log(`automation-api listening on http://127.0.0.1:${port}`);
+const host = process.env.AUTOMATION_API_HOST ?? "0.0.0.0";
+
+server.listen(port, host, () => {
+  console.log(`automation-api listening on http://${host}:${port}`);
   console.log(`  GET  /health`);
   console.log(`  POST /v1/validate/extraction`);
 });

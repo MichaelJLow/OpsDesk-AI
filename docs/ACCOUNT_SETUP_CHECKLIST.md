@@ -25,7 +25,20 @@ Fictional company: **Quayside Property Services** (property-maintenance vertical
 | HubSpot | [x] | Free CRM + contact; Legacy Private App token in `.env` |
 | Slack | [x] | Workspace + OpsDesk AI app; bot in `#maintenance-intake`; token in `.env` |
 | Gemini (or chosen LLM) | [x] | API key in local `.env` (`GEMINI_API_KEY`) |
-| Vercel / Sentry | [ ] | Later |
+| Vercel | [x] | Dashboard: https://opsdesk-quayside.vercel.app |
+| Sentry | [ ] | Later |
+| n8n VPS | [x] | https://n8n.michaeljlow.com — see **n8n VPS login** below |
+
+## n8n VPS login (reminder)
+
+| Item | Value |
+|---|---|
+| URL | https://n8n.michaeljlow.com |
+| Owner login email | `mikelow92@gmail.com` |
+| Host | Hetzner VPS `46.225.225.118` (SSH port `48482`) |
+| automation-api | Docker `opsdesk-automation-api` on network `opsdesk`; Validate URL `http://opsdesk-automation-api:3040/v1/validate/extraction` |
+
+Do not put passwords or API tokens in this file.
 
 ## Sample messages (property)
 

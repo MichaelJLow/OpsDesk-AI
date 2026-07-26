@@ -140,4 +140,17 @@ Meaningful failures found while building OpsDesk AI. Index also maintained in `P
 | Regression test | Row appears in `proposed_actions` with `draft_reply` |
 | Evidence | n8n NodeOperationError text |
 
+### FAIL-010 — Zod Validate uses `host.docker.internal` on VPS
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-26 |
+| Scenario | VPS intake after import — Validate HTTP node |
+| Symptom | Request lands in desk (store OK); pipeline stops at Validate; no Slack/draft |
+| Root cause | Node still called `http://host.docker.internal:3040/...` (local Docker Desktop only). No automation-api on VPS. |
+| Production risk | Partial intake looks “working” in inbox while CRM/Slack/draft never run |
+| Fix | Deploy `opsdesk-automation-api` on `opsdesk` network; Validate URL → `http://opsdesk-automation-api:3040/v1/validate/extraction` (DEC-020) |
+| Regression test | Manual Execute past Validate → HubSpot → Slack → draft; then published poll E2E |
+| Evidence | Red Validate node; desk row without draft |
+
 

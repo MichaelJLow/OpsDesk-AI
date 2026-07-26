@@ -1,0 +1,28 @@
+# OpsDesk automation-api — run beside n8n on the same Docker network.
+# From this directory:
+#   docker compose up -d --build
+#
+# Then point n8n Validate HTTP node at:
+#   http://opsdesk-automation-api:3040/v1/validate/extraction
+# and attach opsdesk-n8n to the opsdesk network if it isn't already:
+#   docker network connect opsdesk opsdesk-n8n
+
+services:
+  automation-api:
+    build: .
+    image: opsdesk-automation-api:local
+    container_name: opsdesk-automation-api
+    restart: unless-stopped
+    environment:
+      AUTOMATION_API_PORT: "3040"
+      AUTOMATION_API_HOST: "0.0.0.0"
+    # Host-only bind — n8n reaches it via Docker network DNS, not this port.
+    ports:
+      - "127.0.0.1:3040:3040"
+    networks:
+      - opsdesk
+
+networks:
+  opsdesk:
+    name: opsdesk
+    driver: bridge

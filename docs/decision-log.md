@@ -506,3 +506,28 @@ Phase 3 exit required failed integrations to be visible and retryable. Slack ale
 
 Depends on n8n writing failure events correctly. Retry semantics are thin (webhook + coaching), not automatic backoff.
 
+---
+
+## DEC-020 — Host n8n on VPS + automation-api sidecar
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-26 |
+| Status | Active |
+
+### Context
+
+Local Docker n8n cannot receive hiring-manager webhook traffic from Vercel, and Gmail OAuth against a raw IP is blocked. Portfolio needs a real always-on automation host.
+
+### Chosen approach
+
+- n8n CE on Hetzner behind Caddy at **https://n8n.michaeljlow.com**
+- Owner account: **`mikelow92@gmail.com`**
+- `automation-api` as Docker service `opsdesk-automation-api` on shared `opsdesk` network (DEC-016 extended off-localhost)
+- Vercel `N8N_SEND_WEBHOOK_URL` / `N8N_RETRY_WEBHOOK_URL` point at the VPS production webhooks
+- Keep local n8n for editing/learning; only one intake workflow published against the shared Gmail inbox
+
+### Trade-offs
+
+Ops burden (SSH, disk, DNS, OAuth redirect URIs). Shared Supabase means local + VPS can race on duplicates if both poll.
+

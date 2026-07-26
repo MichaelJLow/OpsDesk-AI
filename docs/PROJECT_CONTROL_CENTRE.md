@@ -3,9 +3,9 @@
 > This is the living source of truth for the project. Update it at the end of every meaningful build session.
 
 **Project:** OpsDesk AI — Quayside Property Services (property-maintenance vertical)  
-**Current phase:** Phase 3 (happy path working; not exit-complete)  
+**Current phase:** Phase 3 (happy path hosted; exit polish remaining)  
 **Current milestone:** First working vertical slice (routine boiler maintenance)  
-**Overall status:** In progress — operator dashboard (auth + CRM + protected send)  
+**Overall status:** In progress — hosted E2E proven (Vercel desk + VPS n8n)  
 **Last updated:** 2026-07-26  
 **Next review:** 2026-07-31  
 **Remote:** https://github.com/MichaelJLow/OpsDesk-AI  
@@ -16,23 +16,23 @@
 
 ## This week's outcome
 
-> Operator dashboard: inbox, workspace, CRM context, approve/reject, protected send.
+> Hosted Quayside ops: Vercel desk + VPS n8n intake/send/retry with Zod sidecar.
 
 ## Current task
 
-- [x] Failed integration visible + retryable (DEC-019)
+- [ ] Urgent / hazard branch (Phase 6 property path) — next build session
 
 ## Next three tasks
 
-- [ ] n8n Lesson 12: wire error write + retry webhook (coach in learning path)
-- [ ] Loom / evidence at end of build
-- [ ] Host dashboard (Vercel) when ready to share
+- [ ] Urgent / hazard IF → `#urgent-maintenance` + desk behaviour
+- [ ] Lesson 12A: intake writes `needs_attention` + error timeline on HubSpot/Slack fail
+- [ ] Loom / evidence capture (end of build)
 
 ## Blockers
 
 | Blocker | Owner | Next action | Status |
 |---|---|---|---|
-| None for happy path | — | — | Cleared (HubSpot + Slack done) |
+| None | — | — | Clear |
 
 ---
 
@@ -102,7 +102,7 @@
 - [x] Failed integration visible
 - [x] Failed integration retryable
 
-**Progress:** Lessons 1–11 DONE + dashboard failure banner/retry (DEC-019). n8n error-write + retry webhook still to wire in UI (Lesson 12).
+**Progress:** Lessons 1–11 DONE + dashboard failure banner/retry (DEC-019). Thin retry webhook on VPS proven. Intake error-write (12A) still optional polish. **2026-07-26:** VPS n8n + automation-api + Vercel webhooks — full poll → desk → Approve → Send E2E.
 
 ## Phase 4 — Operator dashboard
 
@@ -117,7 +117,7 @@
 
 **Progress:** Inbox, workspace, CRM, extraction, draft approve/reject/send, timeline, demo reset, staff login (Supabase Auth). Service role for data; RLS deferred (DEC-018).
 
-**Exit condition:** A hiring manager can understand the system without opening n8n. **Met for lab MVP** — public host unblocked once deployed with Auth users.
+**Exit condition:** A hiring manager can understand the system without opening n8n. **Met for lab MVP** — hosted at https://opsdesk-quayside.vercel.app with Supabase Auth.
 
 ## Phase 5 — Support workflow
 
@@ -297,6 +297,7 @@ Keep detailed entries in `docs/decision-log.md`. Use this table as the index.
 | DEC-017 | 2026-07-24 | Minimal `sites` table for Lesson 9 lookup | Active | `docs/decision-log.md#dec-017` |
 | DEC-018 | 2026-07-26 | Staff login via Supabase Auth (invite-only; RLS deferred) | Active | `docs/decision-log.md#dec-018` |
 | DEC-019 | 2026-07-26 | Failures via workflow_events + needs_attention; retry webhook | Active | `docs/decision-log.md#dec-019` |
+| DEC-020 | 2026-07-26 | Host n8n on VPS + automation-api sidecar | Active | `docs/decision-log.md#dec-020` |
 
 A decision should be logged when it changes:
 
@@ -328,6 +329,7 @@ Keep detailed entries in `docs/failure-log.md`.
 | FAIL-007 | 2026-07-24 | Supabase site lookup PGRST100 `filter (*)` | Query Name/Value swapped in n8n | [x] URL-style filters | Riverside Court row returns |
 | FAIL-008 | 2026-07-24 | Draft Gemini grey / “node unexecuted” | Fake wire or solo execute | [x] Re-hook + full run | Draft + `proposed_actions` |
 | FAIL-009 | 2026-07-24 | Store draft “JSON Body” was a URL | URL pasted into body field | [x] Body = action JSON | Row in `proposed_actions` |
+| FAIL-010 | 2026-07-26 | Zod Validate dies on VPS | `host.docker.internal` / no API | [x] `opsdesk-automation-api` | Validate → Slack → draft |
 
 Every meaningful failure should produce at least one of:
 
@@ -419,19 +421,20 @@ Complete once per week.
 
 - Lab day ≠ client engagement calendar; price outcome not raw n8n hours
 - n8n: verify connection hooks; prefer URL query for Supabase filters; use `.first()` across IF branches
+- Hosted path: local-only URLs (`host.docker.internal`) must be replaced for VPS; one published intake only against shared Gmail
 - Client delivery: they own n8n + OAuth/Private App/bot tokens
 
 ## Most important failure
 
-- FAIL-007/008/009 late-slice wiring and body mix-ups (all fixed)
+- FAIL-010 Zod Validate on VPS (partial inbox insert looked “done”) — fixed with automation-api sidecar
 
 ## Evidence captured
 
-- Working demo in n8n/Slack/Supabase; screenshots EVID-005–013 still pending file
+- Hosted E2E proven (poll → desk → approve → send); screenshot files EVID-005–013 still pending
 
 ## Decisions made
 
-- DEC-017 minimal sites table; pricing discussion (not a DEC) — opening UK SMB pilot ~£4.5k band
+- DEC-020 VPS n8n + automation-api; DEC-017 minimal sites; pricing notes (~£4.5k pilot band)
 
 ## Metrics changed
 
@@ -439,17 +442,17 @@ Complete once per week.
 
 ## Scope risks
 
-- Do not mark Phase 3 complete; do not auto-send email or dispatch contractors
+- Phase 3 not formally exit-complete (evidence + optional 12A). Do not auto-send without approve. Local + VPS dual-poll risk.
 
 ## Next week's single outcome
 
-> Polish slice for demo (approval or evidence) or start Phase 4 dashboard — pick one.
+> Urgent / hazard branch for Quayside (second route + Slack channel).
 
 ## Three committed tasks
 
-- [ ] Choose next track: urgent IF / approval gate / dashboard
-- [ ] Capture EVID-011–013 when convenient
-- [ ] Keep client-delivery pricing notes mental model (~£4–5k pilot)
+- [ ] Urgent / hazard IF → `#urgent-maintenance`
+- [ ] Lesson 12A intake failure write (optional polish)
+- [ ] Capture EVID screenshots / Loom at end of build
 
 ---
 
@@ -460,13 +463,13 @@ Complete this after every meaningful build session.
 - [x] Current task status updated.
 - [x] New decisions logged.
 - [x] Failures logged.
-- [ ] Tests added or updated. — none automated this session; manual checks only
-- [ ] Evidence captured. — sources yes; screenshots pending EVID-005–008
+- [ ] Tests added or updated. — none automated; manual hosted E2E only
+- [ ] Evidence captured. — E2E proven live; screenshot files EVID-005–013 still pending
 - [ ] Useful screenshots renamed and filed.
 - [x] Metric changes recorded. — none; left blank honestly
-- [ ] README/progress section updated where relevant.
+- [x] README/progress section updated where relevant. — n8n README + account checklist
 - [x] Next task written clearly.
-- [ ] Work committed to Git. — recommend commit below; not pushed this close-out
+- [x] Work committed to Git. — this end-session + push
 
 Recommended commit format:
 

@@ -1,6 +1,19 @@
-# Local n8n
+# n8n (local + VPS)
 
-## Start
+## VPS (production lab)
+
+| Item | Value |
+|---|---|
+| UI | https://n8n.michaeljlow.com |
+| Owner login | `mikelow92@gmail.com` |
+| SSH | `ssh root@46.225.225.118 -p 48482` |
+| Container | `opsdesk-n8n` (data: `/home/hermes/n8n-data`) |
+| Zod API | `opsdesk-automation-api` — see `services/automation-api/docker-compose.yml` |
+| Validate URL (from n8n) | `http://opsdesk-automation-api:3040/v1/validate/extraction` |
+
+Keep local Docker unpublished when VPS intake is published (same Gmail + same Supabase).
+
+## Local start
 
 ```powershell
 docker compose -f n8n/docker-compose.yml up -d
