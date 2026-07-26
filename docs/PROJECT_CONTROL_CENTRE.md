@@ -5,8 +5,8 @@
 **Project:** OpsDesk AI — Quayside Property Services (property-maintenance vertical)  
 **Current phase:** Phase 3 (happy path working; not exit-complete)  
 **Current milestone:** First working vertical slice (routine boiler maintenance)  
-**Overall status:** Paused — resume tomorrow (polish / Phase 4 / approvals)  
-**Last updated:** 2026-07-24  
+**Overall status:** In progress — operator dashboard (auth + CRM + protected send)  
+**Last updated:** 2026-07-26  
 **Next review:** 2026-07-31  
 **Remote:** https://github.com/MichaelJLow/OpsDesk-AI  
 
@@ -16,17 +16,17 @@
 
 ## This week's outcome
 
-> Lessons 1–11 done — first Quayside routine boiler vertical slice end-to-end (Gmail → draft in `proposed_actions` + Slack notify).
+> Operator dashboard: inbox, workspace, CRM context, approve/reject, protected send.
 
 ## Current task
 
-- [ ] Next session: choose polish (urgent route IF / evidence) vs human approval vs Phase 4 dashboard.
+- [x] Failed integration visible + retryable (DEC-019)
 
 ## Next three tasks
 
-- [ ] Optional: route IF on `suggestedRoute` → `#urgent-maintenance`
-- [ ] Capture one finished-workflow screenshot when ready for portfolio
-- [ ] Human approval gate or operator dashboard (Phase 4)
+- [ ] n8n Lesson 12: wire error write + retry webhook (coach in learning path)
+- [ ] Loom / evidence at end of build
+- [ ] Host dashboard (Vercel) when ready to share
 
 ## Blockers
 
@@ -99,23 +99,25 @@
 - [x] Draft response created
 - [x] Workflow event timeline stored
 - [x] Duplicate email blocked
-- [ ] Failed integration visible
-- [ ] Failed integration retryable
+- [x] Failed integration visible
+- [x] Failed integration retryable
 
-**Progress:** Lessons 1–11 DONE — routine boiler path: Gmail → store → timeline → Gemini extract → Zod → HubSpot → site → Slack → draft → `proposed_actions`. Slice not formally “Phase 3 complete” until evidence/demo checklist and remaining Phase 3 items reviewed.
+**Progress:** Lessons 1–11 DONE + dashboard failure banner/retry (DEC-019). n8n error-write + retry webhook still to wire in UI (Lesson 12).
 
 ## Phase 4 — Operator dashboard
 
-- [ ] Operations Inbox
-- [ ] Request Workspace
-- [ ] CRM context panel
-- [ ] Structured extraction panel
-- [ ] Draft response panel
-- [ ] Workflow Timeline
-- [ ] Loading, empty and error states
-- [ ] Demo data reset
+- [x] Operations Inbox
+- [x] Request Workspace
+- [x] CRM context panel
+- [x] Structured extraction panel
+- [x] Draft response panel
+- [x] Workflow Timeline
+- [x] Loading, empty and error states
+- [x] Demo data reset
 
-**Exit condition:** A hiring manager can understand the system without opening n8n.
+**Progress:** Inbox, workspace, CRM, extraction, draft approve/reject/send, timeline, demo reset, staff login (Supabase Auth). Service role for data; RLS deferred (DEC-018).
+
+**Exit condition:** A hiring manager can understand the system without opening n8n. **Met for lab MVP** — public host unblocked once deployed with Auth users.
 
 ## Phase 5 — Support workflow
 
@@ -293,6 +295,8 @@ Keep detailed entries in `docs/decision-log.md`. Use this table as the index.
 | DEC-015 | 2026-07-24 | Gemini 2.5 Flash for free-tier extraction | Active | `docs/decision-log.md#dec-015` |
 | DEC-016 | 2026-07-24 | Zod via local automation-api `:3040` | Active | `docs/decision-log.md#dec-016` |
 | DEC-017 | 2026-07-24 | Minimal `sites` table for Lesson 9 lookup | Active | `docs/decision-log.md#dec-017` |
+| DEC-018 | 2026-07-26 | Staff login via Supabase Auth (invite-only; RLS deferred) | Active | `docs/decision-log.md#dec-018` |
+| DEC-019 | 2026-07-26 | Failures via workflow_events + needs_attention; retry webhook | Active | `docs/decision-log.md#dec-019` |
 
 A decision should be logged when it changes:
 

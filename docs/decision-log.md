@@ -455,3 +455,54 @@ Small `sites` table + unique lower(name) index + seed Riverside Court (`supabase
 
 Not the full vertical schema; companies table unused for site match. Expand later with reviewed migration.
 
+---
+
+## DEC-018 — Staff login via Supabase Auth (invite-only gate)
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-26 |
+| Status | Active |
+
+### Context
+
+Dashboard was open on localhost with service-role data access. A public host (e.g. Vercel) needs a staff gate before any hiring-manager URL.
+
+### Alternatives considered
+
+- Shared env password / HTTP basic auth
+- Auth.js credentials provider
+- Supabase Auth email/password with middleware
+
+### Chosen approach
+
+**Supabase Auth** email/password, invite-only (create users in Supabase Dashboard; no public sign-up UI). Next.js middleware refreshes session and redirects anonymous users to `/login`. Service role remains for OpsDesk table reads/writes after login; **RLS deferred**.
+
+### Trade-offs
+
+Auth is an application gate, not row-level security yet. Compromised service role still bypasses Auth. Acceptable for lab; add RLS before multi-tenant production.
+
+---
+
+## DEC-019 — Integration failures via timeline + retry webhook
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-26 |
+| Status | Active |
+
+### Context
+
+Phase 3 exit required failed integrations to be visible and retryable. Slack alerts alone are not enough for the operator desk / hiring-manager demo.
+
+### Chosen approach
+
+- On failure: `requests.status = needs_attention` and `workflow_events` with `status = error`  
+- Dashboard: inbox attention count, workspace failure banner, emphasised error timeline rows  
+- Retry: authenticated **Retry** POSTs to `N8N_RETRY_WEBHOOK_URL` (n8n resumes from a safe step; not full Gmail re-ingest)  
+- Full Phase 7 recovery queue / DLQ deferred
+
+### Trade-offs
+
+Depends on n8n writing failure events correctly. Retry semantics are thin (webhook + coaching), not automatic backoff.
+

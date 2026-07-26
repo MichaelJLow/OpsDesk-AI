@@ -1,0 +1,385 @@
+:root {
+  --bg: #e8eef2;
+  --surface: #f7fafb;
+  --ink: #14212b;
+  --muted: #5a6b78;
+  --line: #c5d0d8;
+  --accent: #0d6e6e;
+  --accent-ink: #f4fbfb;
+  --danger: #8b2e2e;
+  --ok: #1f6b3a;
+  --warn: #8a5a12;
+  --font: "Segoe UI", "Helvetica Neue", sans-serif;
+  --mono: "Cascadia Mono", "Consolas", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background:
+    radial-gradient(ellipse 80% 50% at 10% -10%, #d4e4ea 0%, transparent 55%),
+    linear-gradient(180deg, #eef3f6 0%, var(--bg) 100%);
+  color: var(--ink);
+  font-family: var(--font);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+code,
+.mono {
+  font-family: var(--mono);
+  font-size: 0.9em;
+}
+
+.shell {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.25rem 1.5rem 3rem;
+}
+
+.topbar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.brand strong {
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+}
+
+.brand span {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.nav a {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.topbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.topbar-email {
+  font-size: 0.8rem;
+}
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0 3rem;
+}
+
+.login-panel {
+  width: min(24rem, 100%);
+  margin-bottom: 0;
+}
+
+.login-form {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.login-label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.login-label .note-input {
+  width: 100%;
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 1rem 1.15rem;
+  margin-bottom: 1rem;
+}
+
+.panel h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+}
+
+.panel-subhead {
+  margin: 1rem 0 0.45rem;
+  font-size: 0.8rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.panel-subhead:first-of-type {
+  margin-top: 0.25rem;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 0.65rem 0.5rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.table th {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.45rem;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  font-size: 0.75rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.badge-proposed {
+  border-color: var(--warn);
+  color: var(--warn);
+}
+
+.badge-approved {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+
+.badge-sent {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.badge-attention {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.badge-rejected {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.failure-banner {
+  border: 1px solid var(--danger);
+  color: var(--ink);
+  background: #fbf2f2;
+  padding: 0.85rem 1rem;
+  margin-bottom: 0;
+}
+
+.timeline-error {
+  background: #fbf2f2;
+  margin: 0 -0.25rem;
+  padding: 0.55rem 0.25rem;
+}
+
+.attention-count {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+}
+
+.stack {
+  display: grid;
+  gap: 1rem;
+}
+
+.grid-2 {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 860px) {
+  .grid-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: #eef3f6;
+  border: 1px solid var(--line);
+  padding: 0.85rem;
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.kv {
+  display: grid;
+  grid-template-columns: 9rem 1fr;
+  gap: 0.35rem 0.75rem;
+  font-size: 0.92rem;
+}
+
+.kv dt {
+  color: var(--muted);
+}
+
+.kv dd {
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+  margin-top: 0.85rem;
+}
+
+.btn {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  padding: 0.45rem 0.9rem;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.btn:hover {
+  background: #eef3f6;
+}
+
+.btn-approve {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.btn-approve:hover {
+  filter: brightness(1.05);
+}
+
+.btn-reject {
+  background: #fff;
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.btn-danger {
+  background: #fff;
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: #fbf2f2;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.inbox-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.reset-demo {
+  max-width: 16rem;
+  text-align: right;
+}
+
+.error-inline {
+  color: var(--danger);
+  margin: 0.35rem 0 0;
+  font-size: 0.85rem;
+}
+
+.ok-inline {
+  color: var(--ok);
+  margin: 0.35rem 0 0;
+  font-size: 0.85rem;
+}
+
+.note-input {
+  width: min(28rem, 100%);
+  padding: 0.4rem 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  font: inherit;
+}
+
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.timeline li {
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.9rem;
+}
+
+.timeline li:last-child {
+  border-bottom: none;
+}
+
+.error-banner {
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  background: #fbf2f2;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+}
