@@ -22,7 +22,7 @@
 
 - `/start-session` and `/end-session`  
 - One current task; preserve scope  
-- Manual n8n learning path: [`N8N_MANUAL_LEARNING_PATH.md`](N8N_MANUAL_LEARNING_PATH.md)  
+- n8n workflow runbook: [`N8N_WORKFLOW_RUNBOOK.md`](N8N_WORKFLOW_RUNBOOK.md)  
 
 ## Current implementation (honest)
 

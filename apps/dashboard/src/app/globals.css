@@ -215,6 +215,12 @@ code,
   color: var(--warn);
 }
 
+.badge-chargeable {
+  border-color: #3d5a80;
+  color: #3d5a80;
+  background: #eef3f8;
+}
+
 .badge-rejected {
   border-color: var(--danger);
   color: var(--danger);

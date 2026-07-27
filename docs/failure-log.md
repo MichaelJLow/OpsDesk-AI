@@ -47,7 +47,7 @@ Meaningful failures found while building OpsDesk AI. Index also maintained in `P
 | Production risk | Silent bad inserts or failed writes whenever a node is inserted between normalise and side effect without updating expressions. |
 | Fix | Use `$('Edit Fields').item.json.externalMessageId` (etc.) in POST body. **Body fix confirmed 2026-07-24** (duplicate key error = valid payload). Check/IF still not skipping before POST. |
 | Regression test | Manual: new email inserts; existing `external_message_id` skips POST (false branch). |
-| Evidence | n8n error on POST node; coaching note in Control Centre |
+| Evidence | n8n error on POST node; note in Control Centre |
 
 ### FAIL-003 — Duplicate guard IF not skipping before POST
 

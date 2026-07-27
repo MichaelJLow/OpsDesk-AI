@@ -2,14 +2,19 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { decideOnDraft } from "./actions";
+import { decideOnChargeableWork, decideOnDraft } from "./actions";
 
 type Props = {
   proposedActionId: string;
   requestId: string;
+  mode?: "draft_reply" | "chargeable_work";
 };
 
-export function DecisionForm({ proposedActionId, requestId }: Props) {
+export function DecisionForm({
+  proposedActionId,
+  requestId,
+  mode = "draft_reply",
+}: Props) {
   const router = useRouter();
   const [note, setNote] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -18,12 +23,20 @@ export function DecisionForm({ proposedActionId, requestId }: Props) {
   function submit(decision: "approve" | "reject") {
     setError(null);
     startTransition(async () => {
-      const result = await decideOnDraft({
-        proposedActionId,
-        requestId,
-        decision,
-        note,
-      });
+      const result =
+        mode === "chargeable_work"
+          ? await decideOnChargeableWork({
+              proposedActionId,
+              requestId,
+              decision,
+              note,
+            })
+          : await decideOnDraft({
+              proposedActionId,
+              requestId,
+              decision,
+              note,
+            });
       if (!result.ok) {
         setError(result.error);
         return;

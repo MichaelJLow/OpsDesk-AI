@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import {
+  isChargeableRequest,
   isUrgentRequest,
   requestStatusBadgeClass,
   urgencyBadgeClass,
@@ -113,6 +114,15 @@ export default async function OperationsInboxPage() {
                         {request.category === "urgent_hazardous"
                           ? "hazard"
                           : request.urgency}
+                      </span>
+                    ) : isChargeableRequest(request.category) ? (
+                      <span
+                        className={urgencyBadgeClass(
+                          request.urgency,
+                          request.category,
+                        )}
+                      >
+                        chargeable
                       </span>
                     ) : (
                       <span className="muted">

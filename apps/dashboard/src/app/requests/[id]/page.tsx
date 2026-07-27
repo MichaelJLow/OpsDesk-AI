@@ -113,7 +113,7 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
 
   const typedRequest = request as OpsRequest;
 
-  const [{ data: extractions }, { data: actions }, { data: events }] =
+  const [{ data: extractions }, { data: actions }, { data: chargeableActions }, { data: events }] =
     await Promise.all([
       supabase
         .from("request_extractions")
@@ -133,6 +133,15 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
         .order("created_at", { ascending: false })
         .limit(1),
       supabase
+        .from("proposed_actions")
+        .select(
+          "id, request_id, action_type, payload, reason, risk_level, requires_approval, status, created_at",
+        )
+        .eq("request_id", id)
+        .eq("action_type", "chargeable_work")
+        .order("created_at", { ascending: false })
+        .limit(1),
+      supabase
         .from("workflow_events")
         .select(
           "id, request_id, event_type, step_name, status, payload, error, occurred_at",
@@ -144,6 +153,7 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
 
   const extraction = (extractions?.[0] ?? null) as RequestExtraction | null;
   const draft = (actions?.[0] ?? null) as ProposedAction | null;
+  const chargeable = (chargeableActions?.[0] ?? null) as ProposedAction | null;
   const timeline = (events ?? []) as WorkflowEvent[];
   const latestError =
     timeline.find((event) => event.status === "error") ?? null;
@@ -151,6 +161,12 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
     typeof draft?.payload?.draftText === "string"
       ? draft.payload.draftText
       : null;
+  const chargeableSummary =
+    typeof chargeable?.payload?.summary === "string"
+      ? chargeable.payload.summary
+      : typeof chargeable?.reason === "string"
+        ? chargeable.reason
+        : null;
 
   const extractedSite =
     typeof extraction?.structured_output?.siteReference === "string"
@@ -216,7 +232,9 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
           <span className={requestStatusBadgeClass(typedRequest.status)}>
             {typedRequest.status}
           </span>
-          {typedRequest.urgency || typedRequest.category === "urgent_hazardous"
+          {typedRequest.urgency ||
+          typedRequest.category === "urgent_hazardous" ||
+          typedRequest.category === "controlled_chargeable"
             ? (
                 <>
                   {" "}
@@ -229,7 +247,9 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
                   >
                     {typedRequest.category === "urgent_hazardous"
                       ? "urgent hazard"
-                      : typedRequest.urgency}
+                      : typedRequest.category === "controlled_chargeable"
+                        ? "chargeable"
+                        : typedRequest.urgency}
                   </span>
                 </>
               )
@@ -294,6 +314,7 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
                 <DecisionForm
                   proposedActionId={draft.id}
                   requestId={typedRequest.id}
+                  mode="draft_reply"
                 />
               ) : draft.status === "approved" ? (
                 <SendForm
@@ -318,6 +339,47 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
           )}
         </section>
       </div>
+
+      {chargeable ? (
+        <section className="panel">
+          <h2>Chargeable work — approval required</h2>
+          <p className="muted" style={{ marginTop: 0 }}>
+            Status{" "}
+            <span className={badgeClass(chargeable.status)}>
+              {chargeable.status}
+            </span>
+            {chargeable.risk_level ? ` · risk ${chargeable.risk_level}` : null}
+            {" · "}
+            <span className="badge badge-chargeable">HITL</span>
+          </p>
+          <pre className="pre">
+            {chargeableSummary ||
+              "(no chargeable summary in payload — see reason / extraction)"}
+          </pre>
+          {chargeable.status === "proposed" ? (
+            <>
+              <p className="muted">
+                Approve records landlord/ops authority. This does{" "}
+                <strong>not</strong> invoice or dispatch contractors.
+              </p>
+              <DecisionForm
+                proposedActionId={chargeable.id}
+                requestId={typedRequest.id}
+                mode="chargeable_work"
+              />
+            </>
+          ) : chargeable.status === "approved" ? (
+            <p className="muted" style={{ marginBottom: 0 }}>
+              Approved — execution deferred (no auto-invoice or dispatch in this
+              slice).
+            </p>
+          ) : (
+            <p className="muted" style={{ marginBottom: 0 }}>
+              Decision recorded as <strong>{chargeable.status}</strong>.
+            </p>
+          )}
+        </section>
+      ) : null}
 
       <section className="panel">
         <h2>Workflow timeline</h2>

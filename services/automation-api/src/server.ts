@@ -1,6 +1,6 @@
 import { createServer } from "node:http";
 import { health } from "./index.js";
-import { applyUrgentHazardRouting } from "./routing/urgent-hazard.js";
+import { applyPropertyRouting } from "./routing/property-route.js";
 import {
   safeValidateClassification,
   type RequestClassification,
@@ -92,7 +92,7 @@ const server = createServer(async (req, res) => {
         send(res, 400, validated);
         return;
       }
-      const routed = applyUrgentHazardRouting({
+      const routed = applyPropertyRouting({
         extraction: validated.data as RequestClassification,
         rawBody: body.raw_body,
         subject: body.subject,

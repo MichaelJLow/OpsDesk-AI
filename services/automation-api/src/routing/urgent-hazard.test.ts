@@ -22,6 +22,8 @@ describe("applyUrgentHazardRouting", () => {
   it("leaves routine boiler alone", () => {
     const result = applyUrgentHazardRouting({ extraction: base });
     assert.equal(result.escalated, false);
+    assert.equal(result.chargeable, false);
+    assert.equal(result.requiresApproval, false);
     assert.equal(result.suggestedRoute, "maintenance_intake");
   });
 

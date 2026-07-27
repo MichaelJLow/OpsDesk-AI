@@ -178,40 +178,73 @@ Revisit an always-on thin rule only if session hygiene repeatedly fails.
 
 ---
 
-## DEC-006 — Manual n8n workflow build (learning-first)
+## DEC-006 — Hands-on n8n workflow construction (initial slice)
 
 | Field | Value |
 |---|---|
 | Date | 2026-07-24 |
+| Status | **Superseded** by DEC-023 (2026-07-27) |
+
+### Context
+
+For the first Quayside vertical slice, n8n workflows were constructed directly in the canvas so branching, credentials, polling, and error paths were owned end-to-end—not only demonstrated via an imported JSON file.
+
+### Alternatives considered
+
+- Import a finished workflow JSON on day one
+- Scaffold JSON externally and paste into n8n
+- Hybrid: scaffold + canvas ownership of critical nodes
+
+### Chosen approach
+
+**Canvas-first construction** for the intake path through draft/store. Workflow JSON exports only when explicitly requested for backup or portfolio evidence.
+
+### Reason
+
+Production-style fluency (IF branches, auth headers, duplicate guards, Slack/HubSpot side effects) is required for client delivery and hiring screens—not only a green demo path.
+
+### Trade-offs
+
+Slower than importing a complete workflow. More time on configuration detail; config mistakes feed the failure log.
+
+### Follow-up
+
+**Completed 2026-07-27:** Vertical slice + urgent route delivered on canvas. Superseded by DEC-023 (API-assisted iteration with documented review).
+
+---
+
+## DEC-023 — API-assisted n8n workflow iteration
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-27 |
 | Status | Active |
 
 ### Context
 
-n8n is a core skill for the target AI Automation roles. Auto-generating or importing a finished workflow would skip the learning value of triggers, credentials, IF branches, error paths and node configuration.
+The Quayside intake workflow is live on VPS through urgent/hazard routing. Hand-entering every remaining HTTP field slows delivery without improving architecture quality.
 
 ### Alternatives considered
 
-- Agent builds / imports complete workflow JSON
-- Pair-programming walkthrough where Mike builds every node in the UI
-- Mix: agent scaffolds JSON, Mike edits
+- Keep canvas-only edits indefinitely (DEC-006)
+- Unreviewed bulk workflow rewrites
+- Export/import JSON only (no live API)
 
 ### Chosen approach
 
-**Manual guided build.** The agent provides step-by-step instructions, explains why each node exists, and waits while Mike configures the workflow in the n8n UI. Do **not** auto-create the business workflow or silently overwrite `n8n/workflows/*.json` unless Mike explicitly asks for an export/backup after he built it.
+Use the **n8n Public API** (`N8N_API_KEY` in local `.env` only) to add/update nodes on VPS workflows. Each change is documented in-session (intent, node contract, verification). Operator reviews the canvas and runs lab tests. Never commit API keys. Sanitised workflow exports to the repo only on request.
 
 ### Reason
 
-Portfolio credibility and job readiness require real n8n fluency (branching, credentials, polling, error workflows), not only a working demo.
+Canvas fluency is established; remaining work optimises for delivery speed and correctness across capability modules.
 
 ### Trade-offs
 
-Slower than importing JSON. More session time on UI steps. Risk of small config mistakes — treated as learning/failure-log material.
+API PUTs can desync the canvas if malformed—mitigate with small diffs, backups under `tmp/` (gitignored), and a lab Execute after each change.
 
 ### Follow-up
 
-After the sales vertical slice works, export a sanitised workflow JSON for the repo as evidence. Optional later: compare Mike’s build to a reference export for review only.
-
----
+`N8N_API_KEY` / `N8N_API_BASE_URL` placeholders in `.env.example`. Optional sanitised export under `n8n/workflows/` for portfolio evidence.
 
 ## DEC-007 — Dedicated Gmail test inbox preferred over plus-alias
 
@@ -504,7 +537,7 @@ Phase 3 exit required failed integrations to be visible and retryable. Slack ale
 
 ### Trade-offs
 
-Depends on n8n writing failure events correctly. Retry semantics are thin (webhook + coaching), not automatic backoff.
+Depends on n8n writing failure events correctly. Retry semantics are thin (webhook + operator retry), not automatic backoff.
 
 ---
 

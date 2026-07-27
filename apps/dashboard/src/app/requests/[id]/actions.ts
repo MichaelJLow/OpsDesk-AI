@@ -18,7 +18,53 @@ export async function decideOnDraft(input: {
   decision: "approve" | "reject";
   note?: string;
 }): Promise<DecisionResult> {
-  const { proposedActionId, requestId, decision } = input;
+  return decideOnProposedAction({
+    ...input,
+    allowedActionType: "draft_reply",
+    onApproveRequestStatus: "approved",
+    onRejectRequestStatus: "rejected",
+    timelineOnApprove: null,
+  });
+}
+
+export async function decideOnChargeableWork(input: {
+  proposedActionId: string;
+  requestId: string;
+  decision: "approve" | "reject";
+  note?: string;
+}): Promise<DecisionResult> {
+  return decideOnProposedAction({
+    ...input,
+    allowedActionType: "chargeable_work",
+    onApproveRequestStatus: "awaiting_execution",
+    onRejectRequestStatus: "rejected",
+    timelineOnApprove: {
+      event_type: "execution_deferred",
+      step_name: "chargeable_approval",
+      status: "success",
+      payload: {
+        note: "Chargeable work approved — execution deferred (no auto-invoice or dispatch)",
+      },
+    },
+  });
+}
+
+async function decideOnProposedAction(input: {
+  proposedActionId: string;
+  requestId: string;
+  decision: "approve" | "reject";
+  note?: string;
+  allowedActionType: string;
+  onApproveRequestStatus: string;
+  onRejectRequestStatus: string;
+  timelineOnApprove: {
+    event_type: string;
+    step_name: string;
+    status: string;
+    payload: Record<string, unknown>;
+  } | null;
+}): Promise<DecisionResult> {
+  const { proposedActionId, requestId, decision, allowedActionType } = input;
   const note = input.note?.trim() || undefined;
 
   if (!proposedActionId || !requestId) {
@@ -55,8 +101,11 @@ export async function decideOnDraft(input: {
     return { ok: false, error: "Proposed action does not belong to this request." };
   }
 
-  if (existing.action_type !== "draft_reply") {
-    return { ok: false, error: "Only draft_reply actions can be decided here." };
+  if (existing.action_type !== allowedActionType) {
+    return {
+      ok: false,
+      error: `Only ${allowedActionType} actions can be decided here.`,
+    };
   }
 
   if (existing.status !== "proposed") {
@@ -68,7 +117,9 @@ export async function decideOnDraft(input: {
 
   const nextStatus = decision === "approve" ? "approved" : "rejected";
   const nextRequestStatus =
-    decision === "approve" ? "approved" : "rejected";
+    decision === "approve"
+      ? input.onApproveRequestStatus
+      : input.onRejectRequestStatus;
 
   const { error: updateError } = await supabase
     .from("proposed_actions")
@@ -102,6 +153,34 @@ export async function decideOnDraft(input: {
 
   if (insertError) {
     return { ok: false, error: insertError.message };
+  }
+
+  if (decision === "approve" && input.timelineOnApprove) {
+    await supabase.from("workflow_events").insert({
+      request_id: requestId,
+      event_type: input.timelineOnApprove.event_type,
+      step_name: input.timelineOnApprove.step_name,
+      status: input.timelineOnApprove.status,
+      payload: {
+        ...input.timelineOnApprove.payload,
+        proposed_action_id: proposedActionId,
+        decided_by: reviewerId,
+      },
+    });
+  } else if (
+    decision === "reject" &&
+    allowedActionType === "chargeable_work"
+  ) {
+    await supabase.from("workflow_events").insert({
+      request_id: requestId,
+      event_type: "chargeable_rejected",
+      step_name: "chargeable_approval",
+      status: "success",
+      payload: {
+        proposed_action_id: proposedActionId,
+        decided_by: reviewerId,
+      },
+    });
   }
 
   revalidatePath("/");

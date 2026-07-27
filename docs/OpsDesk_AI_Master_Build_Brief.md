@@ -84,7 +84,7 @@ Central question: *Where is this request, what blocks it, who acts next?*
 | **Slack** | Notifications — not system of record |
 | **LLM** | Extract, retrieve-assisted draft/plan — never execute protected actions |
 
-No Mastra/LangGraph in v1. Learning-first manual n8n build (DEC-006).
+No Mastra/LangGraph in v1. Canvas-first n8n for the initial slice (DEC-006); API-assisted iteration thereafter (DEC-023).
 
 ---
 

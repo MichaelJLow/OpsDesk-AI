@@ -8,6 +8,8 @@ export type UrgentHazardRuleId =
 
 export type RoutePropertyResult = RequestClassification & {
   escalated: boolean;
+  chargeable: boolean;
+  requiresApproval: boolean;
   matchedRules: UrgentHazardRuleId[];
 };
 
@@ -79,6 +81,8 @@ export function applyUrgentHazardRouting(
     return {
       ...input.extraction,
       escalated: false,
+      chargeable: false,
+      requiresApproval: false,
       matchedRules: [],
     };
   }
@@ -94,6 +98,8 @@ export function applyUrgentHazardRouting(
           : "high",
     suggestedRoute: "urgent_maintenance",
     escalated: true,
+    chargeable: false,
+    requiresApproval: false,
     matchedRules,
   };
 }

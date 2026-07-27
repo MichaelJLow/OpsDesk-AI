@@ -18,7 +18,7 @@ n8n CE, Next.js/TS, Zod, Supabase, Gmail, HubSpot, Slack, one LLM, Python seeds/
 
 ## Principles
 
-Workflow first; AI for language; deterministic code for safety/authority/spend; separate recommendation/approval/execution; idempotent side effects; validate model output; no Mastra/LangGraph in v1; manual n8n learning (DEC-006); one complete capability module before broad abstraction; do not block a module’s demo on unfinished cross-module integration.
+Workflow first; AI for language; deterministic code for safety/authority/spend; separate recommendation/approval/execution; idempotent side effects; validate model output; no Mastra/LangGraph in v1; canvas-first n8n then API iteration (DEC-006 → DEC-023); one complete capability module before broad abstraction; do not block a module’s demo on unfinished cross-module integration.
 
 ## First implementation focus
 

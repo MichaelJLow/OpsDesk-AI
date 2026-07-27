@@ -64,11 +64,11 @@ Phases 3–10 remain the build sequence; they are **delivery vehicles for capabi
 
 ## Current task
 
-- [ ] Commit + push urgency badges / route API; redeploy Vercel
+- [ ] Verify `Log route escalated` on urgent lab run (API-added, DEC-023)
 
 ## Next three tasks
 
-- [ ] Optional: timeline `route_escalated` + urgent draft tone
+- [ ] Optional: urgent draft tone
 - [ ] Lesson 12A intake failure write (optional polish)
 - [ ] Loom / evidence capture (end of build)
 
@@ -327,7 +327,7 @@ Keep detailed entries in `docs/decision-log.md`. Use this table as the index.
 | DEC-003 | 2026-07-24 | Flatten monorepo; build pack under `docs/` | Active | `docs/decision-log.md#dec-003` |
 | DEC-004 | 2026-07-24 | `project-status.json` twin of Control Centre | Active | `docs/decision-log.md#dec-004` |
 | DEC-005 | 2026-07-24 | Cursor start/end session commands only | Active | `docs/decision-log.md#dec-005` |
-| DEC-006 | 2026-07-24 | Manual n8n workflow build (learning-first) | Active | `docs/decision-log.md#dec-006` |
+| DEC-006 | 2026-07-24 | Hands-on n8n construction (initial slice) | **Superseded** by DEC-023 | `docs/decision-log.md#dec-006` |
 | DEC-007 | 2026-07-24 | Dedicated Gmail test inbox preferred | Active | `docs/decision-log.md#dec-007` |
 | DEC-008 | 2026-07-24 | Local n8n TLS verify disabled (SSL interception) | Active local-only | `docs/decision-log.md#dec-008` |
 | DEC-009 | 2026-07-24 | Property maintenance (Quayside) is first vertical | Active | `docs/decision-log.md#dec-009` |
@@ -344,6 +344,7 @@ Keep detailed entries in `docs/decision-log.md`. Use this table as the index.
 | DEC-020 | 2026-07-26 | Host n8n on VPS + automation-api sidecar | Active | `docs/decision-log.md#dec-020` |
 | DEC-021 | 2026-07-27 | Deterministic urgent/hazard routing | Active | `docs/decision-log.md#dec-021` |
 | DEC-022 | 2026-07-27 | Capability playbook over monolithic platform | Active | `docs/decision-log.md#dec-022` |
+| DEC-023 | 2026-07-27 | API-assisted n8n workflow iteration | Active | `docs/decision-log.md#dec-023` |
 
 A decision should be logged when it changes:
 
