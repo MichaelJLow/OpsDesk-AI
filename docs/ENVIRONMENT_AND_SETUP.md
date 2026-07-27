@@ -21,6 +21,7 @@
 ## Slack channels (property)
 
 - [ ] `#maintenance-intake`  
+- [ ] `#maintenance-intake`
 - [ ] `#urgent-maintenance`  
 - [ ] `#approval-queue`  
 - [ ] `#automation-alerts`  

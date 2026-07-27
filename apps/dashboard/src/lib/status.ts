@@ -9,6 +9,27 @@ export function requestStatusBadgeClass(status: string): string {
   return "badge";
 }
 
+export function urgencyBadgeClass(
+  urgency: string | null | undefined,
+  category?: string | null,
+): string {
+  if (category === "urgent_hazardous") return "badge badge-urgent";
+  if (urgency === "critical") return "badge badge-urgent";
+  if (urgency === "high") return "badge badge-urgent-soft";
+  return "badge";
+}
+
+export function isUrgentRequest(
+  urgency: string | null | undefined,
+  category?: string | null,
+): boolean {
+  return (
+    category === "urgent_hazardous" ||
+    urgency === "critical" ||
+    urgency === "high"
+  );
+}
+
 export function isAttentionStatus(status: string): boolean {
   return status === "needs_attention";
 }

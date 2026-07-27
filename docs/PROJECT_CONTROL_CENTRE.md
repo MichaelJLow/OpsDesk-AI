@@ -6,9 +6,53 @@
 **Current phase:** Phase 3 (happy path hosted; exit polish remaining)  
 **Current milestone:** First working vertical slice (routine boiler maintenance)  
 **Overall status:** In progress — hosted E2E proven (Vercel desk + VPS n8n)  
-**Last updated:** 2026-07-26  
+**Last updated:** 2026-07-27  
 **Next review:** 2026-07-31  
 **Remote:** https://github.com/MichaelJLow/OpsDesk-AI  
+
+---
+
+# 0. Build Philosophy — Capability Playbook
+
+> **DEC-022.** OpsDesk is not one enormous fictional platform that takes months before anything works. It is a **playbook of real business capabilities**. Each module solves one clear operational problem as a complete, demonstrable vertical slice. Each slice can stand alone as a portfolio case study. Later, the strongest modules can share data and connect into a broader operating system.
+
+## Positioning (what to say)
+
+Prefer:
+
+> I've built a reusable playbook of production-style AI workflows covering request handling, approvals, research, CRM enrichment, document retrieval, task routing, customer operations, and human-in-the-loop execution.
+
+Avoid:
+
+- “I build an AI dashboard”
+- “Universal workflow platform”
+- Claiming a finished multi-module OS before the slices exist
+
+## Module rules
+
+1. **One problem per module** — clear operational pain, not a feature list.
+2. **Complete vertical slice** — happy path, failure path, audit trail, and operator loop (where relevant).
+3. **Demoable alone** — a hiring manager should understand the module without the rest of OpsDesk.
+4. **Shared spine, deferred integration** — reuse patterns (intake → structure → validate → act → audit → human gate); connect data/CRM/docs only after 2–3 slices prove the pattern.
+5. **Name capabilities, not phases** — e.g. “urgent hazard routing with Slack escalation,” not “Phase 13 of OpsDesk.”
+6. **Evidence per module** — each shippable slice produces screenshots, decisions, and limitations.
+
+## Capability map (playbook inventory)
+
+| Capability | Status | Notes |
+|---|---|---|
+| Request intake & normalisation | In progress / largely done | Gmail → store → timeline |
+| Structured extraction + validation | Done (lab) | Gemini + Zod sidecar |
+| CRM / property enrichment | Done (lab) | HubSpot + `sites` |
+| Draft response + HITL approve/send | Done (lab hosted) | Desk + VPS webhooks |
+| Urgent / hazard task routing | Done (lab hosted) | DEC-021; Lesson 13 proven 2026-07-27 |
+| Failure visibility + retry | Done (thin) | DEC-019; full recovery queue later |
+| Document retrieval / grounded support | Planned | Phase 5 as its own slice |
+| Controlled approvals (chargeable / auth) | Planned | Phase 6 as its own slice |
+| Evaluation harness | Planned | Phase 8; per-capability fixtures |
+| Cross-module shared operating system | Later | Only after strongest slices exist |
+
+Phases 3–10 remain the build sequence; they are **delivery vehicles for capability modules**, not a mandate to ship one monolithic product before anything is portfolio-ready.
 
 ---
 
@@ -20,12 +64,12 @@
 
 ## Current task
 
-- [ ] Urgent / hazard branch (Phase 6 property path) — next build session
+- [ ] Commit + push urgency badges / route API; redeploy Vercel
 
 ## Next three tasks
 
-- [ ] Urgent / hazard IF → `#urgent-maintenance` + desk behaviour
-- [ ] Lesson 12A: intake writes `needs_attention` + error timeline on HubSpot/Slack fail
+- [ ] Optional: timeline `route_escalated` + urgent draft tone
+- [ ] Lesson 12A intake failure write (optional polish)
 - [ ] Loom / evidence capture (end of build)
 
 ## Blockers
@@ -298,6 +342,8 @@ Keep detailed entries in `docs/decision-log.md`. Use this table as the index.
 | DEC-018 | 2026-07-26 | Staff login via Supabase Auth (invite-only; RLS deferred) | Active | `docs/decision-log.md#dec-018` |
 | DEC-019 | 2026-07-26 | Failures via workflow_events + needs_attention; retry webhook | Active | `docs/decision-log.md#dec-019` |
 | DEC-020 | 2026-07-26 | Host n8n on VPS + automation-api sidecar | Active | `docs/decision-log.md#dec-020` |
+| DEC-021 | 2026-07-27 | Deterministic urgent/hazard routing | Active | `docs/decision-log.md#dec-021` |
+| DEC-022 | 2026-07-27 | Capability playbook over monolithic platform | Active | `docs/decision-log.md#dec-022` |
 
 A decision should be logged when it changes:
 
@@ -358,6 +404,14 @@ Only use measured values.
 ---
 
 # 8. Portfolio Readiness Checklist
+
+## Playbook framing
+
+- [x] Positioning is capability playbook, not “one AI platform” (DEC-022).
+- [ ] At least one module is a standalone case study (routine request handling).
+- [ ] Second module demoable alone (urgent routing or approvals).
+- [ ] Capability list named in CV / LinkedIn language (not only phase numbers).
+- [ ] Cross-module “operating system” story deferred until 2–3 slices ship.
 
 ## Problem evidence
 
@@ -446,12 +500,12 @@ Complete once per week.
 
 ## Next week's single outcome
 
-> Urgent / hazard branch for Quayside (second route + Slack channel).
+> Ship urgency badges to Vercel; capture evidence for urgent-route module.
 
 ## Three committed tasks
 
-- [ ] Urgent / hazard IF → `#urgent-maintenance`
-- [ ] Lesson 12A intake failure write (optional polish)
+- [x] Urgent / hazard IF → `#urgent-maintenance`
+- [ ] Commit/push route API + desk badges; redeploy Vercel
 - [ ] Capture EVID screenshots / Loom at end of build
 
 ---
@@ -524,3 +578,5 @@ Interpretation:
 8. Scope additions require a documented reason.
 9. A phase is not complete until its exit condition is met.
 10. The portfolio story is developed alongside the code, not after it.
+11. Ship complete capability modules (vertical slices), not platform scaffolding for its own sake (DEC-022).
+12. Do not block a module’s demo on unfinished cross-module integration.

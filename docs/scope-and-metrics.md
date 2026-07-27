@@ -1,19 +1,25 @@
 # Scope and Success Metrics — OpsDesk AI
 
+## Strategy (DEC-022)
+
+Build a **playbook of capability modules** (complete vertical slices), not one enormous platform before anything is demoable. Quayside property maintenance is the first vertical setting. Cross-module shared OS comes later.
+
 ## In scope (version one — property maintenance)
 
-1. Routine maintenance request path (first vertical slice).  
-2. Urgent/hazard path with deterministic escalation (after slice).  
-3. Controlled/chargeable path with human approval (after slice).  
+1. Routine maintenance request path (first vertical slice / capability module).  
+2. Urgent/hazard path with deterministic escalation (after slice — its own capability).  
+3. Controlled/chargeable path with human approval (after slice — its own capability).  
 4. Real integrations: Gmail, HubSpot, Slack, Supabase, one LLM.  
 5. Durable state, audit, idempotent side effects, recoverable failures.  
 6. Labelled evaluation for property scenarios (+ shared reliability cases).  
 7. Operator dashboard with reusable components; property panels first.  
 8. Documentation of reusable core + vertical configuration seams.  
 9. Client-delivery methodology templates (not a real client deployment).  
+10. Portfolio framing as named capabilities, each demoable alone.  
 
 ## Explicitly out of scope (now)
 
+- Building a full multi-module “operating system” before 2–3 slices ship  
 - Inspection-services vertical implementation (post-MVP Track A only)  
 - Visual workflow / rules builder  
 - Multi-tenant SaaS product / agency website  
@@ -25,7 +31,7 @@
 
 ## Adaptability (design now, build property only)
 
-Reusable core: ingestion, orgs/contacts, sites/assets, requests, extractions, proposed actions, approvals, jobs, workflow events, recovery, evaluation, timeline UI.
+Reusable core / shared spine: ingestion, orgs/contacts, sites/assets, requests, extractions, proposed actions, approvals, jobs, workflow events, recovery, evaluation, timeline UI.
 
 Vertical-specific: terminology, extraction extensions, rule packs, tools allowlist, document namespaces, seed data, evaluation fixtures, domain panels.
 
@@ -56,4 +62,4 @@ See Master Brief: real Gmail → store → validated extraction → HubSpot + pr
 
 ## Stop rule
 
-One phase at a time. Do not build inspection or dashboard depth before the routine boiler slice works.
+One capability module (phase) at a time. Do not build inspection or dashboard depth before the routine boiler slice works. Do not block a module’s demo on unfinished cross-module integration.

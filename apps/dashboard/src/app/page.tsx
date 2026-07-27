@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
-import { requestStatusBadgeClass } from "@/lib/status";
+import {
+  isUrgentRequest,
+  requestStatusBadgeClass,
+  urgencyBadgeClass,
+} from "@/lib/status";
 import type { OpsRequest } from "@/lib/types";
 import { ResetDemoButton } from "./reset-demo-button";
 
@@ -84,6 +88,7 @@ export default async function OperationsInboxPage() {
                 <th>Received</th>
                 <th>Sender</th>
                 <th>Subject</th>
+                <th>Urgency</th>
                 <th>Status</th>
               </tr>
             </thead>
@@ -96,6 +101,24 @@ export default async function OperationsInboxPage() {
                     <Link href={`/requests/${request.id}`}>
                       {request.subject?.trim() || "(no subject)"}
                     </Link>
+                  </td>
+                  <td>
+                    {isUrgentRequest(request.urgency, request.category) ? (
+                      <span
+                        className={urgencyBadgeClass(
+                          request.urgency,
+                          request.category,
+                        )}
+                      >
+                        {request.category === "urgent_hazardous"
+                          ? "hazard"
+                          : request.urgency}
+                      </span>
+                    ) : (
+                      <span className="muted">
+                        {request.urgency?.trim() || "—"}
+                      </span>
+                    )}
                   </td>
                   <td>
                     <span className={requestStatusBadgeClass(request.status)}>

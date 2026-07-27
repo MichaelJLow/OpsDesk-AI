@@ -508,6 +508,30 @@ Depends on n8n writing failure events correctly. Retry semantics are thin (webho
 
 ---
 
+## DEC-021 — Deterministic urgent/hazard routing (property)
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-27 |
+| Status | Active |
+
+### Context
+
+Routine boiler slice routes everything to `#maintenance-intake`. Portfolio and Phase 6 require a second path for safety hazards. Model urgency alone is insufficient — false negatives are unsafe.
+
+### Chosen approach
+
+- Keep Zod validation unchanged.
+- Add `POST /v1/route/property` on `automation-api` that applies keyword / category rules and **forces** `urgent_hazardous` + `urgent_maintenance` when matched.
+- n8n IF on `escalated` → `#urgent-maintenance` Slack + urgent draft tone; else existing routine path.
+- Dashboard shows urgency/hazard badges on inbox and workspace.
+
+### Trade-offs
+
+Keyword rules are brittle and language-specific (English lab). Expand with fixtures later; do not auto-dispatch contractors from this path.
+
+---
+
 ## DEC-020 — Host n8n on VPS + automation-api sidecar
 
 | Field | Value |
@@ -531,3 +555,46 @@ Local Docker n8n cannot receive hiring-manager webhook traffic from Vercel, and 
 
 Ops burden (SSH, disk, DNS, OAuth redirect URIs). Shared Supabase means local + VPS can race on duplicates if both poll.
 
+---
+
+## DEC-022 — Capability playbook over monolithic platform
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-27 |
+| Status | Active |
+
+### Context
+
+Building OpsDesk as one enormous fictional platform risks months of scaffolding before anything is demoable. Portfolio and consulting positioning are stronger when each shippable unit is a complete operational capability.
+
+### Alternatives considered
+
+- Monolithic “OpsDesk platform” first, modules later
+- Loose collection of unrelated demos with no shared spine
+- Capability playbook: complete vertical slices now; compose strongest modules later
+
+### Chosen approach
+
+Treat OpsDesk as a **playbook of production-style AI workflow capabilities**. Each module:
+
+- solves one clear operational problem;
+- is a complete, demonstrable vertical slice;
+- can stand alone as a portfolio case study;
+- may later share data and connect into a broader operating system.
+
+Portfolio language targets applied AI automation consulting and forward-deployed roles: patterns across request handling, approvals, research, CRM enrichment, document retrieval, task routing, customer operations, and human-in-the-loop execution — not “I built an AI dashboard.”
+
+Extends DEC-010 (reusable core + vertical config): core is a shared spine of patterns; modules are the product units.
+
+### Reason
+
+Shows pattern fluency, not just one app. Keeps delivery paced to demoable outcomes. Avoids over-building integration before slices prove themselves.
+
+### Trade-offs
+
+Risk of shallow disconnected demos if module rules are ignored. Cross-module OS story must stay honest until 2–3 strong slices exist. Quayside remains the first vertical setting; playbook does not mean building every industry at once.
+
+### Follow-up
+
+Keep Control Centre §0 capability map current. Name modules by capability in README / portfolio materials. Connect shared data only deliberately after multiple slices ship.

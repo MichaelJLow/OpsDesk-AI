@@ -1,6 +1,10 @@
 import { createServer } from "node:http";
 import { health } from "./index.js";
-import { safeValidateClassification } from "./schemas/request-classification.js";
+import { applyUrgentHazardRouting } from "./routing/urgent-hazard.js";
+import {
+  safeValidateClassification,
+  type RequestClassification,
+} from "./schemas/request-classification.js";
 
 const port = Number(process.env.AUTOMATION_API_PORT ?? 3040);
 
@@ -72,6 +76,36 @@ const server = createServer(async (req, res) => {
     return;
   }
 
+  if (req.method === "POST" && url.pathname === "/v1/route/property") {
+    try {
+      const body = (await readJson(req)) as {
+        structured_output?: unknown;
+        raw_body?: string | null;
+        subject?: string | null;
+      };
+      const candidate =
+        body && typeof body === "object" && "structured_output" in body
+          ? body.structured_output
+          : body;
+      const validated = safeValidateClassification(candidate);
+      if (!validated.valid) {
+        send(res, 400, validated);
+        return;
+      }
+      const routed = applyUrgentHazardRouting({
+        extraction: validated.data as RequestClassification,
+        rawBody: body.raw_body,
+        subject: body.subject,
+      });
+      send(res, 200, routed);
+    } catch {
+      send(res, 400, {
+        error: "Request body must be valid JSON",
+      });
+    }
+    return;
+  }
+
   send(res, 404, { error: "Not found" });
 });
 
@@ -81,4 +115,5 @@ server.listen(port, host, () => {
   console.log(`automation-api listening on http://${host}:${port}`);
   console.log(`  GET  /health`);
   console.log(`  POST /v1/validate/extraction`);
+  console.log(`  POST /v1/route/property`);
 });

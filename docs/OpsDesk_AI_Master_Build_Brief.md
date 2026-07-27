@@ -7,13 +7,13 @@
 
 ## 1. Purpose
 
-Build a flagship portfolio project that demonstrates readiness for **AI Automation Engineer / Specialist / Solutions Engineer** roles—and a credible method for taking a synthetic workflow into a real-company engagement later.
+Build a flagship portfolio project that demonstrates readiness for **AI Automation Engineer / Specialist / Solutions Engineer** and applied / forward-deployed roles—and a credible method for taking synthetic workflows into a real-company engagement later.
 
 OpsDesk AI is:
 
-> A reusable, vertical-configurable request-to-resolution system, demonstrated first in **property maintenance** (Quayside Property Services) and later validated against a **technical inspection** workflow.
+> A **capability playbook** of production-style AI workflows (DEC-022): each module is a complete vertical slice that solves one operational problem and can stand alone as a case study. Demonstrated first in **property maintenance** (Quayside Property Services); later validated against a **technical inspection** workflow. Strongest modules may later share data and connect into a broader operating system.
 
-It is not a universal platform, chatbot, autonomous property manager, or multi-agent OS.
+It is not a universal platform built before anything works, a chatbot, an autonomous property manager, or a multi-agent OS.
 
 ---
 
@@ -136,20 +136,22 @@ Shared reliability cases + `evaluation/property-maintenance/` (+ future `inspect
 
 ## 12. Portfolio positioning
 
-**Homepage:** AI-assisted property-maintenance operations desk…  
+**Strategy (DEC-022):** capability playbook — complete vertical slices first; compose strongest modules later.
 
-**Adaptability:** property first; inspection proves transfer without forking.  
+**Homepage:** A reusable playbook of production-style AI workflows — starting with property-maintenance request handling, routing, enrichment, and human-in-the-loop execution for Quayside.
 
-**Limitations:** synthetic data; real integrations; no claimed client outcomes.
+**Adaptability:** property first; inspection proves transfer without forking.
+
+**Limitations:** synthetic data; real integrations; growing playbook, not a finished multi-module OS; no claimed client outcomes.
 
 ---
 
 ## 13. Roadmap
 
-Phases 0–10 retained with property domain content; Tracks A/B post-MVP. Immediate build stays near current progress: timeline event → structured boiler extraction → lookups → route → Slack → draft.
+Phases 0–10 are delivery vehicles for capability modules, not a mandate to finish a monolith first. Tracks A/B post-MVP. Immediate build stays near current progress: urgent/hazard routing → evidence capture → next module.
 
 ---
 
 ## 14. Definition of complete (portfolio)
 
-Property categories work; approvals for controlled actions; idempotent failures; ≥50 labelled scenarios over time; demo; honest limitations; client-delivery docs present; inspection proof optional later.
+At least one standalone capability case study ships; property categories work; approvals for controlled actions; idempotent failures; ≥50 labelled scenarios over time; demo; honest limitations; client-delivery docs present; inspection proof optional later. Cross-module OS narrative only after 2–3 strong slices.

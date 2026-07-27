@@ -1,5 +1,9 @@
 # Build Roadmap — OpsDesk AI (Quayside / property)
 
+## Strategy (DEC-022)
+
+Ship a **capability playbook**: each major item below is (or becomes) a complete vertical slice that can stand alone as a portfolio case study. Connect the strongest modules later — do not wait for a finished “platform” before anything is demoable.
+
 ## Active implementation sequence (scope control)
 
 1. Finish Lesson 5 — `workflow_events` after store  
@@ -16,7 +20,7 @@
 12. **Track A** inspection portability (post-MVP)  
 13. **Track B** client-delivery toolkit (docs can exist now)
 
-Do not build property + inspection simultaneously.
+Do not build property + inspection simultaneously. Do not block a module’s demo on unfinished cross-module integration.
 
 ---
 

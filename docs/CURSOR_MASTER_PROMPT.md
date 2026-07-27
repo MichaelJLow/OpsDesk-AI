@@ -6,9 +6,11 @@ Read project docs before proposing architecture or code. Current source of truth
 
 ## Objective
 
-Property-maintenance request-to-resolution: Gmail → store → extract → validate → CRM/site context → deterministic rules → draft → Slack → approvals when needed → audit → recover → evaluate.
+**Capability playbook** (DEC-022): ship complete vertical slices that each solve one operational problem and can stand alone as portfolio case studies; compose the strongest modules later.
 
-Reusable core; property config first; inspection portability **post-MVP**. Client-delivery docs explain synthetic→real method without claiming client delivery.
+Property-maintenance request-to-resolution first: Gmail → store → extract → validate → CRM/site context → deterministic rules → draft → Slack → approvals when needed → audit → recover → evaluate.
+
+Reusable core / shared spine; property config first; inspection portability **post-MVP**. Client-delivery docs explain synthetic→real method without claiming client delivery.
 
 ## Stack
 
@@ -16,7 +18,7 @@ n8n CE, Next.js/TS, Zod, Supabase, Gmail, HubSpot, Slack, one LLM, Python seeds/
 
 ## Principles
 
-Workflow first; AI for language; deterministic code for safety/authority/spend; separate recommendation/approval/execution; idempotent side effects; validate model output; no Mastra/LangGraph in v1; manual n8n learning (DEC-006); one vertical slice before broad abstraction.
+Workflow first; AI for language; deterministic code for safety/authority/spend; separate recommendation/approval/execution; idempotent side effects; validate model output; no Mastra/LangGraph in v1; manual n8n learning (DEC-006); one complete capability module before broad abstraction; do not block a module’s demo on unfinished cross-module integration.
 
 ## First implementation focus
 

@@ -204,6 +204,17 @@ code,
   color: var(--danger);
 }
 
+.badge-urgent {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: #fbf2f2;
+}
+
+.badge-urgent-soft {
+  border-color: var(--warn);
+  color: var(--warn);
+}
+
 .badge-rejected {
   border-color: var(--danger);
   color: var(--danger);

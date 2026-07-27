@@ -16,7 +16,10 @@ import { CrmContextPanel } from "./crm-panel";
 import { DecisionForm } from "./decision-form";
 import { FailureBanner } from "./failure-banner";
 import { SendForm } from "./send-form";
-import { requestStatusBadgeClass } from "@/lib/status";
+import {
+  requestStatusBadgeClass,
+  urgencyBadgeClass,
+} from "@/lib/status";
 
 export const dynamic = "force-dynamic";
 
@@ -213,6 +216,24 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
           <span className={requestStatusBadgeClass(typedRequest.status)}>
             {typedRequest.status}
           </span>
+          {typedRequest.urgency || typedRequest.category === "urgent_hazardous"
+            ? (
+                <>
+                  {" "}
+                  ·{" "}
+                  <span
+                    className={urgencyBadgeClass(
+                      typedRequest.urgency,
+                      typedRequest.category,
+                    )}
+                  >
+                    {typedRequest.category === "urgent_hazardous"
+                      ? "urgent hazard"
+                      : typedRequest.urgency}
+                  </span>
+                </>
+              )
+            : null}
         </p>
       </div>
 
