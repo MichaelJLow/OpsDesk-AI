@@ -1,5 +1,6 @@
 import { createServer } from "node:http";
 import { health } from "./index.js";
+import { retrieveKnowledge } from "./retrieval/search.js";
 import { applyPropertyRouting } from "./routing/property-route.js";
 import {
   safeValidateClassification,
@@ -106,6 +107,25 @@ const server = createServer(async (req, res) => {
     return;
   }
 
+  if (req.method === "POST" && url.pathname === "/v1/retrieve") {
+    try {
+      const body = (await readJson(req)) as {
+        query?: string;
+        limit?: number;
+      };
+      const query = typeof body.query === "string" ? body.query : "";
+      const limit =
+        typeof body.limit === "number" && body.limit > 0
+          ? Math.min(body.limit, 10)
+          : 3;
+      const hits = retrieveKnowledge(query, { limit });
+      send(res, 200, { query, hits });
+    } catch {
+      send(res, 400, { error: "Request body must be valid JSON" });
+    }
+    return;
+  }
+
   send(res, 404, { error: "Not found" });
 });
 
@@ -116,4 +136,5 @@ server.listen(port, host, () => {
   console.log(`  GET  /health`);
   console.log(`  POST /v1/validate/extraction`);
   console.log(`  POST /v1/route/property`);
+  console.log(`  POST /v1/retrieve`);
 });

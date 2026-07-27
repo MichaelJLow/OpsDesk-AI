@@ -696,3 +696,24 @@ JSON fixtures under `evaluation/fixtures/property-routing/` exercised by `servic
 Does not score extraction quality. Full 50-case / model-version harness remains later.
 
 ---
+
+## DEC-027 — Keyword document retrieval before pgvector
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-27 |
+| Status | Active |
+
+### Context
+
+Phase 5 needs grounded citations for demos. Scope says defer pgvector until keyword/metadata retrieval is insufficient.
+
+### Chosen approach
+
+Seeded Quayside corpus (chargeable, urgent, boiler warranty, Riverside access) + deterministic keyword search. Desk **Retrieve context** shows citations and logs `retrieval_ran`. automation-api `POST /v1/retrieve` for n8n later. No embeddings.
+
+### Trade-offs
+
+Corpus duplicated in desk + automation-api (keep in sync). Not full support-intent workflow or Slack support routing yet.
+
+---

@@ -18,6 +18,7 @@ import { DecisionForm } from "./decision-form";
 import { EvidencePackForm } from "./evidence-pack-form";
 import { ExecuteWorkOrderForm } from "./execute-form";
 import { FailureBanner } from "./failure-banner";
+import { RetrievalPanel } from "./retrieval-panel";
 import { SendForm } from "./send-form";
 import {
   requestStatusBadgeClass,
@@ -457,6 +458,11 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
             ))}
           </ul>
         )}
+      </section>
+
+      <section className="panel">
+        <h2>Context retrieval</h2>
+        <RetrievalPanel requestId={typedRequest.id} />
       </section>
 
       <section className="panel">

@@ -47,7 +47,7 @@ Avoid:
 | Draft response + HITL approve/send | Done (lab hosted) | Desk + VPS webhooks |
 | Urgent / hazard task routing | Done (lab hosted) | DEC-021; Lesson 13 proven 2026-07-27 |
 | Failure visibility + retry | Done (thin) | DEC-019; full recovery queue later |
-| Document retrieval / grounded support | Planned | Phase 5 as its own slice |
+| Document retrieval / grounded support | Thin (keyword) | Quayside corpus + desk **Retrieve context** + `POST /v1/retrieve`; citations; no pgvector yet |
 | Controlled approvals (chargeable / auth) | Planned | Phase 6 as its own slice |
 | Evaluation harness | Thin (routing fixtures) | `evaluation/fixtures/property-routing` + `npm run eval:routing`; full Gemini suite later |
 | Cross-module shared operating system | Later | Only after strongest slices exist |
@@ -348,6 +348,7 @@ Keep detailed entries in `docs/decision-log.md`. Use this table as the index.
 | DEC-024 | 2026-07-27 | Minimal `jobs` table for lab protected execution | Active | `docs/decision-log.md#dec-024` |
 | DEC-025 | 2026-07-27 | Desk evidence pack (audit markdown export) | Active | `docs/decision-log.md#dec-025` |
 | DEC-026 | 2026-07-27 | Thin routing evaluation fixtures first | Active | `docs/decision-log.md#dec-026` |
+| DEC-027 | 2026-07-27 | Keyword document retrieval before pgvector | Active | `docs/decision-log.md#dec-027` |
 
 A decision should be logged when it changes:
 

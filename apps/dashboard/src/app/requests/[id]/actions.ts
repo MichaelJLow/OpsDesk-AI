@@ -6,6 +6,11 @@ import {
   polishDraftText,
 } from "@/lib/draft-polish";
 import { formatEvidencePackMarkdown } from "@/lib/evidence-pack";
+import {
+  buildRetrievalQuery,
+  retrieveKnowledge,
+  type RetrievalHit,
+} from "@/lib/retrieval/search";
 import { ensureServerEnv, getSupabaseAdmin } from "@/lib/supabase/admin";
 import { getSessionUser } from "@/lib/supabase/server";
 
@@ -649,4 +654,81 @@ export async function buildEvidencePack(input: {
   });
 
   return { ok: true, markdown };
+}
+
+export type RetrieveContextResult =
+  | { ok: true; query: string; hits: RetrievalHit[] }
+  | { ok: false; error: string };
+
+/** Keyword retrieval over Quayside lab corpus + timeline audit event. */
+export async function retrieveRequestContext(input: {
+  requestId: string;
+}): Promise<RetrieveContextResult> {
+  const { requestId } = input;
+  if (!requestId) {
+    return { ok: false, error: "Missing request id." };
+  }
+
+  const actor = await getSessionUser();
+  if (!actor) {
+    return { ok: false, error: "You must be signed in to retrieve context." };
+  }
+
+  const supabase = getSupabaseAdmin();
+
+  const { data: request, error: requestError } = await supabase
+    .from("requests")
+    .select("id, subject, raw_body, category")
+    .eq("id", requestId)
+    .maybeSingle();
+
+  if (requestError) {
+    return { ok: false, error: requestError.message };
+  }
+  if (!request) {
+    return { ok: false, error: "Request not found." };
+  }
+
+  const { data: extractions } = await supabase
+    .from("request_extractions")
+    .select("structured_output")
+    .eq("request_id", requestId)
+    .order("created_at", { ascending: false })
+    .limit(1);
+
+  const so = (extractions?.[0]?.structured_output ?? null) as {
+    issueSummary?: string;
+    category?: string;
+    assetType?: string;
+    siteReference?: string | null;
+  } | null;
+
+  const query = buildRetrievalQuery({
+    subject: request.subject,
+    issueSummary: so?.issueSummary,
+    category: so?.category || request.category,
+    assetType: so?.assetType,
+    siteReference: so?.siteReference,
+    rawBody: request.raw_body,
+  });
+
+  const hits = retrieveKnowledge(query, { limit: 3 });
+
+  await supabase.from("workflow_events").insert({
+    request_id: requestId,
+    event_type: "retrieval_ran",
+    step_name: "keyword_retrieval",
+    status: "success",
+    payload: {
+      query: query.slice(0, 400),
+      hit_ids: hits.map((h) => h.id),
+      hit_count: hits.length,
+      method: "keyword",
+      retrieved_by: actor.email?.trim() || actor.id,
+    },
+  });
+
+  revalidatePath(`/requests/${requestId}`);
+
+  return { ok: true, query, hits };
 }
