@@ -631,3 +631,26 @@ Risk of shallow disconnected demos if module rules are ignored. Cross-module OS 
 ### Follow-up
 
 Keep Control Centre §0 capability map current. Name modules by capability in README / portfolio materials. Connect shared data only deliberately after multiple slices ship.
+
+---
+
+## DEC-024 — Minimal `jobs` table for lab protected execution
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-27 |
+| Status | Active |
+
+### Context
+
+Chargeable HITL proved Approve ≠ execute. Next demo beat needs a second human gate that persists a work order without invoicing or contractor dispatch.
+
+### Chosen approach
+
+Thin `jobs` table (`supabase/migrations/20260727100000_jobs_minimal.sql`) + desk **Create work order (lab)** → request `executed_lab` + timeline `execution_recorded`. Unique on `proposed_action_id` for idempotency. No billing APIs.
+
+### Trade-offs
+
+Not full job/contractor schema. Real invoicing stays client-specific later.
+
+---

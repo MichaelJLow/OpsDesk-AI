@@ -372,3 +372,151 @@ export async function sendApprovedDraft(input: {
 
   return { ok: true };
 }
+
+export type CreateWorkOrderResult =
+  | { ok: true; jobId: string }
+  | { ok: false; error: string };
+
+/**
+ * Protected lab execution after chargeable approval.
+ * Creates a jobs row + audit event. Does NOT invoice, email, or dispatch.
+ */
+export async function createLabWorkOrder(input: {
+  proposedActionId: string;
+  requestId: string;
+}): Promise<CreateWorkOrderResult> {
+  const { proposedActionId, requestId } = input;
+
+  if (!proposedActionId || !requestId) {
+    return { ok: false, error: "Missing proposed action or request id." };
+  }
+
+  const actor = await getSessionUser();
+  if (!actor) {
+    return { ok: false, error: "You must be signed in to create a work order." };
+  }
+
+  const supabase = getSupabaseAdmin();
+
+  const { data: action, error: actionError } = await supabase
+    .from("proposed_actions")
+    .select("id, request_id, action_type, status, payload")
+    .eq("id", proposedActionId)
+    .maybeSingle();
+
+  if (actionError) {
+    return { ok: false, error: actionError.message };
+  }
+
+  if (!action) {
+    return { ok: false, error: "Proposed action not found." };
+  }
+
+  if (action.request_id !== requestId) {
+    return { ok: false, error: "Proposed action does not belong to this request." };
+  }
+
+  if (action.action_type !== "chargeable_work") {
+    return { ok: false, error: "Only chargeable work can create a lab work order." };
+  }
+
+  if (action.status !== "approved") {
+    return {
+      ok: false,
+      error: `Chargeable action must be approved first (current: ${action.status}).`,
+    };
+  }
+
+  const { data: request, error: requestError } = await supabase
+    .from("requests")
+    .select("id, status, subject")
+    .eq("id", requestId)
+    .maybeSingle();
+
+  if (requestError) {
+    return { ok: false, error: requestError.message };
+  }
+
+  if (!request) {
+    return { ok: false, error: "Request not found." };
+  }
+
+  if (request.status !== "awaiting_execution" && request.status !== "executed_lab") {
+    return {
+      ok: false,
+      error: `Request must be awaiting_execution (current: ${request.status}).`,
+    };
+  }
+
+  const { data: existingJob } = await supabase
+    .from("jobs")
+    .select("id")
+    .eq("proposed_action_id", proposedActionId)
+    .maybeSingle();
+
+  if (existingJob) {
+    return { ok: true, jobId: existingJob.id };
+  }
+
+  const title =
+    typeof action.payload === "object" &&
+    action.payload &&
+    "subject" in action.payload &&
+    typeof (action.payload as { subject?: unknown }).subject === "string"
+      ? (action.payload as { subject: string }).subject
+      : request.subject || "Chargeable work order (lab)";
+
+  const { data: job, error: jobError } = await supabase
+    .from("jobs")
+    .insert({
+      request_id: requestId,
+      proposed_action_id: proposedActionId,
+      job_type: "chargeable_work_order",
+      title,
+      status: "queued",
+      lab_only: true,
+      created_by: actor.email?.trim() || actor.id,
+      payload: {
+        lab: true,
+        billing: "none",
+        note: "Lab execution only — no invoice, dispatch, or contractor email.",
+      },
+    })
+    .select("id")
+    .single();
+
+  if (jobError || !job) {
+    return {
+      ok: false,
+      error: jobError?.message || "Failed to create work order.",
+    };
+  }
+
+  const { error: requestUpdateError } = await supabase
+    .from("requests")
+    .update({ status: "executed_lab" })
+    .eq("id", requestId);
+
+  if (requestUpdateError) {
+    return { ok: false, error: requestUpdateError.message };
+  }
+
+  await supabase.from("workflow_events").insert({
+    request_id: requestId,
+    event_type: "execution_recorded",
+    step_name: "protected_execution_lab",
+    status: "success",
+    payload: {
+      job_id: job.id,
+      proposed_action_id: proposedActionId,
+      lab_only: true,
+      billing: "none",
+      executed_by: actor.email?.trim() || actor.id,
+    },
+  });
+
+  revalidatePath("/");
+  revalidatePath(`/requests/${requestId}`);
+
+  return { ok: true, jobId: job.id };
+}

@@ -11,7 +11,7 @@
 |---|---|---|
 | Routine boiler | Email → desk → Slack `#maintenance-inbox` → draft → Approve → Send | Happy path |
 | Urgent / hazard | Water near electrics → `#urgent-maintenance` → desk **hazard** badge → urgent draft (no fake dispatch) → timeline `route_escalated` | DEC-021 / Stage 13 |
-| Chargeable HITL | Replace carpet / charge to tenant → `#approval-queue` → desk **chargeable** panel → Approve/Reject (no auto-invoice) → `execution_deferred` | Controlled chargeable slice |
+| Chargeable HITL | Replace carpet / charge to tenant → `#approval-queue` → desk **chargeable** panel → Approve → `awaiting_execution` / `execution_deferred` → **Create work order (lab)** → `jobs` row + `execution_recorded` (no invoice) | Controlled chargeable + protected execution stub |
 | Integration failure → recovery | HubSpot error → `needs_attention` + timeline `integration_failed` + Slack alert → desk **Retry** | DEC-019 / Stage 12A |
 
 Do **not** leave HubSpot pointed at a broken URL in demos — simulate failure briefly, then restore (as in the 2026-07-27 lab).

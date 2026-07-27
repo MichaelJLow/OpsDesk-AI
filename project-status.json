@@ -42,6 +42,7 @@
     "n8nOwnerEmail": "mikelow92@gmail.com"
   },
   "notes": [
+    "2026-07-27: Chargeable HITL lab proven — Approve → awaiting_execution + execution_deferred (no send)",
     "2026-07-27: Chargeable HITL live — route chargeable flag, n8n If chargeable branch, desk approve/reject (execution deferred)",
     "2026-07-27: Stage 12A proven — HubSpot fail → needs_attention + timeline + Slack + desk Retry; URL restored",
     "2026-07-27: Demo beats logged in docs/demo/README.md (routine, urgent, chargeable, failure/retry)",

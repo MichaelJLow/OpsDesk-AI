@@ -4,6 +4,7 @@ export function requestStatusBadgeClass(status: string): string {
   if (status === "proposed") return "badge badge-proposed";
   if (status === "approved") return "badge badge-approved";
   if (status === "awaiting_execution") return "badge badge-chargeable";
+  if (status === "executed_lab") return "badge badge-approved";
   if (status === "rejected") return "badge badge-rejected";
   if (status === "sent") return "badge badge-sent";
   if (status === "error") return "badge badge-attention";

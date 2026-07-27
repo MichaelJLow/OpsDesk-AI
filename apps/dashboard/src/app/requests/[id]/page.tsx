@@ -5,6 +5,7 @@ import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import type {
   OpsCompany,
   OpsContact,
+  OpsJob,
   OpsRequest,
   OpsSite,
   ProposedAction,
@@ -14,6 +15,7 @@ import type {
 } from "@/lib/types";
 import { CrmContextPanel } from "./crm-panel";
 import { DecisionForm } from "./decision-form";
+import { ExecuteWorkOrderForm } from "./execute-form";
 import { FailureBanner } from "./failure-banner";
 import { SendForm } from "./send-form";
 import {
@@ -113,48 +115,66 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
 
   const typedRequest = request as OpsRequest;
 
-  const [{ data: extractions }, { data: actions }, { data: chargeableActions }, { data: events }] =
-    await Promise.all([
-      supabase
-        .from("request_extractions")
-        .select(
-          "id, request_id, model_provider, model_name, prompt_version, structured_output, validation_status, created_at",
-        )
-        .eq("request_id", id)
-        .order("created_at", { ascending: false })
-        .limit(1),
-      supabase
-        .from("proposed_actions")
-        .select(
-          "id, request_id, action_type, payload, reason, risk_level, requires_approval, status, created_at",
-        )
-        .eq("request_id", id)
-        .eq("action_type", "draft_reply")
-        .order("created_at", { ascending: false })
-        .limit(1),
-      supabase
-        .from("proposed_actions")
-        .select(
-          "id, request_id, action_type, payload, reason, risk_level, requires_approval, status, created_at",
-        )
-        .eq("request_id", id)
-        .eq("action_type", "chargeable_work")
-        .order("created_at", { ascending: false })
-        .limit(1),
-      supabase
-        .from("workflow_events")
-        .select(
-          "id, request_id, event_type, step_name, status, payload, error, occurred_at",
-        )
-        .eq("request_id", id)
-        .order("occurred_at", { ascending: false })
-        .limit(20),
-    ]);
+  const [
+    { data: extractions },
+    { data: actions },
+    { data: chargeableActions },
+    { data: events },
+    { data: jobs },
+  ] = await Promise.all([
+    supabase
+      .from("request_extractions")
+      .select(
+        "id, request_id, model_provider, model_name, prompt_version, structured_output, validation_status, created_at",
+      )
+      .eq("request_id", id)
+      .order("created_at", { ascending: false })
+      .limit(1),
+    supabase
+      .from("proposed_actions")
+      .select(
+        "id, request_id, action_type, payload, reason, risk_level, requires_approval, status, created_at",
+      )
+      .eq("request_id", id)
+      .eq("action_type", "draft_reply")
+      .order("created_at", { ascending: false })
+      .limit(1),
+    supabase
+      .from("proposed_actions")
+      .select(
+        "id, request_id, action_type, payload, reason, risk_level, requires_approval, status, created_at",
+      )
+      .eq("request_id", id)
+      .eq("action_type", "chargeable_work")
+      .order("created_at", { ascending: false })
+      .limit(1),
+    supabase
+      .from("workflow_events")
+      .select(
+        "id, request_id, event_type, step_name, status, payload, error, occurred_at",
+      )
+      .eq("request_id", id)
+      .order("occurred_at", { ascending: false })
+      .limit(20),
+    supabase
+      .from("jobs")
+      .select(
+        "id, request_id, proposed_action_id, job_type, title, status, lab_only, payload, created_by, created_at",
+      )
+      .eq("request_id", id)
+      .order("created_at", { ascending: false })
+      .limit(5),
+  ]);
 
   const extraction = (extractions?.[0] ?? null) as RequestExtraction | null;
   const draft = (actions?.[0] ?? null) as ProposedAction | null;
   const chargeable = (chargeableActions?.[0] ?? null) as ProposedAction | null;
   const timeline = (events ?? []) as WorkflowEvent[];
+  const labJobs = (jobs ?? []) as OpsJob[];
+  const chargeableJob =
+    labJobs.find((job) => job.proposed_action_id === chargeable?.id) ??
+    labJobs[0] ??
+    null;
   const latestError =
     timeline.find((event) => event.status === "error") ?? null;
   const draftText =
@@ -368,10 +388,38 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
                 mode="chargeable_work"
               />
             </>
+          ) : chargeable.status === "approved" && chargeableJob ? (
+            <div>
+              <p className="muted" style={{ marginBottom: 8 }}>
+                Lab work order created.{" "}
+                <strong>Lab execution only — no billing.</strong>
+              </p>
+              <dl className="kv">
+                <div style={{ display: "contents" }}>
+                  <dt>Job id</dt>
+                  <dd>
+                    <code>{chargeableJob.id}</code>
+                  </dd>
+                </div>
+                <div style={{ display: "contents" }}>
+                  <dt>Status</dt>
+                  <dd>{chargeableJob.status}</dd>
+                </div>
+                <div style={{ display: "contents" }}>
+                  <dt>Type</dt>
+                  <dd>{chargeableJob.job_type}</dd>
+                </div>
+              </dl>
+            </div>
+          ) : chargeable.status === "approved" &&
+            typedRequest.status === "awaiting_execution" ? (
+            <ExecuteWorkOrderForm
+              proposedActionId={chargeable.id}
+              requestId={typedRequest.id}
+            />
           ) : chargeable.status === "approved" ? (
             <p className="muted" style={{ marginBottom: 0 }}>
-              Approved — execution deferred (no auto-invoice or dispatch in this
-              slice).
+              Approved — execution deferred (no auto-invoice or dispatch).
             </p>
           ) : (
             <p className="muted" style={{ marginBottom: 0 }}>

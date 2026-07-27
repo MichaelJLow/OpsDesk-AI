@@ -345,6 +345,7 @@ Keep detailed entries in `docs/decision-log.md`. Use this table as the index.
 | DEC-021 | 2026-07-27 | Deterministic urgent/hazard routing | Active | `docs/decision-log.md#dec-021` |
 | DEC-022 | 2026-07-27 | Capability playbook over monolithic platform | Active | `docs/decision-log.md#dec-022` |
 | DEC-023 | 2026-07-27 | API-assisted n8n workflow iteration | Active | `docs/decision-log.md#dec-023` |
+| DEC-024 | 2026-07-27 | Minimal `jobs` table for lab protected execution | Active | `docs/decision-log.md#dec-024` |
 
 A decision should be logged when it changes:
 

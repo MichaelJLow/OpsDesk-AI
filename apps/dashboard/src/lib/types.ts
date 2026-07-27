@@ -83,6 +83,19 @@ export type ProposedAction = {
   created_at: string;
 };
 
+export type OpsJob = {
+  id: string;
+  request_id: string;
+  proposed_action_id: string | null;
+  job_type: string;
+  title: string | null;
+  status: string;
+  lab_only: boolean;
+  payload: Record<string, unknown> | null;
+  created_by: string | null;
+  created_at: string;
+};
+
 export type WorkflowEvent = {
   id: string;
   request_id: string | null;

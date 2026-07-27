@@ -21,6 +21,7 @@ function resetAllowed(): boolean {
 
 /**
  * Lab-only: wipe request run state. Keeps companies, contacts, sites.
+ * Related jobs cascade-delete with requests.
  * Cascades clear extractions, proposed_actions, approvals, linked workflow_events.
  */
 export async function resetDemoData(): Promise<DemoResetResult> {
