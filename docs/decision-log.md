@@ -731,10 +731,10 @@ Phase 5 retrieval worked on the desk but drafts were still ungrounded. Portfolio
 
 ### Chosen approach
 
-`POST /v1/draft/with-citations` enriches Gemini draft text with a `Sources (OpsDesk lab policies)` block. n8n **Parse draft** calls it (soft-fail if API down). Payload also stores `citations[]`. Desk send path re-enriches if footnotes missing.
+`POST /v1/draft/with-citations` returns **clean** `draftText` plus separate `hits` / `citationBlock`. n8n **Parse draft** stores `payload.citations` for the desk. Customer email never includes Sources footnotes; Send strips them if present. Operators can copy internal citations later if a dispute needs evidence.
 
 ### Trade-offs
 
-Footnotes are keyword-selected, not LLM-grounded generation. Citations appear in the email body (transparent for demos).
+Footnotes are keyword-selected, not LLM-grounded generation. “Send citations to customer” is a future explicit action, not the default reply.
 
 ---

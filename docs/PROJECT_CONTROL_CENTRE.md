@@ -47,7 +47,7 @@ Avoid:
 | Draft response + HITL approve/send | Done (lab hosted) | Desk + VPS webhooks |
 | Urgent / hazard task routing | Done (lab hosted) | DEC-021; Lesson 13 proven 2026-07-27 |
 | Failure visibility + retry | Done (thin) | DEC-019; full recovery queue later |
-| Document retrieval / grounded support | Thin (keyword + draft footnotes) | Corpus + desk retrieve + n8n Parse draft → `/v1/draft/with-citations` |
+| Document retrieval / grounded support | Thin (keyword; desk-only citations) | Corpus + retrieve; draft `citations[]` internal; customer email stays clean |
 | Controlled approvals (chargeable / auth) | Planned | Phase 6 as its own slice |
 | Evaluation harness | Thin (routing fixtures) | `evaluation/fixtures/property-routing` + `npm run eval:routing`; full Gemini suite later |
 | Cross-module shared operating system | Later | Only after strongest slices exist |

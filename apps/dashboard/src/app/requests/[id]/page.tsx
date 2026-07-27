@@ -184,7 +184,13 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
       ? draft.payload.draftText
       : null;
   const draftCitations = Array.isArray(draft?.payload?.citations)
-    ? (draft.payload.citations as Array<{ id?: string; title?: string }>)
+    ? (draft.payload.citations as Array<{
+        id?: string;
+        title?: string;
+        snippet?: string;
+        namespace?: string;
+        score?: number;
+      }>)
     : null;
   const chargeableSummary =
     typeof chargeable?.payload?.summary === "string"
@@ -336,12 +342,31 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
               </p>
               <pre className="pre">{draftText || "(no draft text in payload)"}</pre>
               {draftCitations && draftCitations.length > 0 ? (
-                <p className="muted" style={{ marginTop: "0.5rem" }}>
-                  Grounded on{" "}
-                  {draftCitations
-                    .map((c) => c.title || c.id || "policy")
-                    .join("; ")}
-                </p>
+                <div style={{ marginTop: "0.75rem" }}>
+                  <p className="muted" style={{ marginBottom: "0.35rem" }}>
+                    <strong>Internal grounding</strong> — not included in the
+                    customer email. Keep for disputes / follow-up if needed.
+                  </p>
+                  <ul className="timeline">
+                    {draftCitations.map((c, i) => (
+                      <li key={c.id || String(i)}>
+                        <strong>{c.title || c.id || "policy"}</strong>
+                        {c.namespace ? (
+                          <>
+                            {" · "}
+                            <span className="badge">{c.namespace}</span>
+                          </>
+                        ) : null}
+                        {c.id ? (
+                          <div className="muted mono">{c.id}</div>
+                        ) : null}
+                        {c.snippet ? (
+                          <p style={{ margin: "0.35rem 0 0" }}>{c.snippet}</p>
+                        ) : null}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ) : null}
               {draft.status === "proposed" ? (
                 <DecisionForm

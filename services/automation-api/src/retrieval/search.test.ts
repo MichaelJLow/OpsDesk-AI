@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
-  enrichDraftWithCitations,
   formatCitationBlock,
   retrieveKnowledge,
+  stripCustomerCitationFootnotes,
 } from "./search.js";
 
 describe("retrieveKnowledge", () => {
@@ -39,25 +39,21 @@ describe("retrieveKnowledge", () => {
   });
 });
 
-describe("enrichDraftWithCitations", () => {
-  it("appends Sources block from hits", () => {
+describe("stripCustomerCitationFootnotes", () => {
+  it("removes Sources block from draft body", () => {
     const hits = retrieveKnowledge("charge tenant carpet replace");
-    const out = enrichDraftWithCitations({
-      draftText: "Thanks, we received your request.",
-      hits,
-    });
-    assert.match(out, /Sources \(OpsDesk lab policies\):/);
-    assert.match(out, /pol-chargeable-works/);
+    const dirty =
+      "Thanks, we received your request.\n" + formatCitationBlock(hits);
+    const clean = stripCustomerCitationFootnotes(dirty);
+    assert.equal(clean, "Thanks, we received your request.");
+    assert.ok(!clean.includes("Sources (OpsDesk lab policies):"));
   });
 
-  it("is idempotent if Sources already present", () => {
-    const hits = retrieveKnowledge("boiler rattling");
-    const once = enrichDraftWithCitations({
-      draftText: "Hello",
-      hits,
-    });
-    const twice = enrichDraftWithCitations({ draftText: once, hits });
-    assert.equal(once, twice);
+  it("leaves clean drafts unchanged", () => {
+    assert.equal(
+      stripCustomerCitationFootnotes("Hello from Quayside."),
+      "Hello from Quayside.",
+    );
   });
 
   it("formatCitationBlock empty for no hits", () => {

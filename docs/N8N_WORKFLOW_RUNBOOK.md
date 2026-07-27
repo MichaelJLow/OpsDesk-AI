@@ -37,7 +37,7 @@ Later: full support-intent Slack routing; pgvector if keyword retrieval is insuf
 | 2026-07-26 | Hosted E2E — Vercel desk + VPS n8n; Zod sidecar; send/retry webhooks |
 | 2026-07-27 | Stage 13 — `Route Property` → patch urgency → Slack urgent/intake; desk hazard badge |
 | 2026-07-27 | Controlled/chargeable HITL — `chargeable` route flag, n8n approval branch, desk approve/reject without send |
-| 2026-07-27 | Draft citations — Parse draft → `POST /v1/draft/with-citations` (keyword Sources footnotes) |
+| 2026-07-27 | Draft citations — Parse draft → `/v1/draft/with-citations`; citations on desk only (not customer email) |
 
 ---
 

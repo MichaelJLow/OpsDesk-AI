@@ -1,6 +1,6 @@
 import { createServer } from "node:http";
 import { health } from "./index.js";
-import { retrieveKnowledge, buildRetrievalQuery, enrichDraftWithCitations, formatCitationBlock } from "./retrieval/search.js";
+import { retrieveKnowledge, buildRetrievalQuery, stripCustomerCitationFootnotes, formatCitationBlock } from "./retrieval/search.js";
 import { applyPropertyRouting } from "./routing/property-route.js";
 import {
   safeValidateClassification,
@@ -168,12 +168,13 @@ const server = createServer(async (req, res) => {
           ? Math.min(body.limit, 10)
           : 3;
       const hits = retrieveKnowledge(query, { limit });
-      const enriched = enrichDraftWithCitations({ draftText, hits });
+      const cleanDraft = stripCustomerCitationFootnotes(draftText);
       send(res, 200, {
         query,
         hits,
         citationBlock: formatCitationBlock(hits),
-        draftText: enriched,
+        // Customer-facing body stays clean; citations are separate for the desk
+        draftText: cleanDraft,
       });
     } catch {
       send(res, 400, { error: "Request body must be valid JSON" });

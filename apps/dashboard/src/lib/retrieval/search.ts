@@ -107,7 +107,7 @@ export function buildRetrievalQuery(parts: {
     .join(" ");
 }
 
-/** Footnotes block appended to operator-facing draft emails. */
+/** Internal-only footnotes for desk / dispute packs — not for customer email. */
 export function formatCitationBlock(hits: RetrievalHit[]): string {
   if (hits.length === 0) return "";
   const lines = hits.map(
@@ -117,14 +117,37 @@ export function formatCitationBlock(hits: RetrievalHit[]): string {
   return ["", "—", "Sources (OpsDesk lab policies):", ...lines].join("\n");
 }
 
+const SOURCES_MARKER = "Sources (OpsDesk lab policies):";
+
+/** Remove lab Sources footnotes from customer-facing draft body. */
+export function stripCustomerCitationFootnotes(draftText: string): string {
+  const text = draftText.trim();
+  const idx = text.indexOf(SOURCES_MARKER);
+  if (idx === -1) return text;
+
+  let start = idx;
+  const before = text.slice(0, idx);
+  const dashBlock = before.lastIndexOf("\n—\n");
+  if (dashBlock >= 0) {
+    start = dashBlock;
+  } else {
+    const dashLine = before.lastIndexOf("\n—");
+    if (dashLine >= 0 && before.slice(dashLine).trim() === "—") {
+      start = dashLine;
+    }
+  }
+  return text.slice(0, start).trim();
+}
+
+/**
+ * @deprecated Prefer strip + separate citations payload. Kept for tests/compat;
+ * no longer appends Sources into customer draft text.
+ */
 export function enrichDraftWithCitations(input: {
   draftText: string;
   hits: RetrievalHit[];
 }): string {
-  const base = input.draftText.trim();
-  const block = formatCitationBlock(input.hits);
-  if (!block) return base;
-  if (base.includes("Sources (OpsDesk lab policies):")) return base;
-  return `${base}\n${block}`;
+  void input.hits;
+  return stripCustomerCitationFootnotes(input.draftText);
 }
 

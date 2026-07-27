@@ -8,8 +8,8 @@ import {
 import { formatEvidencePackMarkdown } from "@/lib/evidence-pack";
 import {
   buildRetrievalQuery,
-  enrichDraftWithCitations,
   retrieveKnowledge,
+  stripCustomerCitationFootnotes,
   type RetrievalHit,
 } from "@/lib/retrieval/search";
 import { ensureServerEnv, getSupabaseAdmin } from "@/lib/supabase/admin";
@@ -286,14 +286,19 @@ export async function sendApprovedDraft(input: {
 
   const payload = (action.payload ?? {}) as {
     draftText?: string;
+    citations?: unknown;
+    retrievalQuery?: string;
+    [key: string]: unknown;
   };
   const rawDraft = payload.draftText?.trim();
   if (!rawDraft) {
     return { ok: false, error: "Draft text missing from proposed action payload." };
   }
 
-  let draftForSend = rawDraft;
-  if (!draftForSend.includes("Sources (OpsDesk lab policies):")) {
+  let draftForSend = stripCustomerCitationFootnotes(rawDraft);
+
+  // Ensure citations exist on the action for desk/dispute; never put them in email body
+  if (!Array.isArray((payload as { citations?: unknown }).citations)) {
     const { data: extractions } = await supabase
       .from("request_extractions")
       .select("structured_output")
@@ -315,7 +320,19 @@ export async function sendApprovedDraft(input: {
       rawBody: request.raw_body,
     });
     const hits = retrieveKnowledge(query, { limit: 3 });
-    draftForSend = enrichDraftWithCitations({ draftText: draftForSend, hits });
+    if (hits.length > 0) {
+      await supabase
+        .from("proposed_actions")
+        .update({
+          payload: {
+            ...payload,
+            draftText: draftForSend,
+            citations: hits,
+            retrievalQuery: query,
+          },
+        })
+        .eq("id", proposedActionId);
+    }
   }
 
   const draftText = polishDraftText(
