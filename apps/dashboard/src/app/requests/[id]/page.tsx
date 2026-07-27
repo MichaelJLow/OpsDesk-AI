@@ -15,6 +15,7 @@ import type {
 } from "@/lib/types";
 import { CrmContextPanel } from "./crm-panel";
 import { DecisionForm } from "./decision-form";
+import { EvidencePackForm } from "./evidence-pack-form";
 import { ExecuteWorkOrderForm } from "./execute-form";
 import { FailureBanner } from "./failure-banner";
 import { SendForm } from "./send-form";
@@ -456,6 +457,11 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
             ))}
           </ul>
         )}
+      </section>
+
+      <section className="panel">
+        <h2>Evidence pack</h2>
+        <EvidencePackForm requestId={typedRequest.id} />
       </section>
     </main>
   );

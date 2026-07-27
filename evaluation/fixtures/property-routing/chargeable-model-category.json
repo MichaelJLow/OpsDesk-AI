@@ -1,0 +1,27 @@
+{
+  "id": "chargeable-model-category",
+  "description": "Model already labelled controlled_chargeable",
+  "subject": "New flooring Flat 3",
+  "rawBody": "Please arrange new flooring for Flat 3 when convenient.",
+  "extraction": {
+    "vertical": "property-maintenance",
+    "category": "controlled_chargeable",
+    "confidence": 0.78,
+    "urgency": "normal",
+    "siteReference": "Riverside Court",
+    "unitReference": "Flat 3",
+    "assetType": "flooring",
+    "issueSummary": "New flooring requested",
+    "accessNotes": null,
+    "heatingStillWorking": null,
+    "missingInformation": [],
+    "suggestedRoute": "maintenance_intake"
+  },
+  "expected": {
+    "escalated": false,
+    "chargeable": true,
+    "requiresApproval": true,
+    "suggestedRoute": "approval_queue",
+    "category": "controlled_chargeable"
+  }
+}

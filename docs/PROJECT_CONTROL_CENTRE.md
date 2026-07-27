@@ -49,7 +49,7 @@ Avoid:
 | Failure visibility + retry | Done (thin) | DEC-019; full recovery queue later |
 | Document retrieval / grounded support | Planned | Phase 5 as its own slice |
 | Controlled approvals (chargeable / auth) | Planned | Phase 6 as its own slice |
-| Evaluation harness | Planned | Phase 8; per-capability fixtures |
+| Evaluation harness | Thin (routing fixtures) | `evaluation/fixtures/property-routing` + `npm run eval:routing`; full Gemini suite later |
 | Cross-module shared operating system | Later | Only after strongest slices exist |
 
 Phases 3–10 remain the build sequence; they are **delivery vehicles for capability modules**, not a mandate to ship one monolithic product before anything is portfolio-ready.
@@ -346,6 +346,8 @@ Keep detailed entries in `docs/decision-log.md`. Use this table as the index.
 | DEC-022 | 2026-07-27 | Capability playbook over monolithic platform | Active | `docs/decision-log.md#dec-022` |
 | DEC-023 | 2026-07-27 | API-assisted n8n workflow iteration | Active | `docs/decision-log.md#dec-023` |
 | DEC-024 | 2026-07-27 | Minimal `jobs` table for lab protected execution | Active | `docs/decision-log.md#dec-024` |
+| DEC-025 | 2026-07-27 | Desk evidence pack (audit markdown export) | Active | `docs/decision-log.md#dec-025` |
+| DEC-026 | 2026-07-27 | Thin routing evaluation fixtures first | Active | `docs/decision-log.md#dec-026` |
 
 A decision should be logged when it changes:
 

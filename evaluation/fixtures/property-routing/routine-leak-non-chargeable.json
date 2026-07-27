@@ -1,0 +1,27 @@
+{
+  "id": "routine-leak-non-chargeable",
+  "description": "Routine drip leak — not chargeable, not urgent",
+  "subject": "Kitchen tap dripping Flat 8",
+  "rawBody": "The kitchen tap in Flat 8 at Riverside Court has been dripping slowly. Not urgent. Happy for a weekday visit.",
+  "extraction": {
+    "vertical": "property-maintenance",
+    "category": "routine_maintenance",
+    "confidence": 0.82,
+    "urgency": "normal",
+    "siteReference": "Riverside Court",
+    "unitReference": "Flat 8",
+    "assetType": "plumbing",
+    "issueSummary": "Kitchen tap dripping",
+    "accessNotes": "Weekday visit ok",
+    "heatingStillWorking": null,
+    "missingInformation": [],
+    "suggestedRoute": "maintenance_intake"
+  },
+  "expected": {
+    "escalated": false,
+    "chargeable": false,
+    "requiresApproval": false,
+    "suggestedRoute": "maintenance_intake",
+    "category": "routine_maintenance"
+  }
+}

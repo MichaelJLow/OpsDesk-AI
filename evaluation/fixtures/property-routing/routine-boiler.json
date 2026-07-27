@@ -1,0 +1,27 @@
+{
+  "id": "routine-boiler",
+  "description": "Routine boiler rattle — maintenance intake",
+  "subject": "Boiler rattling Flat 8 Riverside Court",
+  "rawBody": "Hi, the boiler in Flat 8 at Riverside Court has been rattling for a few days. Heating still works. Access weekdays after 9am.",
+  "extraction": {
+    "vertical": "property-maintenance",
+    "category": "routine_maintenance",
+    "confidence": 0.85,
+    "urgency": "normal",
+    "siteReference": "Riverside Court",
+    "unitReference": "Flat 8",
+    "assetType": "boiler",
+    "issueSummary": "Boiler rattling",
+    "accessNotes": "Weekdays after 9am",
+    "heatingStillWorking": true,
+    "missingInformation": [],
+    "suggestedRoute": "maintenance_intake"
+  },
+  "expected": {
+    "escalated": false,
+    "chargeable": false,
+    "requiresApproval": false,
+    "suggestedRoute": "maintenance_intake",
+    "category": "routine_maintenance"
+  }
+}

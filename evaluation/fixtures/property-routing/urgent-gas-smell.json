@@ -1,0 +1,27 @@
+{
+  "id": "urgent-gas-smell",
+  "description": "Gas smell — urgent hazard",
+  "subject": "Smell of gas Flat 8",
+  "rawBody": "Strong smell of gas in the kitchen at Flat 8 Riverside Court.",
+  "extraction": {
+    "vertical": "property-maintenance",
+    "category": "routine_maintenance",
+    "confidence": 0.75,
+    "urgency": "normal",
+    "siteReference": "Riverside Court",
+    "unitReference": "Flat 8",
+    "assetType": "gas",
+    "issueSummary": "Strong smell of gas in the kitchen",
+    "accessNotes": null,
+    "heatingStillWorking": null,
+    "missingInformation": [],
+    "suggestedRoute": "maintenance_intake"
+  },
+  "expected": {
+    "escalated": true,
+    "chargeable": false,
+    "requiresApproval": false,
+    "suggestedRoute": "urgent_maintenance",
+    "category": "urgent_hazardous"
+  }
+}

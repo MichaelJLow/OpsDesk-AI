@@ -654,3 +654,45 @@ Thin `jobs` table (`supabase/migrations/20260727100000_jobs_minimal.sql`) + desk
 Not full job/contractor schema. Real invoicing stays client-specific later.
 
 ---
+
+## DEC-025 — Desk evidence pack (audit markdown export)
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-27 |
+| Status | Active |
+
+### Context
+
+Need a Loom-friendly proof artefact after chargeable propose → approve → execute (lab), without PDF services or email.
+
+### Chosen approach
+
+Request detail **Generate evidence pack** builds markdown from existing Supabase rows (request, extraction, proposed_actions, approvals, jobs, workflow_events). Copyable on the desk. No external export service.
+
+### Trade-offs
+
+Markdown only (not PDF). Not a legal/compliance pack — demo/portfolio audit view.
+
+---
+
+## DEC-026 — Thin routing evaluation fixtures first
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-27 |
+| Status | Active |
+
+### Context
+
+Phase 8 asks for labelled evaluation. Live Gemini scoring is flaky and needs API spend. Routing rules already decide urgent vs chargeable vs routine in production.
+
+### Chosen approach
+
+JSON fixtures under `evaluation/fixtures/property-routing/` exercised by `services/automation-api` (`npm run eval:routing` / `npm test`). Deterministic only — no Gemini, no Supabase `evaluation_*` writes yet.
+
+### Trade-offs
+
+Does not score extraction quality. Full 50-case / model-version harness remains later.
+
+---

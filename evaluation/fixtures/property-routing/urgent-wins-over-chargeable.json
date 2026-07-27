@@ -1,0 +1,27 @@
+{
+  "id": "urgent-wins-over-chargeable",
+  "description": "Water near electrics plus charge-tenant language — urgent wins",
+  "subject": "Flood and carpet charge",
+  "rawBody": "Water dripping onto the light fitting — also please charge carpet to tenant.",
+  "extraction": {
+    "vertical": "property-maintenance",
+    "category": "routine_maintenance",
+    "confidence": 0.7,
+    "urgency": "normal",
+    "siteReference": "Riverside Court",
+    "unitReference": "Flat 8",
+    "assetType": "carpet",
+    "issueSummary": "Water and carpet",
+    "accessNotes": null,
+    "heatingStillWorking": null,
+    "missingInformation": [],
+    "suggestedRoute": "maintenance_intake"
+  },
+  "expected": {
+    "escalated": true,
+    "chargeable": false,
+    "requiresApproval": false,
+    "suggestedRoute": "urgent_maintenance",
+    "category": "urgent_hazardous"
+  }
+}

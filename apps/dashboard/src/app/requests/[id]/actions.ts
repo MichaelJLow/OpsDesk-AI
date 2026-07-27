@@ -5,6 +5,7 @@ import {
   draftTextToHtml,
   polishDraftText,
 } from "@/lib/draft-polish";
+import { formatEvidencePackMarkdown } from "@/lib/evidence-pack";
 import { ensureServerEnv, getSupabaseAdmin } from "@/lib/supabase/admin";
 import { getSessionUser } from "@/lib/supabase/server";
 
@@ -519,4 +520,133 @@ export async function createLabWorkOrder(input: {
   revalidatePath(`/requests/${requestId}`);
 
   return { ok: true, jobId: job.id };
+}
+
+export type EvidencePackResult =
+  | { ok: true; markdown: string }
+  | { ok: false; error: string };
+
+/** Desk audit export — no email, invoice, or dispatch. */
+export async function buildEvidencePack(input: {
+  requestId: string;
+}): Promise<EvidencePackResult> {
+  const { requestId } = input;
+  if (!requestId) {
+    return { ok: false, error: "Missing request id." };
+  }
+
+  const actor = await getSessionUser();
+  if (!actor) {
+    return { ok: false, error: "You must be signed in to generate an evidence pack." };
+  }
+
+  const supabase = getSupabaseAdmin();
+
+  const { data: request, error: requestError } = await supabase
+    .from("requests")
+    .select(
+      "id, subject, sender_email, status, urgency, category, received_at",
+    )
+    .eq("id", requestId)
+    .maybeSingle();
+
+  if (requestError) {
+    return { ok: false, error: requestError.message };
+  }
+  if (!request) {
+    return { ok: false, error: "Request not found." };
+  }
+
+  const [
+    { data: extractions },
+    { data: actions },
+    { data: jobs },
+    { data: events },
+  ] = await Promise.all([
+    supabase
+      .from("request_extractions")
+      .select(
+        "validation_status, model_name, structured_output, created_at",
+      )
+      .eq("request_id", requestId)
+      .order("created_at", { ascending: false })
+      .limit(1),
+    supabase
+      .from("proposed_actions")
+      .select("id, action_type, status, risk_level, reason, payload, created_at")
+      .eq("request_id", requestId)
+      .order("created_at", { ascending: true }),
+    supabase
+      .from("jobs")
+      .select("id, job_type, title, status, lab_only, created_at")
+      .eq("request_id", requestId)
+      .order("created_at", { ascending: true }),
+    supabase
+      .from("workflow_events")
+      .select(
+        "occurred_at, event_type, step_name, status, error, payload",
+      )
+      .eq("request_id", requestId)
+      .order("occurred_at", { ascending: true })
+      .limit(100),
+  ]);
+
+  const actionIds = (actions ?? []).map((a) => a.id);
+  let approvals: Array<{
+    decision: string;
+    reviewer_id: string | null;
+    reason: string | null;
+    decided_at: string;
+    proposed_action_id: string;
+  }> = [];
+
+  if (actionIds.length > 0) {
+    const { data: approvalRows } = await supabase
+      .from("approvals")
+      .select(
+        "decision, reviewer_id, reason, decided_at, proposed_action_id",
+      )
+      .in("proposed_action_id", actionIds)
+      .order("decided_at", { ascending: true });
+    approvals = approvalRows ?? [];
+  }
+
+  const markdown = formatEvidencePackMarkdown({
+    request: {
+      id: request.id,
+      subject: request.subject,
+      sender_email: request.sender_email,
+      status: request.status,
+      urgency: request.urgency,
+      category: request.category,
+      received_at: request.received_at,
+    },
+    extraction: extractions?.[0]
+      ? {
+          validation_status: extractions[0].validation_status,
+          model_name: extractions[0].model_name,
+          structured_output: extractions[0].structured_output as {
+            issueSummary?: string;
+            siteReference?: string | null;
+            urgency?: string;
+            category?: string;
+            suggestedRoute?: string;
+          } | null,
+        }
+      : null,
+    actions: (actions ?? []).map((a) => ({
+      id: a.id,
+      action_type: a.action_type,
+      status: a.status,
+      risk_level: a.risk_level,
+      reason: a.reason,
+      payload: (a.payload ?? null) as Record<string, unknown> | null,
+    })),
+    jobs: jobs ?? [],
+    events: events ?? [],
+    approvals,
+    generatedAt: new Date().toISOString(),
+  });
+
+  return { ok: true, markdown };
 }

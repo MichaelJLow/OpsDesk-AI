@@ -1,0 +1,27 @@
+{
+  "id": "urgent-water-electrics",
+  "description": "Water near electrics — urgent hazard",
+  "subject": "Water dripping onto light fitting",
+  "rawBody": "There is water dripping onto the light fitting in the hallway at Riverside Court Flat 8. Please help urgently.",
+  "extraction": {
+    "vertical": "property-maintenance",
+    "category": "routine_maintenance",
+    "confidence": 0.7,
+    "urgency": "normal",
+    "siteReference": "Riverside Court",
+    "unitReference": "Flat 8",
+    "assetType": "electrics",
+    "issueSummary": "Water near light fitting",
+    "accessNotes": null,
+    "heatingStillWorking": null,
+    "missingInformation": [],
+    "suggestedRoute": "maintenance_intake"
+  },
+  "expected": {
+    "escalated": true,
+    "chargeable": false,
+    "requiresApproval": false,
+    "suggestedRoute": "urgent_maintenance",
+    "category": "urgent_hazardous"
+  }
+}
