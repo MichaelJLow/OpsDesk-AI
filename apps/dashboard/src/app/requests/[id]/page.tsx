@@ -16,11 +16,11 @@ import type {
 import { CaseToolsDisclosure } from "./case-tools";
 import { CrmContextPanel } from "./crm-panel";
 import { DecisionForm } from "./decision-form";
+import { DraftReplyPanel } from "./draft-reply-panel";
 import { EvidencePackForm } from "./evidence-pack-form";
 import { ExecuteWorkOrderForm } from "./execute-form";
 import { FailureBanner } from "./failure-banner";
 import { RetrievalPanel } from "./retrieval-panel";
-import { SendForm } from "./send-form";
 import {
   requestStatusBadgeClass,
   urgencyBadgeClass,
@@ -378,62 +378,19 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
         <section className="panel panel-decide">
           <h2>Draft reply</h2>
           {draft ? (
-            <>
-              <p className="muted" style={{ marginTop: 0 }}>
-                Status{" "}
-                <span className={badgeClass(draft.status)}>{draft.status}</span>
-                {draft.risk_level ? ` · risk ${draft.risk_level}` : null}
-              </p>
-              <pre className="pre">{draftText || "(no draft text in payload)"}</pre>
-              {draftCitations && draftCitations.length > 0 ? (
-                <div style={{ marginTop: "0.75rem" }}>
-                  <p className="muted" style={{ marginBottom: "0.35rem" }}>
-                    <strong>Internal grounding</strong> (desk only; not in the
-                    customer email). Keep for disputes / follow-up if needed.
-                  </p>
-                  <ul className="timeline">
-                    {draftCitations.map((c, i) => (
-                      <li key={c.id || String(i)}>
-                        <strong>{c.title || c.id || "policy"}</strong>
-                        {c.namespace ? (
-                          <>
-                            {" · "}
-                            <span className="badge">{c.namespace}</span>
-                          </>
-                        ) : null}
-                        {c.id ? (
-                          <div className="muted mono">{c.id}</div>
-                        ) : null}
-                        {c.snippet ? (
-                          <p style={{ margin: "0.35rem 0 0" }}>{c.snippet}</p>
-                        ) : null}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ) : null}
-              {draft.status === "proposed" ? (
-                <DecisionForm
-                  proposedActionId={draft.id}
-                  requestId={typedRequest.id}
-                  mode="draft_reply"
-                />
-              ) : draft.status === "approved" ? (
-                <SendForm
-                  proposedActionId={draft.id}
-                  requestId={typedRequest.id}
-                />
-              ) : draft.status === "sent" ? (
-                <p className="muted" style={{ marginBottom: 0 }}>
-                  Reply marked as sent. Check the recipient inbox / Sent folder.
-                </p>
-              ) : (
-                <p className="muted" style={{ marginBottom: 0 }}>
-                  Decision recorded as <strong>{draft.status}</strong>. No send
-                  available.
-                </p>
-              )}
-            </>
+            <DraftReplyPanel
+              proposedActionId={draft.id}
+              requestId={typedRequest.id}
+              status={draft.status}
+              riskLevel={draft.risk_level}
+              draftText={draftText}
+              citations={draftCitations}
+              editedBy={
+                typeof draft.payload?.editedBy === "string"
+                  ? draft.payload.editedBy
+                  : null
+              }
+            />
           ) : (
             <p className="muted" style={{ margin: 0 }}>
               No draft reply proposed yet.

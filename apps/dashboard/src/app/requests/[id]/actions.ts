@@ -196,6 +196,108 @@ async function decideOnProposedAction(input: {
   return { ok: true };
 }
 
+export async function updateDraftReply(input: {
+  proposedActionId: string;
+  requestId: string;
+  draftText: string;
+}): Promise<DecisionResult> {
+  const { proposedActionId, requestId } = input;
+  const draftText = input.draftText.trim();
+
+  if (!proposedActionId || !requestId) {
+    return { ok: false, error: "Missing proposed action or request id." };
+  }
+
+  if (!draftText) {
+    return { ok: false, error: "Draft text cannot be empty." };
+  }
+
+  const editor = await getSessionUser();
+  if (!editor) {
+    return { ok: false, error: "Sign in required to edit a draft." };
+  }
+  const editorId = editor.email?.trim() || editor.id;
+
+  const supabase = getSupabaseAdmin();
+
+  const { data: existing, error: loadError } = await supabase
+    .from("proposed_actions")
+    .select("id, status, request_id, action_type, payload")
+    .eq("id", proposedActionId)
+    .maybeSingle();
+
+  if (loadError) {
+    return { ok: false, error: loadError.message };
+  }
+
+  if (!existing) {
+    return { ok: false, error: "Proposed action not found." };
+  }
+
+  if (existing.request_id !== requestId) {
+    return { ok: false, error: "Proposed action does not belong to this request." };
+  }
+
+  if (existing.action_type !== "draft_reply") {
+    return { ok: false, error: "Only draft replies can be edited here." };
+  }
+
+  if (existing.status !== "proposed" && existing.status !== "approved") {
+    return {
+      ok: false,
+      error: `Draft cannot be edited while status is "${existing.status}".`,
+    };
+  }
+
+  const previousPayload =
+    existing.payload && typeof existing.payload === "object"
+      ? (existing.payload as Record<string, unknown>)
+      : {};
+  const previousText =
+    typeof previousPayload.draftText === "string"
+      ? previousPayload.draftText
+      : "";
+
+  if (previousText.trim() === draftText) {
+    return { ok: true };
+  }
+
+  const nextPayload = {
+    ...previousPayload,
+    draftText,
+    editedAt: new Date().toISOString(),
+    editedBy: editorId,
+  };
+
+  const { error: updateError } = await supabase
+    .from("proposed_actions")
+    .update({ payload: nextPayload })
+    .eq("id", proposedActionId)
+    .in("status", ["proposed", "approved"]);
+
+  if (updateError) {
+    return { ok: false, error: updateError.message };
+  }
+
+  await supabase.from("workflow_events").insert({
+    request_id: requestId,
+    event_type: "draft_edited",
+    step_name: "opsdesk_dashboard",
+    status: "success",
+    payload: {
+      proposed_action_id: proposedActionId,
+      edited_by: editorId,
+      previous_length: previousText.length,
+      next_length: draftText.length,
+    },
+  });
+
+  revalidatePath("/");
+  revalidatePath(`/requests/${requestId}`);
+
+  return { ok: true };
+}
+
 export async function sendApprovedDraft(input: {
   proposedActionId: string;
   requestId: string;
