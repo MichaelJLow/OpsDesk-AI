@@ -3,11 +3,11 @@
 > This is the living source of truth for the project. Update it at the end of every meaningful build session.
 
 **Project:** OpsDesk AI — Quayside Property Services (property-maintenance vertical)  
-**Current phase:** Phase 3 (happy path hosted; exit polish remaining)  
-**Current milestone:** First working vertical slice (routine boiler maintenance)  
-**Overall status:** In progress — hosted E2E proven (Vercel desk + VPS n8n)  
-**Last updated:** 2026-07-27  
-**Next review:** 2026-07-31  
+**Current phase:** Phase 3 (happy path hosted; exit polish remaining) + Phase 10 packaging in progress  
+**Current milestone:** Portfolio packaging (desk polish done; demo video next)  
+**Overall status:** In progress — hosted lab + walkthrough seed ready; Loom deferred to Clipchamp/OBS if signup stays broken  
+**Last updated:** 2026-07-27 (end-session)  
+**Next review:** 2026-07-28  
 **Remote:** https://github.com/MichaelJLow/OpsDesk-AI  
 
 ---
@@ -47,10 +47,11 @@ Avoid:
 | Draft response + HITL approve/send | Done (lab hosted) | Desk + VPS webhooks |
 | Urgent / hazard task routing | Done (lab hosted) | DEC-021; Lesson 13 proven 2026-07-27 |
 | Failure visibility + retry | Done (thin) | DEC-019; full recovery queue later |
-| Document retrieval / grounded support | Thin (keyword; desk-only citations) | Corpus + retrieve; draft `citations[]` internal; customer email stays clean |
-| Controlled approvals (chargeable / auth) | Planned | Phase 6 as its own slice |
+| Document retrieval / grounded support | Thin (keyword; desk-only citations) | Corpus + retrieve; draft `citations[]` internal; Sources UI tidied; customer email stays clean |
+| Controlled approvals (chargeable / auth) | Done (lab) | Chargeable HITL + lab work order; account-change Phase 6 still open |
 | Evaluation harness | Thin (routing fixtures) | `evaluation/fixtures/property-routing` + `npm run eval:routing`; full Gemini suite later |
 | Cross-module shared operating system | Later | Only after strongest slices exist |
+| Portfolio packaging (desk + demo) | In progress | Story locked; desk UI polish + draft edit shipped; video tomorrow |
 
 Phases 3–10 remain the build sequence; they are **delivery vehicles for capability modules**, not a mandate to ship one monolithic product before anything is portfolio-ready.
 
@@ -60,23 +61,23 @@ Phases 3–10 remain the build sequence; they are **delivery vehicles for capabi
 
 ## This week's outcome
 
-> Hosted Quayside ops: Vercel desk + VPS n8n intake/send/retry with Zod sidecar.
+> Portfolio-ready Quayside desk + walkthrough seed; record demo video (Loom or Clipchamp).
 
 ## Current task
 
-- [ ] Verify `Log route escalated` on urgent lab run (API-added, DEC-023)
+- [ ] Record ~3.5–4 min portfolio demo (six seeded cases; Clipchamp/OBS if Loom signup still broken)
 
 ## Next three tasks
 
-- [ ] Optional: urgent draft tone
-- [ ] Lesson 12A intake failure write (optional polish)
-- [ ] Loom / evidence capture (end of build)
+- [ ] Capture screenshots for the six demo beats on hosted desk
+- [ ] Upload unlisted demo + paste links in README / portfolio notes
+- [ ] Case study page (or README first-impression rewrite)
 
 ## Blockers
 
 | Blocker | Owner | Next action | Status |
 |---|---|---|---|
-| None | — | — | Clear |
+| Loom free signup fails at workspace name | Mike | Retry Loom tomorrow; fallback Clipchamp screen+cam | Open (FAIL-012) |
 
 ---
 
@@ -155,11 +156,14 @@ Phases 3–10 remain the build sequence; they are **delivery vehicles for capabi
 - [x] CRM context panel
 - [x] Structured extraction panel
 - [x] Draft response panel
+- [x] Operator draft edit (proposed / approved)
 - [x] Workflow Timeline
 - [x] Loading, empty and error states
 - [x] Demo data reset
+- [x] Quayside visual polish + lab controls in gear menu
+- [x] Decide-first request workspace (chips, Case tools collapse)
 
-**Progress:** Inbox, workspace, CRM, extraction, draft approve/reject/send, timeline, demo reset, staff login (Supabase Auth). Service role for data; RLS deferred (DEC-018).
+**Progress:** Inbox, workspace, CRM, extraction, draft approve/edit/reject/send, timeline, demo reset, walkthrough seed, staff login (Supabase Auth). Service role for data; RLS deferred (DEC-018).
 
 **Exit condition:** A hiring manager can understand the system without opening n8n. **Met for lab MVP** — hosted at https://opsdesk-quayside.vercel.app with Supabase Auth.
 
@@ -251,10 +255,12 @@ Phases 3–10 remain the build sequence; they are **delivery vehicles for capabi
 - [ ] GitHub README
 - [ ] Screenshots
 - [ ] Limitations section
-- [ ] CV bullets updated
+- [x] CV bullets updated
 - [ ] LinkedIn project post drafted
 
-**Exit condition:** A hiring manager can understand the project, evidence and trade-offs in under five minutes.
+**Exit condition:** A hiring manager can understand the project, evidence and trade-offs in under five minutes. **Not met** — desk polished; video + screenshots pending.
+
+**Progress 2026-07-27:** Story locked (`docs/portfolio-notes.md`); walkthrough seed + richer staggered emails; desk Quayside UI + draft edit pushed; CV updated locally (Desktop).
 
 ---
 
@@ -296,6 +302,8 @@ Update this immediately after producing useful evidence.
 | EVID-011 | 2026-07-24 | Slack `#maintenance-intake` notify | *capture Slack message* | Demo happy path | [ ] pending |
 | EVID-012 | 2026-07-24 | `proposed_actions` draft_reply row | *capture Table Editor* | Demo happy path | [ ] pending |
 | EVID-013 | 2026-07-24 | Finished n8n canvas (full slice) | *capture when ready* | Portfolio | [ ] pending |
+| EVID-014 | 2026-07-28 | Portfolio demo video (~3.5–4 min, six beats) | *record tomorrow* | Hero / applications | [ ] pending |
+| EVID-015 | 2026-07-28 | Desk screenshots (inbox, draft edit, chargeable, sources, evidence) | *capture with seed* | Case study | [ ] pending |
 
 ## Evidence types to collect
 
@@ -349,7 +357,9 @@ Keep detailed entries in `docs/decision-log.md`. Use this table as the index.
 | DEC-025 | 2026-07-27 | Desk evidence pack (audit markdown export) | Active | `docs/decision-log.md#dec-025` |
 | DEC-026 | 2026-07-27 | Thin routing evaluation fixtures first | Active | `docs/decision-log.md#dec-026` |
 | DEC-027 | 2026-07-27 | Keyword document retrieval before pgvector | Active | `docs/decision-log.md#dec-027` |
-| DEC-028 | 2026-07-27 | Draft replies include lab policy citation footnotes | Active | `docs/decision-log.md#dec-028` |
+| DEC-028 | 2026-07-27 | Draft citations desk-internal (not customer email) | Active (amended) | `docs/decision-log.md#dec-028` |
+| DEC-029 | 2026-07-27 | Operator can edit draft before approve/send | Active | `docs/decision-log.md#dec-029` |
+| DEC-030 | 2026-07-27 | Quayside desk visual polish + decide-first workspace | Active | `docs/decision-log.md#dec-030` |
 
 A decision should be logged when it changes:
 
@@ -382,6 +392,8 @@ Keep detailed entries in `docs/failure-log.md`.
 | FAIL-008 | 2026-07-24 | Draft Gemini grey / “node unexecuted” | Fake wire or solo execute | [x] Re-hook + full run | Draft + `proposed_actions` |
 | FAIL-009 | 2026-07-24 | Store draft “JSON Body” was a URL | URL pasted into body field | [x] Body = action JSON | Row in `proposed_actions` |
 | FAIL-010 | 2026-07-26 | Zod Validate dies on VPS | `host.docker.internal` / no API | [x] `opsdesk-automation-api` | Validate → Slack → draft |
+| FAIL-011 | 2026-07-27 | Local desk login loop | Stale Supabase refresh race | [x] local signOut + client redirect | Sign in on localhost |
+| FAIL-012 | 2026-07-27 | Loom free signup / workspace name error | Atlassian onboarding | [ ] Clipchamp fallback | Record demo without Loom |
 
 Every meaningful failure should produce at least one of:
 
@@ -416,8 +428,8 @@ Only use measured values.
 - [x] Positioning is capability playbook, not “one AI platform” (DEC-022).
 - [ ] At least one module is a standalone case study (routine request handling).
 - [ ] Second module demoable alone (urgent routing or approvals).
-- [ ] Capability list named in CV / LinkedIn language (not only phase numbers).
-- [ ] Cross-module “operating system” story deferred until 2–3 slices ship.
+- [x] Capability list named in CV / LinkedIn language (not only phase numbers).
+- [x] Cross-module “operating system” story deferred until 2–3 slices ship.
 
 ## Problem evidence
 
@@ -523,13 +535,13 @@ Complete this after every meaningful build session.
 - [x] Current task status updated.
 - [x] New decisions logged.
 - [x] Failures logged.
-- [ ] Tests added or updated. — none automated; manual hosted E2E only
-- [ ] Evidence captured. — E2E proven live; screenshot files EVID-005–013 still pending
+- [x] Tests added or updated. — `npm run eval:routing` 7/7; dashboard `tsc` clean; no new automated test for draft edit
+- [ ] Evidence captured. — video/screenshots pending tomorrow (EVID-014/015)
 - [ ] Useful screenshots renamed and filed.
 - [x] Metric changes recorded. — none; left blank honestly
-- [x] README/progress section updated where relevant. — n8n README + account checklist
+- [x] README/progress section updated where relevant. — portfolio-notes capture list; Control Centre
 - [x] Next task written clearly.
-- [x] Work committed to Git. — this end-session + push
+- [x] Work committed to Git. — end-session docs push
 
 Recommended commit format:
 
@@ -552,16 +564,16 @@ Score each category from 0 to 2 every Friday.
 
 | Category | Score | Notes |
 |---|---:|---|
-| Scope control |  |  |
-| Working software |  |  |
-| Reliability |  |  |
-| Evaluation |  |  |
-| Security |  |  |
-| Documentation |  |  |
-| Portfolio evidence |  |  |
-| Demo readiness |  |  |
+| Scope control | 2 | Playbook framing; packaging not more platform |
+| Working software | 2 | Hosted E2E + seed walkthrough |
+| Reliability | 1 | Thin retry; not full Phase 7 |
+| Evaluation | 1 | Routing fixtures only |
+| Security | 1 | Staff login; RLS deferred |
+| Documentation | 2 | Story + demo + control centre current |
+| Portfolio evidence | 1 | Desk ready; video/screenshots missing |
+| Demo readiness | 1 | Seed + script; recorder tooling TBD |
 
-**Total:** /16
+**Total:** 11/16
 
 Interpretation:
 

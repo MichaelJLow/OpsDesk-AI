@@ -153,4 +153,30 @@ Meaningful failures found while building OpsDesk AI. Index also maintained in `P
 | Regression test | Manual Execute past Validate → HubSpot → Slack → draft; then published poll E2E |
 | Evidence | Red Validate node; desk row without draft |
 
+### FAIL-011 — Local desk sign-in loops back to login
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-27 |
+| Scenario | Local Next.js desk `localhost:3000` staff login |
+| Symptom | POST /login 303 then still on /login; `AuthRefreshDiscardedError` in logs |
+| Root cause | Stale Supabase session cookies raced with sign-in refresh; server-action redirect did not reliably land authenticated |
+| Production risk | Operators cannot use local desk; similar cookie races possible after forced sign-out |
+| Fix | `signOut({ scope: "local" })` before password sign-in; return `{ ok, next }` and client `router.replace` + refresh; ensure dashboard `.env.local` has public Supabase keys |
+| Regression test | Sign in on localhost → land on inbox with session |
+| Evidence | Dev server logs; fixed in `login/actions.ts` + `login-form.tsx` |
+
+### FAIL-012 — Loom free signup fails at workspace naming
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-27 |
+| Scenario | Create free Loom account for portfolio demo |
+| Symptom | “Error processing your request” when naming workspace / team |
+| Root cause | Atlassian/Loom onboarding bug (widely reported); not OpsDesk code |
+| Production risk | Blocks preferred recorder; does not affect product |
+| Fix | Workaround: Clipchamp (screen+cam) or OBS; retry Loom later; optional Atlassian support ticket |
+| Regression test | n/a (external SaaS) |
+| Evidence | Signup UI error; session notes 2026-07-27 |
+
 

@@ -119,16 +119,18 @@ Client path (methodology only, no fake delivery claim): [`client-delivery/`](../
 
 - [x] Lock story ([`portfolio-notes.md`](portfolio-notes.md)): problem, outcome, one-liner, six scenarios  
 - [x] Demo walkthrough seed + one live email proof ([`demo/README.md`](demo/README.md))  
-- [ ] Desk visual polish  
-- [ ] Run full scenario pack once on hosted stack  
+- [x] Desk visual polish  
+- [ ] Run full scenario pack once on hosted stack (for video)  
 - [ ] Screenshots per scenario  
-- [ ] Loom  
+- [ ] Demo video (~3.5–4 min; Loom or Clipchamp)  
+- [x] CV bullets updated (Desktop `MichaelLowCV`)  
 - [ ] Website case study + README first impression  
 
 ---
 
 ## Notes
 
+- 2026-07-27: **End-session packaging:** Quayside desk UI, walkthrough email substance + stagger, draft edit, Sources tidy; Loom signup blocked (FAIL-012); resume video tomorrow.  
 - 2026-07-27: **Story locked**: problem / outcome / one-liner / six scenarios (portfolio packaging). No em dashes in copy.  
 - 2026-07-27: DEC-022: capability playbook over monolithic platform.  
 - 2026-07-24: Domain pivot SaaS → Quayside; company name for portfolio.  

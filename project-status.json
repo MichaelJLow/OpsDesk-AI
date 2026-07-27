@@ -3,18 +3,24 @@
   "fictionalCompany": "Quayside Property Services",
   "vertical": "property-maintenance",
   "repository": "https://github.com/MichaelJLow/OpsDesk-AI",
-  "phase": 3,
-  "phaseName": "Vertical slice + hosted reliability",
-  "milestone": "First working vertical slice — routine boiler maintenance",
+  "phase": 10,
+  "phaseName": "Portfolio packaging (desk ready; demo video next)",
+  "milestone": "Portfolio packaging — record demo + screenshots",
   "status": "in_progress",
   "buildPhilosophy": "capability-playbook",
-  "currentTask": "Lab-test chargeable HITL email (carpet / charge tenant)",
+  "currentTask": "Record ~3.5–4 min portfolio demo (six seeded cases; Clipchamp if Loom signup still broken)",
   "nextTasks": [
-    "Send chargeable lab email; approve/reject on desk",
-    "Regression: routine boiler + urgent water/electrics",
-    "Loom / evidence capture (end of build)"
+    "Capture screenshots for the six demo beats on hosted desk",
+    "Upload unlisted demo + paste links in README / portfolio notes",
+    "Case study page (or README first-impression rewrite)"
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "id": "FAIL-012",
+      "summary": "Loom free signup fails at workspace name",
+      "nextAction": "Retry Loom tomorrow; fallback Clipchamp screen+cam"
+    }
+  ],
   "lastUpdated": "2026-07-27",
   "phase0Complete": true,
   "phase1Complete": false,
@@ -29,29 +35,30 @@
   "stage12aComplete": true,
   "urgentRouteComplete": true,
   "chargeableHitlComplete": true,
+  "deskVisualPolishComplete": true,
+  "draftEditComplete": true,
+  "walkthroughSeedComplete": true,
+  "cvUpdated": true,
+  "demoVideoComplete": false,
   "inspectionVerticalStarted": false,
-  "estimatedOverallPercent": "72-78",
+  "estimatedOverallPercent": "78-84",
   "estimatedVerticalSlicePercent": "99",
-  "decisions": ["DEC-001", "DEC-002", "DEC-003", "DEC-004", "DEC-005", "DEC-006", "DEC-007", "DEC-008", "DEC-009", "DEC-010", "DEC-011", "DEC-012", "DEC-013", "DEC-014", "DEC-015", "DEC-016", "DEC-017", "DEC-018", "DEC-019", "DEC-020", "DEC-021", "DEC-022", "DEC-023"],
-  "failures": ["FAIL-001", "FAIL-002", "FAIL-003", "FAIL-004", "FAIL-005", "FAIL-006", "FAIL-007", "FAIL-008", "FAIL-009", "FAIL-010"],
+  "portfolioReadinessScore": "11/16",
+  "decisions": ["DEC-001", "DEC-002", "DEC-003", "DEC-004", "DEC-005", "DEC-006", "DEC-007", "DEC-008", "DEC-009", "DEC-010", "DEC-011", "DEC-012", "DEC-013", "DEC-014", "DEC-015", "DEC-016", "DEC-017", "DEC-018", "DEC-019", "DEC-020", "DEC-021", "DEC-022", "DEC-023", "DEC-024", "DEC-025", "DEC-026", "DEC-027", "DEC-028", "DEC-029", "DEC-030"],
+  "failures": ["FAIL-001", "FAIL-002", "FAIL-003", "FAIL-004", "FAIL-005", "FAIL-006", "FAIL-007", "FAIL-008", "FAIL-009", "FAIL-010", "FAIL-011", "FAIL-012"],
   "evidence": ["EVID-001", "EVID-002", "EVID-003"],
-  "evidencePendingCapture": ["EVID-005", "EVID-006", "EVID-007", "EVID-008", "EVID-009", "EVID-010", "EVID-011", "EVID-012", "EVID-013"],
+  "evidencePendingCapture": ["EVID-005", "EVID-006", "EVID-007", "EVID-008", "EVID-009", "EVID-010", "EVID-011", "EVID-012", "EVID-013", "EVID-014", "EVID-015"],
   "hosts": {
     "dashboard": "https://opsdesk-quayside.vercel.app",
     "n8n": "https://n8n.michaeljlow.com",
     "n8nOwnerEmail": "mikelow92@gmail.com"
   },
   "notes": [
+    "2026-07-27 end-session: Desk polish, walkthrough emails, draft edit pushed earlier; docs + status updated; Loom blocked FAIL-012; video tomorrow",
+    "2026-07-27: eval:routing 7/7; dashboard tsc clean",
     "2026-07-27: Chargeable HITL lab proven — Approve → awaiting_execution + execution_deferred (no send)",
-    "2026-07-27: Chargeable HITL live — route chargeable flag, n8n If chargeable branch, desk approve/reject (execution deferred)",
-    "2026-07-27: Stage 12A proven — HubSpot fail → needs_attention + timeline + Slack + desk Retry; URL restored",
-    "2026-07-27: Demo beats logged in docs/demo/README.md (routine, urgent, chargeable, failure/retry)",
-    "2026-07-27: Stage 13 closed — Route+Patch+Slack urgent/routine; desk hazard badge; urgent draft tone",
-    "2026-07-27: DEC-023 API-assisted n8n iteration; DEC-006 superseded",
-    "2026-07-27: DEC-022 capability playbook; DEC-021 urgent/hazard routing",
+    "2026-07-27: Demo beats + walkthrough seed in docs/demo",
     "2026-07-26: DEC-020 VPS n8n + automation-api; hosted poll→approve→send E2E",
-    "2026-07-26: FAIL-010 Zod host.docker.internal fixed via opsdesk-automation-api",
-    "2026-07-26: DEC-019 needs_attention + Retry webhook on VPS",
     "2026-07-26: DEC-018 staff login"
   ]
 }

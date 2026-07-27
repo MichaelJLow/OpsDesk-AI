@@ -718,12 +718,12 @@ Corpus duplicated in desk + automation-api (keep in sync). Not full support-inte
 
 ---
 
-## DEC-028 — Draft replies include lab policy citation footnotes
+## DEC-028 — Draft citations stay desk-internal (not customer email)
 
 | Field | Value |
 |---|---|
 | Date | 2026-07-27 |
-| Status | Active |
+| Status | Active (amended) |
 
 ### Context
 
@@ -736,5 +736,51 @@ Phase 5 retrieval worked on the desk but drafts were still ungrounded. Portfolio
 ### Trade-offs
 
 Footnotes are keyword-selected, not LLM-grounded generation. “Send citations to customer” is a future explicit action, not the default reply.
+
+### Amendment 2026-07-27
+
+Desk UI labels citations **Sources** (internal only). DEC title reframed: citations are desk-internal, not customer-facing footnotes.
+
+---
+
+## DEC-029 — Operator draft edit before approve/send
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-27 |
+| Status | Active |
+
+### Context
+
+HITL without edit forces reject-and-redraft. Operators need to fix tone/facts before Approve or Send.
+
+### Chosen approach
+
+Desk **Edit draft** for `proposed` and `approved` `draft_reply` actions. Updates `payload.draftText`, stamps `editedBy` / `editedAt`, logs `draft_edited`. Approve/Send remain separate.
+
+### Trade-offs
+
+No rich text or collaborative editing. Rejected/sent drafts stay immutable.
+
+---
+
+## DEC-030 — Quayside desk visual polish + decide-first workspace
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-27 |
+| Status | Active |
+
+### Context
+
+Portfolio desk must look like an operator product, not a builder dashboard. Lab seed/reset cluttered the inbox.
+
+### Chosen approach
+
+Quayside wordmark + simple Q mark (no fake crest logo). Lab controls behind topbar gear. Request page: header chips, Inbound|CRM, Draft hero + quiet Extraction, Audit trail, Case tools (retrieval/evidence) closed by default. Walkthrough fixtures use fuller emails and staggered `received_at`.
+
+### Trade-offs
+
+Still a lab; not a design-system product. Demo seed remains destructive (wipe requests).
 
 ---
