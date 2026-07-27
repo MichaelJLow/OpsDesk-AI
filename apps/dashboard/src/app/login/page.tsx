@@ -7,10 +7,13 @@ export default function LoginPage() {
   return (
     <main className="login-page">
       <section className="panel login-panel">
-        <h1 style={{ marginTop: 0, fontSize: "1.35rem" }}>Staff sign in</h1>
+        <p className="brand-product" style={{ margin: "0 0 0.35rem" }}>
+          OpsDesk
+        </p>
+        <h1 style={{ marginTop: 0, fontSize: "1.6rem" }}>Staff sign in</h1>
         <p className="muted" style={{ marginTop: 0 }}>
-          OpsDesk is invite-only. Use the staff account created in Supabase
-          Auth.
+          Quayside Property Services operator desk. Invite-only staff accounts
+          via Supabase Auth.
         </p>
         <Suspense fallback={<p className="muted">Loading…</p>}>
           <LoginForm />

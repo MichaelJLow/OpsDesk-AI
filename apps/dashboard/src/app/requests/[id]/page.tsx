@@ -13,6 +13,7 @@ import type {
   StructuredExtraction,
   WorkflowEvent,
 } from "@/lib/types";
+import { CaseToolsDisclosure } from "./case-tools";
 import { CrmContextPanel } from "./crm-panel";
 import { DecisionForm } from "./decision-form";
 import { EvidencePackForm } from "./evidence-pack-form";
@@ -44,6 +45,90 @@ function formatWhen(iso: string) {
 
 function badgeClass(status: string) {
   return requestStatusBadgeClass(status);
+}
+
+function humanizeToken(value: string) {
+  return value.replace(/_/g, " ");
+}
+
+function CaseChips({
+  request,
+  extraction,
+}: {
+  request: OpsRequest;
+  extraction: RequestExtraction | null;
+}) {
+  const data = extraction?.structured_output;
+  const category =
+    (typeof data?.category === "string" && data.category) ||
+    request.category ||
+    null;
+  const site =
+    typeof data?.siteReference === "string" && data.siteReference.trim()
+      ? data.siteReference.trim()
+      : null;
+  const route =
+    typeof data?.suggestedRoute === "string" && data.suggestedRoute.trim()
+      ? data.suggestedRoute.trim()
+      : null;
+  const urgency =
+    (typeof data?.urgency === "string" && data.urgency) ||
+    request.urgency ||
+    null;
+
+  const chips: Array<{ key: string; label: string; value: string; className?: string }> =
+    [];
+
+  if (category) {
+    chips.push({
+      key: "category",
+      label: "Category",
+      value: humanizeToken(category),
+      className:
+        category === "urgent_hazardous"
+          ? "badge badge-urgent"
+          : category === "controlled_chargeable"
+            ? "badge badge-chargeable"
+            : "badge",
+    });
+  }
+  if (urgency) {
+    chips.push({
+      key: "urgency",
+      label: "Urgency",
+      value: humanizeToken(urgency),
+      className: urgencyBadgeClass(urgency, category),
+    });
+  }
+  if (site) {
+    chips.push({
+      key: "site",
+      label: "Site",
+      value: site,
+      className: "badge",
+    });
+  }
+  if (route) {
+    chips.push({
+      key: "route",
+      label: "Route",
+      value: humanizeToken(route),
+      className: "badge",
+    });
+  }
+
+  if (chips.length === 0) return null;
+
+  return (
+    <ul className="case-chips">
+      {chips.map((chip) => (
+        <li key={chip.key}>
+          <span className="case-chip-label">{chip.label}</span>
+          <span className={chip.className}>{chip.value}</span>
+        </li>
+      ))}
+    </ul>
+  );
 }
 
 function ExtractionFields({ data }: { data: StructuredExtraction | null }) {
@@ -251,42 +336,21 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
 
   return (
     <main className="stack">
-      <div>
-        <p className="muted" style={{ margin: "0 0 0.35rem" }}>
-          <Link href="/">← Operations Inbox</Link>
+      <header className="case-header">
+        <p className="workspace-back">
+          <Link href="/">← Operations inbox</Link>
         </p>
-        <h1 style={{ margin: "0 0 0.35rem", fontSize: "1.45rem" }}>
+        <h1 className="workspace-title">
           {typedRequest.subject?.trim() || "(no subject)"}
         </h1>
-        <p className="muted" style={{ margin: 0 }}>
+        <p className="muted case-meta">
           {typedRequest.sender_email} · {formatWhen(typedRequest.received_at)} ·{" "}
           <span className={requestStatusBadgeClass(typedRequest.status)}>
             {typedRequest.status}
           </span>
-          {typedRequest.urgency ||
-          typedRequest.category === "urgent_hazardous" ||
-          typedRequest.category === "controlled_chargeable"
-            ? (
-                <>
-                  {" "}
-                  ·{" "}
-                  <span
-                    className={urgencyBadgeClass(
-                      typedRequest.urgency,
-                      typedRequest.category,
-                    )}
-                  >
-                    {typedRequest.category === "urgent_hazardous"
-                      ? "urgent hazard"
-                      : typedRequest.category === "controlled_chargeable"
-                        ? "chargeable"
-                        : typedRequest.urgency}
-                  </span>
-                </>
-              )
-            : null}
         </p>
-      </div>
+        <CaseChips request={typedRequest} extraction={extraction} />
+      </header>
 
       <FailureBanner
         requestId={typedRequest.id}
@@ -298,9 +362,6 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
         <section className="panel">
           <h2>Inbound message</h2>
           <pre className="pre">{typedRequest.raw_body || "(empty body)"}</pre>
-          <p className="muted" style={{ marginBottom: 0, marginTop: "0.75rem" }}>
-            <span className="mono">id {typedRequest.id}</span>
-          </p>
         </section>
 
         <CrmContextPanel
@@ -313,25 +374,8 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
         />
       </div>
 
-      <div className="grid-2">
-        <section className="panel">
-          <h2>Structured extraction</h2>
-          {extraction ? (
-            <>
-              <p className="muted" style={{ marginTop: 0 }}>
-                {extraction.model_name ?? "model"} · validation{" "}
-                <span className="badge">{extraction.validation_status}</span>
-              </p>
-              <ExtractionFields data={extraction.structured_output} />
-            </>
-          ) : (
-            <p className="muted" style={{ margin: 0 }}>
-              No extraction stored for this request yet.
-            </p>
-          )}
-        </section>
-
-        <section className="panel">
+      <div className="decide-grid">
+        <section className="panel panel-decide">
           <h2>Draft reply</h2>
           {draft ? (
             <>
@@ -344,8 +388,8 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
               {draftCitations && draftCitations.length > 0 ? (
                 <div style={{ marginTop: "0.75rem" }}>
                   <p className="muted" style={{ marginBottom: "0.35rem" }}>
-                    <strong>Internal grounding</strong> — not included in the
-                    customer email. Keep for disputes / follow-up if needed.
+                    <strong>Internal grounding</strong> (desk only; not in the
+                    customer email). Keep for disputes / follow-up if needed.
                   </p>
                   <ul className="timeline">
                     {draftCitations.map((c, i) => (
@@ -392,15 +436,33 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
             </>
           ) : (
             <p className="muted" style={{ margin: 0 }}>
-              No <code>draft_reply</code> proposed action yet.
+              No draft reply proposed yet.
+            </p>
+          )}
+        </section>
+
+        <section className="panel panel-quiet">
+          <h2>Extraction</h2>
+          {extraction ? (
+            <>
+              <p className="muted extraction-meta">
+                {extraction.validation_status
+                  ? `Validated: ${extraction.validation_status}`
+                  : "Structured fields from intake"}
+              </p>
+              <ExtractionFields data={extraction.structured_output} />
+            </>
+          ) : (
+            <p className="muted" style={{ margin: 0 }}>
+              No extraction stored for this request yet.
             </p>
           )}
         </section>
       </div>
 
       {chargeable ? (
-        <section className="panel">
-          <h2>Chargeable work — approval required</h2>
+        <section className="panel panel-decide">
+          <h2>Chargeable work: approval required</h2>
           <p className="muted" style={{ marginTop: 0 }}>
             Status{" "}
             <span className={badgeClass(chargeable.status)}>
@@ -467,8 +529,11 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
         </section>
       ) : null}
 
-      <section className="panel">
-        <h2>Workflow timeline</h2>
+      <section className="panel panel-audit">
+        <h2>Audit trail</h2>
+        <p className="muted panel-lede">
+          Workflow events for this case. Who decided what, and when.
+        </p>
         {timeline.length === 0 ? (
           <p className="muted" style={{ margin: 0 }}>
             No workflow events for this request.
@@ -478,7 +543,9 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
             {timeline.map((event) => (
               <li
                 key={event.id}
-                className={event.status === "error" ? "timeline-error" : undefined}
+                className={
+                  event.status === "error" ? "timeline-error" : undefined
+                }
               >
                 <strong>{event.event_type}</strong>
                 {event.step_name ? ` · ${event.step_name}` : null}
@@ -496,15 +563,18 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
         )}
       </section>
 
-      <section className="panel">
-        <h2>Context retrieval</h2>
-        <RetrievalPanel requestId={typedRequest.id} />
-      </section>
-
-      <section className="panel">
-        <h2>Evidence pack</h2>
-        <EvidencePackForm requestId={typedRequest.id} />
-      </section>
+      <CaseToolsDisclosure>
+        <div className="case-tools-grid">
+          <div>
+            <h3 className="panel-subhead">Context retrieval</h3>
+            <RetrievalPanel requestId={typedRequest.id} />
+          </div>
+          <div>
+            <h3 className="panel-subhead">Evidence pack</h3>
+            <EvidencePackForm requestId={typedRequest.id} />
+          </div>
+        </div>
+      </CaseToolsDisclosure>
     </main>
   );
 }

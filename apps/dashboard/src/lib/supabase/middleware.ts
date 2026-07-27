@@ -13,6 +13,9 @@ export async function updateSession(request: NextRequest) {
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!url || !anonKey) {
+    console.error(
+      "[opsdesk] middleware missing NEXT_PUBLIC_SUPABASE_URL or ANON_KEY",
+    );
     if (!isLogin) {
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = "/login";

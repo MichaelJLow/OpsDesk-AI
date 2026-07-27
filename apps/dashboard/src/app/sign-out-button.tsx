@@ -9,7 +9,7 @@ export function SignOutButton() {
   return (
     <button
       type="button"
-      className="btn"
+      className="btn btn-quiet"
       disabled={pending}
       onClick={() => {
         startTransition(async () => {

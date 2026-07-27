@@ -7,8 +7,6 @@ import {
   urgencyBadgeClass,
 } from "@/lib/status";
 import type { OpsRequest } from "@/lib/types";
-import { ResetDemoButton } from "./reset-demo-button";
-import { SeedWalkthroughButton } from "./seed-walkthrough-button";
 
 export const dynamic = "force-dynamic";
 
@@ -55,14 +53,11 @@ export default async function OperationsInboxPage() {
     <main>
       <div className="inbox-header">
         <div>
-          <h1 style={{ marginTop: 0, fontSize: "1.6rem" }}>Operations Inbox</h1>
-          <p className="muted" style={{ marginTop: "-0.35rem" }}>
-            Latest maintenance requests from the shared inbox pipeline.
+          <h1>Operations inbox</h1>
+          <p className="lede">
+            Quayside maintenance requests: classify, route, approve, and keep an
+            audit trail.
           </p>
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-          <SeedWalkthroughButton />
-          <ResetDemoButton />
         </div>
       </div>
 
@@ -83,8 +78,8 @@ export default async function OperationsInboxPage() {
       <section className="panel">
         {requests.length === 0 && !loadError ? (
           <p className="muted" style={{ margin: 0 }}>
-            No requests yet. Run the n8n boiler path so a row lands in{" "}
-            <code>requests</code>.
+            No Quayside requests in the inbox yet. Seed the walkthrough cases, or
+            send a live email through the Gmail → n8n path.
           </p>
         ) : (
           <table className="table">

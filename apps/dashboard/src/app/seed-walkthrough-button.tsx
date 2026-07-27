@@ -4,7 +4,11 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { seedDemoWalkthrough } from "./seed-walkthrough-action";
 
-export function SeedWalkthroughButton() {
+export function SeedWalkthroughButton({
+  compact = false,
+}: {
+  compact?: boolean;
+}) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
@@ -32,7 +36,7 @@ export function SeedWalkthroughButton() {
   }
 
   return (
-    <div className="reset-demo">
+    <div className={compact ? "lab-tool" : "reset-demo"}>
       <button
         type="button"
         className="btn btn-approve"
@@ -41,10 +45,15 @@ export function SeedWalkthroughButton() {
       >
         {pending ? "Seeding…" : "Reset & seed walkthrough"}
       </button>
-      <p className="muted" style={{ margin: "0.35rem 0 0", fontSize: "0.85rem" }}>
-        Clears test inbox noise and loads six desk cases for demos. Optional: send
-        one live proof email afterward (see docs/demo).
-      </p>
+      {!compact ? (
+        <p
+          className="muted"
+          style={{ margin: "0.35rem 0 0", fontSize: "0.85rem" }}
+        >
+          Clears test inbox noise and loads six desk cases for demos. Optional:
+          send one live proof email afterward (see docs/demo).
+        </p>
+      ) : null}
       {error ? (
         <p className="error-inline" role="alert">
           {error}

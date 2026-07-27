@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { resetDemoData } from "./reset-demo-action";
 
-export function ResetDemoButton() {
+export function ResetDemoButton({ compact = false }: { compact?: boolean }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
@@ -37,7 +37,7 @@ export function ResetDemoButton() {
   }
 
   return (
-    <div className="reset-demo">
+    <div className={compact ? "lab-tool" : "reset-demo"}>
       <button
         type="button"
         className="btn btn-danger"
@@ -46,9 +46,14 @@ export function ResetDemoButton() {
       >
         {pending ? "Resetting…" : "Reset demo data"}
       </button>
-      <p className="muted" style={{ margin: "0.35rem 0 0", fontSize: "0.85rem" }}>
-        Clears inbox run state. Does not touch HubSpot, Gmail, or sites.
-      </p>
+      {!compact ? (
+        <p
+          className="muted"
+          style={{ margin: "0.35rem 0 0", fontSize: "0.85rem" }}
+        >
+          Clears inbox run state. Does not touch HubSpot, Gmail, or sites.
+        </p>
+      ) : null}
       {error ? (
         <p className="error-inline" role="alert">
           {error}

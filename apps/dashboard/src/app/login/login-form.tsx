@@ -19,17 +19,13 @@ export function LoginForm() {
     const password = String(form.get("password") ?? "");
 
     startTransition(async () => {
-      try {
-        const result = await loginWithPassword({ email, password, next });
-        if (result && !result.ok) {
-          setError(result.error);
-          return;
-        }
-        router.refresh();
-      } catch {
-        // redirect() from the server action throws; treat as success
-        router.refresh();
+      const result = await loginWithPassword({ email, password, next });
+      if (!result.ok) {
+        setError(result.error);
+        return;
       }
+      router.replace(result.next);
+      router.refresh();
     });
   }
 
