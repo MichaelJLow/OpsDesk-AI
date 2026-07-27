@@ -1,28 +1,65 @@
-# Demo folder
+# Demo pack: Quayside walkthrough
 
-- Main demos: Quayside property scenarios (routine, urgent, chargeable, failure, evaluation).  
-- Inspection portability demo: **post-MVP** only.  
-- Prefer stored/safe demo outputs for public links; never expose live secrets.  
-- Always state synthetic data.
+Synthetic data only. Story: [`../portfolio-notes.md`](../portfolio-notes.md).
 
-## Proven lab scenarios (capture in Loom later)
+## How demos work (easy path)
+
+1. **Walkthrough (no email spam):** on the desk, click **Reset & seed walkthrough**.  
+   That deletes old test requests and loads **six ready cases** (routine, urgent, chargeable, failure, grounding, evidence).
+2. **One live proof (optional):** send a single Gmail into the lab inbox to show real intake → n8n → desk.
+
+You do **not** need to send six emails every time.
+
+Also available from the repo:
+
+```bash
+node scripts/seed-demo-walkthrough.mjs
+```
+
+(Requires root `.env` with `NEXT_PUBLIC_SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY`. Same Supabase as Vercel, so the hosted desk updates too.)
+
+Lab controls need `DEMO_RESET_ENABLED=true` on Vercel (and local `.env`) for the desk buttons.
+
+---
+
+## Walkthrough cases (after seed)
+
+| Scenario | What to open / click |
+|---|---|
+| Routine | Draft → Approve → Send (optional) |
+| Urgent | Hazard badge + urgent draft |
+| Chargeable | Approved chargeable → **Create work order (lab)** |
+| Failure | `needs_attention` → **Retry** |
+| Grounding | Draft **Internal grounding** citations |
+| Evidence pack | **Generate evidence pack** |
+
+Fixtures: [`walkthrough-cases.json`](walkthrough-cases.json).
+
+---
+
+## One live proof email
+
+To: `mikelow92+opsdesk@gmail.com`  
+Subject: `Boiler rattling Flat 8 Riverside Court (live proof)`
+
+> Hi, the boiler in Flat 8 at Riverside Court has been rattling for a few days. Heating still works. Access weekdays after 9am.
+>
+> (This is the single live Gmail proof email for portfolio demos.)
+
+Label/inbox must match the OpsDesk Gmail trigger. Wait for n8n, then open the new row on the desk.
+
+---
+
+## Proven lab scenarios (history)
 
 | Beat | What to show | Proof |
 |---|---|---|
-| Routine boiler | Email → desk → Slack `#maintenance-inbox` → draft → Approve → Send | Happy path |
-| Urgent / hazard | Water near electrics → `#urgent-maintenance` → desk **hazard** badge → urgent draft (no fake dispatch) → timeline `route_escalated` | DEC-021 / Stage 13 |
-| Chargeable HITL | Replace carpet / charge to tenant → `#approval-queue` → desk **chargeable** panel → Approve → `awaiting_execution` / `execution_deferred` → **Create work order (lab)** → `jobs` row + `execution_recorded` (no invoice) | Controlled chargeable + protected execution stub |
-| Integration failure → recovery | HubSpot error → `needs_attention` + timeline `integration_failed` + Slack alert → desk **Retry** | DEC-019 / Stage 12A |
-| Evidence pack | Request detail → **Generate evidence pack** → markdown audit (extraction, actions, jobs, timeline) | Desk audit export (DEC-025) |
-| Routing eval | `cd services/automation-api && npm run eval:routing` — fixture emails → urgent/chargeable/routine asserts | Thin harness (DEC-026) |
-| Context retrieval | Request detail → **Retrieve context** → policy/warranty citations (keyword) · timeline `retrieval_ran` | Phase 5 thin (DEC-027) |
-| Draft + citations | Intake retrieves policies → desk shows **Internal grounding** (not in customer email) · Send strips any Sources footnotes | DEC-028 |
+| Routine boiler | Email → desk → Slack → draft → Approve → Send | Happy path |
+| Urgent / hazard | Water near electrics → urgent channel + hazard badge | DEC-021 |
+| Chargeable HITL | Charge tenant → approve → lab work order (no invoice) | Execution stub |
+| Integration failure → recovery | HubSpot fail → Retry | DEC-019 |
+| Evidence pack | Generate evidence pack | DEC-025 |
+| Routing eval | `npm run eval:routing` | DEC-026 |
+| Context retrieval | Retrieve context / internal grounding | DEC-027–028 |
 
-Do **not** leave HubSpot pointed at a broken URL in demos — simulate failure briefly, then restore (as in the 2026-07-27 lab).
-
-### Chargeable lab email
-
-To: `mikelow92+opsdesk@gmail.com`  
-Subject: `Replace hallway carpet Flat 8 — charge tenant`
-
-> Hi, please replace the worn hallway carpet in Flat 8 at Riverside Court and charge to the tenant. Access is available weekdays after 10 am.
+Do **not** leave HubSpot pointed at a broken URL after a failure demo. Simulate briefly, then restore.

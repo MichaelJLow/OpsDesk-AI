@@ -10,7 +10,7 @@
 
 ## One-line description
 
-A reusable playbook of AI-assisted operational capabilities — starting with a property-maintenance desk that turns messy inbound requests into structured, routed and auditable work.
+An end-to-end AI workflow for property-maintenance requests: intake, rules-based routing, CRM context, grounded drafts, and human approval gates, with a full audit trail (Quayside-first capability playbook).
 
 ## Target roles
 

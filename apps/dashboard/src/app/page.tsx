@@ -8,6 +8,7 @@ import {
 } from "@/lib/status";
 import type { OpsRequest } from "@/lib/types";
 import { ResetDemoButton } from "./reset-demo-button";
+import { SeedWalkthroughButton } from "./seed-walkthrough-button";
 
 export const dynamic = "force-dynamic";
 
@@ -59,7 +60,10 @@ export default async function OperationsInboxPage() {
             Latest maintenance requests from the shared inbox pipeline.
           </p>
         </div>
-        <ResetDemoButton />
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+          <SeedWalkthroughButton />
+          <ResetDemoButton />
+        </div>
       </div>
 
       {loadError ? (

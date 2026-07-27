@@ -1,51 +1,65 @@
-# Portfolio and Demo Plan — OpsDesk AI
+# Portfolio and Demo Plan: OpsDesk AI
+
+Story source of truth: [`portfolio-notes.md`](portfolio-notes.md).
 
 ## Positioning (DEC-022)
 
-OpsDesk is a **playbook of production-style AI workflow capabilities**. Quayside property maintenance is the first vertical setting. Each module is a complete vertical slice and a standalone case study; stronger modules may later share data into a broader operating system.
+OpsDesk is a **playbook of production-style AI workflow capabilities**. Quayside property maintenance is the first vertical setting. Portfolio packaging uses **one problem → one outcome → six demo scenarios**, not a phase checklist.
+
+## Locked story
+
+**Problem:** Maintenance mail lands in a shared inbox. Urgent requests get lost. Chargeable or controlled work isn’t separated from day-to-day fixes. There’s no clear approval step, and no reliable record of who decided what.
+
+**Outcome:** Every request becomes a case on the ops desk: classified, routed, drafted, with human approval when it matters, and auditable.
+
+**One-liner:**
+
+> An end-to-end AI workflow for property-maintenance requests: intake, rules-based routing, CRM context, grounded drafts, and human approval gates, with a full audit trail.
+
+Full wording: [`portfolio-notes.md`](portfolio-notes.md).
 
 ## Homepage card
 
 **OpsDesk AI**
 
-*A reusable playbook of production-style AI workflows — starting with property-maintenance request handling, routing, enrichment, and human-in-the-loop execution for Quayside Property Services.*
+*End-to-end AI workflow for property-maintenance requests (Quayside): intake, rules-based routing, CRM context, grounded drafts, and human approval gates, with a full audit trail.*
 
 Highlights:
 
-- Complete vertical slices (not platform scaffolding first)  
-- Gmail, HubSpot and Slack integration  
-- Structured extraction with validated schemas  
-- Deterministic safety and approval rules  
-- Human approval for chargeable / high-risk actions  
-- Recoverable failures and audit timeline  
-- Evaluated scenarios; synthetic Quayside data  
+- Real Gmail, HubSpot, Slack, Supabase (synthetic Quayside data)  
+- Structured extraction + Zod validation  
+- Deterministic urgent and chargeable routing  
+- Human approval; approve ≠ execute / send  
+- Failure visibility + retry  
+- Keyword retrieval with desk-only internal grounding  
+- Evidence pack + thin routing evaluation  
 
-## Case-study structure
+Live desk: https://opsdesk-quayside.vercel.app  
 
-1. Problem (Quayside shared inbox)  
-2. Manual process audit  
-3. Automated solution (first capability module)  
-4. Architecture (shared spine + modules)  
-5. Routine boiler scenario (request handling)  
-6. Urgent hazard scenario (task routing)  
-7. Chargeable approval scenario (HITL approvals)  
-8. Failure and recovery  
-9. Evaluation  
-10. Playbook expansion (support retrieval, further modules)  
-11. Adaptability (inspection portability — later)  
-12. From synthetic to real implementation  
-13. Limitations  
+## Demo scenarios (record in this order)
 
-## Demo (property-first)
+1. Routine boiler: happy path Approve → Send  
+2. Water near electrics: urgent escalate  
+3. Chargeable carpet: approve → lab work order (no invoice)  
+4. HubSpot failure → desk Retry  
+5. Internal grounding / retrieval  
+6. Evidence pack  
 
-1. Routine boiler happy path  
-2. Water near electrics → escalation  
-3. Unauthorised chargeable work → approval  
-4. Integration failure → recovery  
-5. Evaluation metrics  
+Detail and lab emails: [`demo/README.md`](demo/README.md).
 
 Inspection demo is **post-MVP** and separate.
 
+## Case-study structure (website; last)
+
+1. Problem (Quayside shared inbox)  
+2. Manual process audit  
+3. Solution (ops desk + gates)  
+4. Architecture (n8n + automation-api + desk)  
+5–10. Scenarios above  
+11. Evaluation (routing fixtures)  
+12. From synthetic to real (`client-delivery/`)  
+13. Limitations  
+
 ## Limitations statement
 
-> OpsDesk AI is a production-style simulation with real APIs and synthetic Quayside property data. It is a growing playbook of capability modules, not a claim of a finished multi-tenant OS or real-client outcomes.
+> OpsDesk AI is a production-style simulation with real APIs and synthetic Quayside property data. It is a growing playbook of capability modules, not a claim of a finished multi-tenant OS, real invoicing, or real-client outcomes. Staff login is in place; row-level security and full recovery queues are deferred and called out honestly.

@@ -2,21 +2,23 @@
 
 AI-assisted **property-maintenance operations desk** for fictional **Quayside Property Services**.
 
-> A reusable, vertical-configurable request-to-resolution system—property first, inspection portability later—with real integrations and synthetic data.
+> An end-to-end AI workflow for property-maintenance requests: intake, rules-based routing, CRM context, grounded drafts, and human approval gates, with a full audit trail.
+
+Live desk: [opsdesk-quayside.vercel.app](https://opsdesk-quayside.vercel.app) · Story: [`docs/portfolio-notes.md`](docs/portfolio-notes.md)
 
 ## Status
 
 | Field | Value |
 |---|---|
 | Vertical | Property maintenance (Quayside) |
-| Phase | 1 / early 3 |
+| Focus | Portfolio packaging (story locked; demo pack + desk polish next) |
 | Remote | [github.com/MichaelJLow/OpsDesk-AI](https://github.com/MichaelJLow/OpsDesk-AI) |
 
 Living status: [`docs/PROJECT_CONTROL_CENTRE.md`](docs/PROJECT_CONTROL_CENTRE.md) · [`project-status.json`](project-status.json)
 
 ## Stack
 
-n8n · Next.js · TypeScript · Zod · Supabase · Gmail · HubSpot · Slack · LLM · Python · Docker · Vercel · Sentry
+n8n · Next.js · TypeScript · Zod · Supabase · Gmail · HubSpot · Slack · LLM · Docker · Vercel
 
 ## Structure
 
@@ -32,12 +34,12 @@ evaluation/
 
 ## Docs
 
-Start: [`docs/README_START_HERE.md`](docs/README_START_HERE.md)
+Start: [`docs/README_START_HERE.md`](docs/README_START_HERE.md) · Portfolio story: [`docs/portfolio-notes.md`](docs/portfolio-notes.md)
 
-## MVP slice
+## Demo beats
 
-Routine boiler maintenance email through intake → store → extract → lookup → route → Slack → draft → timeline.
+Routine → urgent → chargeable HITL → failure/retry → internal grounding → evidence pack. Lab notes: [`docs/demo/README.md`](docs/demo/README.md).
 
-## Non-goals
+## Non-goals (lab)
 
-No chatbot swarm, no inspection build during MVP, no autonomous spend/dispatch, no claimed real-client outcomes.
+No real invoicing or contractor dispatch; keyword retrieval (not pgvector); synthetic data only.

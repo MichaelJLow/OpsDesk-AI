@@ -1,40 +1,134 @@
-# Portfolio Notes
+# Portfolio Notes: OpsDesk AI
 
-## Positioning
+Canonical **packaged story** for jobs and (later) client conversations. Loom and website case study come after polish; this file is the source of truth for wording.
 
-OpsDesk AI is a **capability playbook**, not one unfinished platform (DEC-022).
+**Style:** no em dashes in portfolio copy.
 
-First vertical setting: **Quayside Property Services** — property-maintenance operations.
+---
 
-Target line:
+## One problem
 
-> I've built a reusable playbook of production-style AI workflows covering request handling, approvals, research, CRM enrichment, document retrieval, task routing, customer operations, and human-in-the-loop execution.
+Maintenance mail lands in a shared inbox. Urgent requests get lost. Chargeable or controlled work isn’t separated from day-to-day fixes. There’s no clear approval step, and no reliable record of who decided what.
 
-Each module is a complete vertical slice that can stand alone as a case study. Later, the strongest modules can share data and connect into a broader operating system.
+## One outcome
 
-Adaptability: reusable core / shared spine; inspection-services as later portability proof (aligns with technical QA / escalation credibility).
+Every request becomes a case on the ops desk: classified, routed, drafted, with human approval when it matters, and auditable.
 
-Client-delivery: methodology in `client-delivery/` shows how synthetic work maps to a real engagement—without claiming completed client delivery.
+## One line (use everywhere)
 
-## Capture next
+> An end-to-end AI workflow for property-maintenance requests: intake, rules-based routing, CRM context, grounded drafts, and human approval gates, with a full audit trail.
 
-- Quayside current/future process diagrams (versioned; don’t relabel old SaaS screenshots)  
-- n8n Lessons 1–4 evidence (EVID-005–007)  
-- Timeline event when Lesson 5 lands  
-- Boiler extraction once built  
-- Name each shipped slice by capability (not only phase number)  
+**Alternate (playbook frame, DEC-022; use when emphasising pattern fluency):**
+
+> I've built a reusable playbook of production-style AI workflows, demonstrated first on Quayside property-maintenance request handling, routing, enrichment, retrieval, and human-in-the-loop execution.
+
+Prefer the **end-to-end workflow** line for interviews.
+
+---
+
+## Setting
+
+| | |
+|---|---|
+| Product name | **OpsDesk AI** |
+| First vertical | Property maintenance |
+| Fictional company | **Quayside Property Services** |
+| Live desk | https://opsdesk-quayside.vercel.app |
+| Repo | https://github.com/MichaelJLow/OpsDesk-AI |
+| Data | Synthetic Quayside lab data; real APIs (Gmail, HubSpot, Slack, Supabase) |
+
+---
+
+## Demo scenarios (“beats”)
+
+In a Loom or interview, a **beat** is just one short scene you walk through, not a separate product. Same desk, six scenarios, in this order:
+
+| # | Scenario | What you show |
+|---|---|---|
+| 1 | **Routine** | Boiler email → draft → Approve → Send |
+| 2 | **Urgent** | Water near electrics → urgent channel + hazard on desk |
+| 3 | **Chargeable** | Charge-to-tenant → approve authority, then separate lab execute (no invoice) |
+| 4 | **Failure** | HubSpot fails → needs attention → Retry |
+| 5 | **Grounding** | Desk shows which policies informed the draft (customer email stays clean) |
+| 6 | **Evidence pack** | One export of the case: who did what, when |
+
+Supporting (mention, don’t centre): routing eval fixtures (`npm run eval:routing`).
+
+Lab scripts and sample emails: [`docs/demo/README.md`](demo/README.md).
+
+---
+
+## Architecture in one breath
+
+n8n (intake / Slack / draft) → automation-api (Zod + deterministic route + retrieve) → Supabase → Next.js operator desk (approve / send / execute lab / evidence). AI interprets; rules and humans control risk.
+
+---
+
+## What this is / isn’t (say out loud)
+
+**Is**
+
+- A production-**style** simulation with real integrations  
+- A capability playbook, Quayside-first (DEC-022)  
+- Proof of HITL, safety routing, audit, thin recovery and retrieval  
+
+**Isn’t**
+
+- A finished multi-tenant product or “autonomous property manager”  
+- Real invoicing, contractor SMS dispatch, or live client outcomes  
+- Full RLS / enterprise IAM (staff login yes; RLS deferred)  
+- Embeddings/pgvector (keyword retrieval by design for now)  
+- Inspection vertical (post-MVP portability proof)  
+
+Client path (methodology only, no fake delivery claim): [`client-delivery/`](../client-delivery/).
+
+---
+
+## Homepage / CV card (short)
+
+**OpsDesk AI:** end-to-end AI workflow for property-maintenance requests (Quayside): intake, rules-based routing, CRM context, grounded drafts, and human approval gates, with a full audit trail. Real Gmail, HubSpot, Slack, Supabase; synthetic data.
+
+---
+
+## Case study outline (website; later)
+
+1. Problem (shared inbox)  
+2. Manual process pain  
+3. Solution (ops desk + gates)  
+4. Architecture sketch  
+5. Beats 1–6 above  
+6. Evaluation (routing fixtures)  
+7. Limitations + synthetic → real  
+8. Loom / live desk link  
+
+---
 
 ## Wording to avoid
 
-- “I build an AI dashboard” (as the whole story)  
-- “Universal workflow platform”  
+- Em dashes in portfolio copy  
+- “I built an AI dashboard” (as the whole story)  
+- “Universal workflow platform” / finished OS  
 - “Autonomous property manager”  
 - Invented metrics or fake client results  
 - Relabelling pre-pivot SaaS screenshots as Quayside  
-- Claiming a finished multi-module OS before the slices exist  
+- Leading with phase numbers instead of capabilities  
+
+---
+
+## Capture next (packaging, not more platform)
+
+- [x] Lock story ([`portfolio-notes.md`](portfolio-notes.md)): problem, outcome, one-liner, six scenarios  
+- [x] Demo walkthrough seed + one live email proof ([`demo/README.md`](demo/README.md))  
+- [ ] Desk visual polish  
+- [ ] Run full scenario pack once on hosted stack  
+- [ ] Screenshots per scenario  
+- [ ] Loom  
+- [ ] Website case study + README first impression  
+
+---
 
 ## Notes
 
-- 2026-07-27: DEC-022 — capability playbook over monolithic platform.  
-- 2026-07-24: Domain pivot SaaS → Quayside Property Services; company name chosen for portfolio.  
-- Pre-pivot Northline/SaaS docs retained only as history in decisions/evidence labels.
+- 2026-07-27: **Story locked**: problem / outcome / one-liner / six scenarios (portfolio packaging). No em dashes in copy.  
+- 2026-07-27: DEC-022: capability playbook over monolithic platform.  
+- 2026-07-24: Domain pivot SaaS → Quayside; company name for portfolio.  
