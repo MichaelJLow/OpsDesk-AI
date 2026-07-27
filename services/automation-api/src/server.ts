@@ -1,6 +1,6 @@
 import { createServer } from "node:http";
 import { health } from "./index.js";
-import { retrieveKnowledge } from "./retrieval/search.js";
+import { retrieveKnowledge, buildRetrievalQuery, enrichDraftWithCitations, formatCitationBlock } from "./retrieval/search.js";
 import { applyPropertyRouting } from "./routing/property-route.js";
 import {
   safeValidateClassification,
@@ -119,7 +119,62 @@ const server = createServer(async (req, res) => {
           ? Math.min(body.limit, 10)
           : 3;
       const hits = retrieveKnowledge(query, { limit });
-      send(res, 200, { query, hits });
+      send(res, 200, {
+        query,
+        hits,
+        citationBlock: formatCitationBlock(hits),
+      });
+    } catch {
+      send(res, 400, { error: "Request body must be valid JSON" });
+    }
+    return;
+  }
+
+  if (req.method === "POST" && url.pathname === "/v1/draft/with-citations") {
+    try {
+      const body = (await readJson(req)) as {
+        draftText?: string;
+        query?: string;
+        subject?: string | null;
+        raw_body?: string | null;
+        structured_output?: {
+          issueSummary?: string;
+          category?: string;
+          assetType?: string;
+          siteReference?: string | null;
+        } | null;
+        limit?: number;
+      };
+      const draftText =
+        typeof body.draftText === "string" ? body.draftText.trim() : "";
+      if (!draftText) {
+        send(res, 400, { error: "draftText is required" });
+        return;
+      }
+      const so = body.structured_output ?? null;
+      const query =
+        typeof body.query === "string" && body.query.trim()
+          ? body.query.trim()
+          : buildRetrievalQuery({
+              subject: body.subject,
+              issueSummary: so?.issueSummary,
+              category: so?.category,
+              assetType: so?.assetType,
+              siteReference: so?.siteReference,
+              rawBody: body.raw_body,
+            });
+      const limit =
+        typeof body.limit === "number" && body.limit > 0
+          ? Math.min(body.limit, 10)
+          : 3;
+      const hits = retrieveKnowledge(query, { limit });
+      const enriched = enrichDraftWithCitations({ draftText, hits });
+      send(res, 200, {
+        query,
+        hits,
+        citationBlock: formatCitationBlock(hits),
+        draftText: enriched,
+      });
     } catch {
       send(res, 400, { error: "Request body must be valid JSON" });
     }
@@ -137,4 +192,5 @@ server.listen(port, host, () => {
   console.log(`  POST /v1/validate/extraction`);
   console.log(`  POST /v1/route/property`);
   console.log(`  POST /v1/retrieve`);
+  console.log(`  POST /v1/draft/with-citations`);
 });

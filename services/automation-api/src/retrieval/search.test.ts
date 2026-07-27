@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { retrieveKnowledge } from "./search.js";
+import {
+  enrichDraftWithCitations,
+  formatCitationBlock,
+  retrieveKnowledge,
+} from "./search.js";
 
 describe("retrieveKnowledge", () => {
   it("returns chargeable policy for carpet / tenant charge query", () => {
@@ -32,5 +36,31 @@ describe("retrieveKnowledge", () => {
 
   it("returns empty for blank query", () => {
     assert.deepEqual(retrieveKnowledge("   "), []);
+  });
+});
+
+describe("enrichDraftWithCitations", () => {
+  it("appends Sources block from hits", () => {
+    const hits = retrieveKnowledge("charge tenant carpet replace");
+    const out = enrichDraftWithCitations({
+      draftText: "Thanks, we received your request.",
+      hits,
+    });
+    assert.match(out, /Sources \(OpsDesk lab policies\):/);
+    assert.match(out, /pol-chargeable-works/);
+  });
+
+  it("is idempotent if Sources already present", () => {
+    const hits = retrieveKnowledge("boiler rattling");
+    const once = enrichDraftWithCitations({
+      draftText: "Hello",
+      hits,
+    });
+    const twice = enrichDraftWithCitations({ draftText: once, hits });
+    assert.equal(once, twice);
+  });
+
+  it("formatCitationBlock empty for no hits", () => {
+    assert.equal(formatCitationBlock([]), "");
   });
 });

@@ -717,3 +717,24 @@ Seeded Quayside corpus (chargeable, urgent, boiler warranty, Riverside access) +
 Corpus duplicated in desk + automation-api (keep in sync). Not full support-intent workflow or Slack support routing yet.
 
 ---
+
+## DEC-028 — Draft replies include lab policy citation footnotes
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-27 |
+| Status | Active |
+
+### Context
+
+Phase 5 retrieval worked on the desk but drafts were still ungrounded. Portfolio story needs citations in the operator-facing reply.
+
+### Chosen approach
+
+`POST /v1/draft/with-citations` enriches Gemini draft text with a `Sources (OpsDesk lab policies)` block. n8n **Parse draft** calls it (soft-fail if API down). Payload also stores `citations[]`. Desk send path re-enriches if footnotes missing.
+
+### Trade-offs
+
+Footnotes are keyword-selected, not LLM-grounded generation. Citations appear in the email body (transparent for demos).
+
+---

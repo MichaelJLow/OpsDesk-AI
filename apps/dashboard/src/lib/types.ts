@@ -73,6 +73,8 @@ export type ProposedAction = {
   payload: {
     channel?: string;
     draftText?: string;
+    citations?: unknown;
+    retrievalQuery?: string;
     sender?: string;
     [key: string]: unknown;
   } | null;

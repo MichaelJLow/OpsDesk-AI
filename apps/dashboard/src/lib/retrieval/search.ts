@@ -106,3 +106,25 @@ export function buildRetrievalQuery(parts: {
     .filter(Boolean)
     .join(" ");
 }
+
+/** Footnotes block appended to operator-facing draft emails. */
+export function formatCitationBlock(hits: RetrievalHit[]): string {
+  if (hits.length === 0) return "";
+  const lines = hits.map(
+    (hit, i) =>
+      `[${i + 1}] ${hit.title} (${hit.id}) — ${hit.snippet.replace(/\s+/g, " ").trim()}`,
+  );
+  return ["", "—", "Sources (OpsDesk lab policies):", ...lines].join("\n");
+}
+
+export function enrichDraftWithCitations(input: {
+  draftText: string;
+  hits: RetrievalHit[];
+}): string {
+  const base = input.draftText.trim();
+  const block = formatCitationBlock(input.hits);
+  if (!block) return base;
+  if (base.includes("Sources (OpsDesk lab policies):")) return base;
+  return `${base}\n${block}`;
+}
+

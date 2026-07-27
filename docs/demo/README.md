@@ -16,6 +16,7 @@
 | Evidence pack | Request detail → **Generate evidence pack** → markdown audit (extraction, actions, jobs, timeline) | Desk audit export (DEC-025) |
 | Routing eval | `cd services/automation-api && npm run eval:routing` — fixture emails → urgent/chargeable/routine asserts | Thin harness (DEC-026) |
 | Context retrieval | Request detail → **Retrieve context** → policy/warranty citations (keyword) · timeline `retrieval_ran` | Phase 5 thin (DEC-027) |
+| Draft + citations | Intake → retrieve → draft stores `Sources (OpsDesk lab policies)` footnotes · desk shows citation titles | DEC-028 |
 
 Do **not** leave HubSpot pointed at a broken URL in demos — simulate failure briefly, then restore (as in the 2026-07-27 lab).
 

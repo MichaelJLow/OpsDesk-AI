@@ -8,6 +8,7 @@ import {
 import { formatEvidencePackMarkdown } from "@/lib/evidence-pack";
 import {
   buildRetrievalQuery,
+  enrichDraftWithCitations,
   retrieveKnowledge,
   type RetrievalHit,
 } from "@/lib/retrieval/search";
@@ -253,7 +254,7 @@ export async function sendApprovedDraft(input: {
 
   const { data: request, error: requestLoadError } = await supabase
     .from("requests")
-    .select("id, sender_email, subject, status, contact_id")
+    .select("id, sender_email, subject, status, contact_id, raw_body, category")
     .eq("id", requestId)
     .maybeSingle();
 
@@ -291,8 +292,34 @@ export async function sendApprovedDraft(input: {
     return { ok: false, error: "Draft text missing from proposed action payload." };
   }
 
+  let draftForSend = rawDraft;
+  if (!draftForSend.includes("Sources (OpsDesk lab policies):")) {
+    const { data: extractions } = await supabase
+      .from("request_extractions")
+      .select("structured_output")
+      .eq("request_id", requestId)
+      .order("created_at", { ascending: false })
+      .limit(1);
+    const so = (extractions?.[0]?.structured_output ?? null) as {
+      issueSummary?: string;
+      category?: string;
+      assetType?: string;
+      siteReference?: string | null;
+    } | null;
+    const query = buildRetrievalQuery({
+      subject: request.subject,
+      issueSummary: so?.issueSummary,
+      category: so?.category || request.category,
+      assetType: so?.assetType,
+      siteReference: so?.siteReference,
+      rawBody: request.raw_body,
+    });
+    const hits = retrieveKnowledge(query, { limit: 3 });
+    draftForSend = enrichDraftWithCitations({ draftText: draftForSend, hits });
+  }
+
   const draftText = polishDraftText(
-    rawDraft,
+    draftForSend,
     request.sender_email,
     contactName,
   );

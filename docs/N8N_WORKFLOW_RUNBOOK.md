@@ -23,11 +23,11 @@ Gmail → normalise → store → timeline → extract → validate
 | 8 | HubSpot contact lookup | DONE |
 | 9 | Supabase property/site lookup | DONE |
 | 10 | Deterministic routine route + Slack | DONE |
-| 11 | Draft reply + store | DONE |
+| 11 | Draft reply + store | DONE (+ citations via `/v1/draft/with-citations`) |
 | 12 | Failure write + retry webhook | DONE (12A HubSpot error path + retry live) |
 | 13 | Urgent / hazard deterministic route | DONE |
 
-Later: controlled approvals, protected execution, retrieval, evaluation. Inspection vertical is Track A (post-MVP).
+Later: full support-intent Slack routing; pgvector if keyword retrieval is insufficient. Inspection vertical is Track A (post-MVP).
 
 ## Delivery log
 
@@ -37,6 +37,7 @@ Later: controlled approvals, protected execution, retrieval, evaluation. Inspect
 | 2026-07-26 | Hosted E2E — Vercel desk + VPS n8n; Zod sidecar; send/retry webhooks |
 | 2026-07-27 | Stage 13 — `Route Property` → patch urgency → Slack urgent/intake; desk hazard badge |
 | 2026-07-27 | Controlled/chargeable HITL — `chargeable` route flag, n8n approval branch, desk approve/reject without send |
+| 2026-07-27 | Draft citations — Parse draft → `POST /v1/draft/with-citations` (keyword Sources footnotes) |
 
 ---
 

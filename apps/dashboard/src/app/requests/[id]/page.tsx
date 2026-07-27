@@ -183,6 +183,9 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
     typeof draft?.payload?.draftText === "string"
       ? draft.payload.draftText
       : null;
+  const draftCitations = Array.isArray(draft?.payload?.citations)
+    ? (draft.payload.citations as Array<{ id?: string; title?: string }>)
+    : null;
   const chargeableSummary =
     typeof chargeable?.payload?.summary === "string"
       ? chargeable.payload.summary
@@ -332,6 +335,14 @@ export default async function RequestWorkspacePage({ params }: PageProps) {
                 {draft.risk_level ? ` · risk ${draft.risk_level}` : null}
               </p>
               <pre className="pre">{draftText || "(no draft text in payload)"}</pre>
+              {draftCitations && draftCitations.length > 0 ? (
+                <p className="muted" style={{ marginTop: "0.5rem" }}>
+                  Grounded on{" "}
+                  {draftCitations
+                    .map((c) => c.title || c.id || "policy")
+                    .join("; ")}
+                </p>
+              ) : null}
               {draft.status === "proposed" ? (
                 <DecisionForm
                   proposedActionId={draft.id}
