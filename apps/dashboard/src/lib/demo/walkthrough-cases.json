@@ -7,8 +7,9 @@
     {
       "slug": "demo-routine-boiler",
       "scenario": "Routine",
-      "subject": "Boiler rattling Flat 8 Riverside Court",
-      "rawBody": "Hi, the boiler in Flat 8 at Riverside Court has been rattling for a few days. Heating still works. Access weekdays after 9am.",
+      "receivedAtHoursAgo": 78,
+      "subject": "Boiler rattling - Flat 8, Riverside Court",
+      "rawBody": "Hi Quayside,\n\nHope you're well. I'm writing about the boiler in Flat 8 at Riverside Court.\n\nFor the last few days it's been making a loud rattling noise whenever the heating comes on. The radiators still get warm and we still have hot water, so it's not an emergency, but it's getting worse in the mornings.\n\nWeekday access after 9am works best for us. Happy to leave a spare key with the caretaker if that helps.\n\nThanks,\nAlex Resident\nFlat 8, Riverside Court",
       "category": "routine_maintenance",
       "urgency": "normal",
       "status": "proposed",
@@ -26,7 +27,7 @@
         "missingInformation": [],
         "suggestedRoute": "maintenance_intake"
       },
-      "draftText": "Hi Alex,\n\nThanks for reporting the rattling boiler in Flat 8 at Riverside Court. We've logged this as routine maintenance. Heating still working is noted; we'll arrange a weekday engineer visit after 9am.\n\nKind regards,\nQuayside Property Services",
+      "draftText": "Hi Alex,\n\nThanks for letting us know about the rattling boiler in Flat 8 at Riverside Court. We've logged this as routine maintenance. Noted that heating and hot water are still working, and that weekday access after 9am suits you.\n\nWe'll arrange an engineer visit and confirm the appointment shortly.\n\nKind regards,\nQuayside Property Services",
       "citations": [
         {
           "id": "pol-boiler-warranty",
@@ -37,16 +38,17 @@
         }
       ],
       "timeline": [
-        { "event_type": "request_stored", "step_name": "demo_seed", "status": "success" },
-        { "event_type": "extraction_validated", "step_name": "demo_seed", "status": "success" },
-        { "event_type": "retrieval_ran", "step_name": "keyword_retrieval", "status": "success" }
+        { "event_type": "request_stored", "step_name": "demo_seed", "status": "success", "minutesAfterReceived": 0 },
+        { "event_type": "extraction_validated", "step_name": "demo_seed", "status": "success", "minutesAfterReceived": 1 },
+        { "event_type": "retrieval_ran", "step_name": "keyword_retrieval", "status": "success", "minutesAfterReceived": 2 }
       ]
     },
     {
       "slug": "demo-urgent-electrics",
       "scenario": "Urgent",
-      "subject": "Water dripping onto light fitting Flat 8",
-      "rawBody": "There is water dripping onto the light fitting in the hallway at Riverside Court Flat 8. Please help urgently.",
+      "receivedAtHoursAgo": 51,
+      "subject": "URGENT: water dripping onto light fitting - Flat 8",
+      "rawBody": "Hello,\n\nI need help urgently. There is water dripping onto the ceiling light fitting in the hallway of Flat 8, Riverside Court.\n\nIt started this evening after the upstairs neighbour had a leak. The fitting is wet and I'm worried about electrics. I've switched the light off at the wall and we're staying clear of that area.\n\nPlease send someone as soon as you can. I can give access tonight if needed - call me on the number you have on file.\n\nAlex Resident\nFlat 8, Riverside Court",
       "category": "urgent_hazardous",
       "urgency": "critical",
       "status": "proposed",
@@ -59,12 +61,12 @@
         "unitReference": "Flat 8",
         "assetType": "electrics",
         "issueSummary": "Water near light fitting",
-        "accessNotes": null,
+        "accessNotes": "Tonight if needed",
         "heatingStillWorking": null,
         "missingInformation": [],
         "suggestedRoute": "urgent_maintenance"
       },
-      "draftText": "Hi Alex,\n\nWe've received your report of water near a light fitting at Flat 8, Riverside Court. This has been escalated as an urgent hazard. Please keep clear of the area. A member of the team will follow up as a priority.\n\nKind regards,\nQuayside Property Services",
+      "draftText": "Hi Alex,\n\nWe've received your report of water dripping onto a light fitting at Flat 8, Riverside Court. This has been escalated as an urgent hazard.\n\nPlease keep the light switched off and stay clear of the area. A member of the team will follow up as a priority and can arrange access this evening if required.\n\nKind regards,\nQuayside Property Services",
       "citations": [
         {
           "id": "pol-urgent-hazard",
@@ -75,15 +77,16 @@
         }
       ],
       "timeline": [
-        { "event_type": "request_stored", "step_name": "demo_seed", "status": "success" },
-        { "event_type": "route_escalated", "step_name": "urgent_hazard_route", "status": "success" }
+        { "event_type": "request_stored", "step_name": "demo_seed", "status": "success", "minutesAfterReceived": 0 },
+        { "event_type": "route_escalated", "step_name": "urgent_hazard_route", "status": "success", "minutesAfterReceived": 1 }
       ]
     },
     {
       "slug": "demo-chargeable-carpet",
       "scenario": "Chargeable",
-      "subject": "Replace hallway carpet Flat 8 - charge tenant",
-      "rawBody": "Hi, please replace the worn hallway carpet in Flat 8 at Riverside Court and charge to the tenant. Access is available weekdays after 10 am.",
+      "receivedAtHoursAgo": 33,
+      "subject": "Hallway carpet replacement - Flat 8 (charge to tenant)",
+      "rawBody": "Hi team,\n\nCould you please arrange replacement of the worn hallway carpet in Flat 8 at Riverside Court?\n\nThe tenant has agreed this is a rechargeable improvement rather than a landlord repair. Please charge the cost to the tenant once the work is approved and completed.\n\nAccess is available weekdays after 10am. Photos attached in the original thread if useful (not included in this lab seed).\n\nThanks,\nAlex Resident\n(on behalf of the tenancy at Flat 8)",
       "category": "controlled_chargeable",
       "urgency": "normal",
       "status": "awaiting_execution",
@@ -106,7 +109,7 @@
         "summary": "Replace hallway carpet and charge to tenant. Approval records authority only; no invoice or dispatch yet.",
         "risk_level": "medium"
       },
-      "draftText": "Hi Alex,\n\nWe've logged your carpet replacement request for Flat 8. Chargeable work requires approval before any work order or billing. We'll confirm next steps once that's complete.\n\nKind regards,\nQuayside Property Services",
+      "draftText": "Hi Alex,\n\nWe've logged the hallway carpet replacement request for Flat 8 at Riverside Court. Because this is chargeable to the tenant, it needs approval before any work order or billing.\n\nWe'll confirm next steps once that authority is recorded. Weekday access after 10am is noted.\n\nKind regards,\nQuayside Property Services",
       "citations": [
         {
           "id": "pol-chargeable-works",
@@ -117,15 +120,16 @@
         }
       ],
       "timeline": [
-        { "event_type": "request_stored", "step_name": "demo_seed", "status": "success" },
-        { "event_type": "execution_deferred", "step_name": "chargeable_approval", "status": "success" }
+        { "event_type": "request_stored", "step_name": "demo_seed", "status": "success", "minutesAfterReceived": 0 },
+        { "event_type": "execution_deferred", "step_name": "chargeable_approval", "status": "success", "minutesAfterReceived": 4 }
       ]
     },
     {
       "slug": "demo-hubspot-failed",
       "scenario": "Failure",
-      "subject": "Kitchen tap dripping Flat 3",
-      "rawBody": "The kitchen tap in Flat 3 at Riverside Court has been dripping slowly. Not urgent.",
+      "receivedAtHoursAgo": 20,
+      "subject": "Kitchen tap dripping - Flat 3, Riverside Court",
+      "rawBody": "Hi,\n\nJust a quick one: the kitchen tap in Flat 3 at Riverside Court has been dripping slowly for about a week. It isn't urgent and we're not getting any flooding, but it is wasting water and keeping us awake at night.\n\nHappy for an engineer whenever you have a slot. No special access notes.\n\nCheers,\nAlex Resident\nFlat 3, Riverside Court",
       "category": "routine_maintenance",
       "urgency": "normal",
       "status": "needs_attention",
@@ -145,20 +149,22 @@
       },
       "draftText": null,
       "timeline": [
-        { "event_type": "request_stored", "step_name": "demo_seed", "status": "success" },
+        { "event_type": "request_stored", "step_name": "demo_seed", "status": "success", "minutesAfterReceived": 0 },
         {
           "event_type": "integration_failed",
           "step_name": "hubspot_contact_lookup",
           "status": "error",
-          "error": "Demo seed: HubSpot lookup failed (simulated for walkthrough)."
+          "error": "Demo seed: HubSpot lookup failed (simulated for walkthrough).",
+          "minutesAfterReceived": 1
         }
       ]
     },
     {
       "slug": "demo-grounding-access",
       "scenario": "Grounding",
-      "subject": "Access times Flat 8 Riverside Court",
-      "rawBody": "When can contractors access Flat 8 at Riverside Court on weekdays?",
+      "receivedAtHoursAgo": 9,
+      "subject": "Contractor access times for Flat 8?",
+      "rawBody": "Hi Quayside,\n\nQuick question before you book anyone in: what are the usual contractor access times for Flat 8 at Riverside Court on weekdays?\n\nI work from home some mornings, so I'd rather match your preferred window if you already have one for the block.\n\nThanks in advance,\nAlex Resident\nFlat 8, Riverside Court",
       "category": "routine_maintenance",
       "urgency": "normal",
       "status": "proposed",
@@ -176,7 +182,7 @@
         "missingInformation": [],
         "suggestedRoute": "maintenance_intake"
       },
-      "draftText": "Hi Alex,\n\nFor Riverside Court, preferred contractor access is weekdays after 09:00 unless you state otherwise. We'll confirm Flat 8 arrangements when booking.\n\nKind regards,\nQuayside Property Services",
+      "draftText": "Hi Alex,\n\nFor Riverside Court, preferred contractor access is weekdays after 09:00 unless you state otherwise. We'll confirm Flat 8 arrangements when booking any visit.\n\nIf a different window suits you better, reply with the times that work and we'll note them on the case.\n\nKind regards,\nQuayside Property Services",
       "citations": [
         {
           "id": "pol-access-riverside",
@@ -187,15 +193,16 @@
         }
       ],
       "timeline": [
-        { "event_type": "request_stored", "step_name": "demo_seed", "status": "success" },
-        { "event_type": "retrieval_ran", "step_name": "keyword_retrieval", "status": "success" }
+        { "event_type": "request_stored", "step_name": "demo_seed", "status": "success", "minutesAfterReceived": 0 },
+        { "event_type": "retrieval_ran", "step_name": "keyword_retrieval", "status": "success", "minutesAfterReceived": 2 }
       ]
     },
     {
       "slug": "demo-evidence-ready",
       "scenario": "Evidence pack",
-      "subject": "Boiler service complete note Flat 8",
-      "rawBody": "Just confirming the boiler service visit for Flat 8 Riverside Court went ahead yesterday. Heating fine.",
+      "receivedAtHoursAgo": 3,
+      "subject": "Re: Boiler service visit - Flat 8 confirmation",
+      "rawBody": "Hi,\n\nJust confirming that the boiler service visit for Flat 8 at Riverside Court went ahead yesterday afternoon as planned.\n\nThe engineer was in for about 40 minutes. Heating and hot water are fine this morning, and the rattling we reported earlier seems quieter for now.\n\nThanks for arranging it.\n\nAlex Resident\nFlat 8, Riverside Court",
       "category": "routine_maintenance",
       "urgency": "normal",
       "status": "sent",
@@ -214,16 +221,16 @@
         "suggestedRoute": "maintenance_intake"
       },
       "draftStatus": "sent",
-      "draftText": "Hi Alex,\n\nThanks for confirming the Flat 8 boiler service. We've closed this as routine follow-up with heating reported fine.\n\nKind regards,\nQuayside Property Services",
+      "draftText": "Hi Alex,\n\nThanks for confirming the Flat 8 boiler service at Riverside Court. We've closed this as routine follow-up, with heating reported fine after the visit.\n\nIf the rattling returns, reply to this thread and we'll reopen the case.\n\nKind regards,\nQuayside Property Services",
       "timeline": [
-        { "event_type": "request_stored", "step_name": "demo_seed", "status": "success" },
-        { "event_type": "draft_sent", "step_name": "protected_send", "status": "success" }
+        { "event_type": "request_stored", "step_name": "demo_seed", "status": "success", "minutesAfterReceived": 0 },
+        { "event_type": "draft_sent", "step_name": "protected_send", "status": "success", "minutesAfterReceived": 12 }
       ]
     }
   ],
   "liveProofEmail": {
     "to": "mikelow92+opsdesk@gmail.com",
-    "subject": "Boiler rattling Flat 8 Riverside Court (live proof)",
-    "body": "Hi, the boiler in Flat 8 at Riverside Court has been rattling for a few days. Heating still works. Access weekdays after 9am.\n\n(This is the single live Gmail proof email for portfolio demos.)"
+    "subject": "Boiler rattling - Flat 8, Riverside Court (live proof)",
+    "body": "Hi Quayside,\n\nHope you're well. I'm writing about the boiler in Flat 8 at Riverside Court.\n\nFor the last few days it's been making a loud rattling noise whenever the heating comes on. The radiators still get warm and we still have hot water, so it's not an emergency, but it's getting worse in the mornings.\n\nWeekday access after 9am works best for us.\n\nThanks,\nAlex Resident\nFlat 8, Riverside Court\n\n(This is the single live Gmail proof email for portfolio demos.)"
   }
 }

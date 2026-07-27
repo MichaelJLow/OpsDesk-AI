@@ -40,9 +40,19 @@ Fixtures: [`walkthrough-cases.json`](walkthrough-cases.json).
 ## One live proof email
 
 To: `mikelow92+opsdesk@gmail.com`  
-Subject: `Boiler rattling Flat 8 Riverside Court (live proof)`
+Subject: `Boiler rattling - Flat 8, Riverside Court (live proof)`
 
-> Hi, the boiler in Flat 8 at Riverside Court has been rattling for a few days. Heating still works. Access weekdays after 9am.
+> Hi Quayside,
+>
+> Hope you're well. I'm writing about the boiler in Flat 8 at Riverside Court.
+>
+> For the last few days it's been making a loud rattling noise whenever the heating comes on. The radiators still get warm and we still have hot water, so it's not an emergency, but it's getting worse in the mornings.
+>
+> Weekday access after 9am works best for us.
+>
+> Thanks,
+> Alex Resident
+> Flat 8, Riverside Court
 >
 > (This is the single live Gmail proof email for portfolio demos.)
 

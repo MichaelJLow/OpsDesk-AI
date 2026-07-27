@@ -130,6 +130,9 @@ async function ensureOrg() {
 
 async function seedCase(c, companyId, contactId) {
   const externalId = `walkthrough:${c.slug}`;
+  const hoursAgo = typeof c.receivedAtHoursAgo === "number" ? c.receivedAtHoursAgo : 0;
+  const receivedAt = new Date(Date.now() - hoursAgo * 60 * 60 * 1000);
+
   const { data: request, error: reqErr } = await supabase
     .from("requests")
     .insert({
@@ -143,7 +146,7 @@ async function seedCase(c, companyId, contactId) {
       urgency: c.urgency,
       company_id: companyId,
       contact_id: contactId,
-      received_at: new Date().toISOString(),
+      received_at: receivedAt.toISOString(),
     })
     .select("id")
     .single();
@@ -195,6 +198,9 @@ async function seedCase(c, companyId, contactId) {
   }
 
   for (const ev of c.timeline || []) {
+    const minutesAfter =
+      typeof ev.minutesAfterReceived === "number" ? ev.minutesAfterReceived : 0;
+    const occurredAt = new Date(receivedAt.getTime() + minutesAfter * 60 * 1000);
     const { error: evErr } = await supabase.from("workflow_events").insert({
       request_id: request.id,
       event_type: ev.event_type,
@@ -202,6 +208,7 @@ async function seedCase(c, companyId, contactId) {
       status: ev.status,
       error: ev.error ?? null,
       payload: { seeded: true, scenario: c.scenario },
+      occurred_at: occurredAt.toISOString(),
     });
     if (evErr) throw evErr;
   }

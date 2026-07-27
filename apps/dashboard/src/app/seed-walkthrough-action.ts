@@ -26,6 +26,7 @@ type WalkthroughFixtures = {
     scenario: string;
     subject: string;
     rawBody: string;
+    receivedAtHoursAgo?: number;
     category: string;
     urgency: string;
     status: string;
@@ -43,6 +44,7 @@ type WalkthroughFixtures = {
       step_name: string;
       status: string;
       error?: string;
+      minutesAfterReceived?: number;
     }>;
   }>;
 };
@@ -146,6 +148,9 @@ export async function seedDemoWalkthrough(): Promise<SeedWalkthroughResult> {
   }
 
   for (const c of fixtures.cases) {
+    const hoursAgo = c.receivedAtHoursAgo ?? 0;
+    const receivedAt = new Date(Date.now() - hoursAgo * 60 * 60 * 1000);
+
     const { data: request, error: reqErr } = await supabase
       .from("requests")
       .insert({
@@ -159,6 +164,7 @@ export async function seedDemoWalkthrough(): Promise<SeedWalkthroughResult> {
         urgency: c.urgency,
         company_id: companyId,
         contact_id: contactId,
+        received_at: receivedAt.toISOString(),
       })
       .select("id")
       .single();
@@ -212,6 +218,8 @@ export async function seedDemoWalkthrough(): Promise<SeedWalkthroughResult> {
     }
 
     for (const ev of c.timeline || []) {
+      const minutesAfter = ev.minutesAfterReceived ?? 0;
+      const occurredAt = new Date(receivedAt.getTime() + minutesAfter * 60 * 1000);
       await supabase.from("workflow_events").insert({
         request_id: request.id,
         event_type: ev.event_type,
@@ -219,6 +227,7 @@ export async function seedDemoWalkthrough(): Promise<SeedWalkthroughResult> {
         status: ev.status,
         error: ev.error ?? null,
         payload: { seeded: true, scenario: c.scenario },
+        occurred_at: occurredAt.toISOString(),
       });
     }
   }
