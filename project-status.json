@@ -21,7 +21,7 @@
       "nextAction": "Retry Loom tomorrow; fallback Clipchamp screen+cam"
     }
   ],
-  "lastUpdated": "2026-07-27",
+  "lastUpdated": "2026-07-28",
   "phase0Complete": true,
   "phase1Complete": false,
   "phase2Complete": false,
@@ -40,6 +40,7 @@
   "walkthroughSeedComplete": true,
   "cvUpdated": true,
   "demoVideoComplete": false,
+  "readmeFirstImpressionComplete": true,
   "inspectionVerticalStarted": false,
   "estimatedOverallPercent": "78-84",
   "estimatedVerticalSlicePercent": "99",
