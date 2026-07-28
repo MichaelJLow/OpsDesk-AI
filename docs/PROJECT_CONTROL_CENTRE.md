@@ -2,7 +2,7 @@
 
 > This is the living source of truth for the project. Update it at the end of every meaningful build session.
 
-**Project:** OpsDesk AI — Quayside Property Services (property-maintenance vertical)  
+**Project:** OpsDesk — Quayside Property Services (property-maintenance vertical)  
 **Current phase:** Phase 3 (happy path hosted; exit polish remaining) + Phase 10 packaging in progress  
 **Current milestone:** Portfolio packaging (desk polish done; demo video next)  
 **Overall status:** In progress — hosted lab + walkthrough seed ready; Loom deferred to Clipchamp/OBS if signup stays broken  

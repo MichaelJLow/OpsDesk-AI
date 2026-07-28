@@ -1,18 +1,18 @@
 {
-  "project": "OpsDesk AI",
+  "project": "OpsDesk",
   "fictionalCompany": "Quayside Property Services",
   "vertical": "property-maintenance",
   "repository": "https://github.com/MichaelJLow/OpsDesk-AI",
   "phase": 10,
-  "phaseName": "Portfolio packaging (desk ready; demo video next)",
-  "milestone": "Portfolio packaging — record demo + screenshots",
+  "phaseName": "Portfolio packaging (README done; demo video next)",
+  "milestone": "Portfolio packaging — record demo + keep case study polished",
   "status": "in_progress",
   "buildPhilosophy": "capability-playbook",
   "currentTask": "Record ~3.5–4 min portfolio demo (six seeded cases; Clipchamp if Loom signup still broken)",
   "nextTasks": [
-    "Capture screenshots for the six demo beats on hosted desk",
+    "Optional: add draft-edit or Sources screenshot to case study",
     "Upload unlisted demo + paste links in README / portfolio notes",
-    "Case study page (or README first-impression rewrite)"
+    "Light repo rename hygiene if GitHub OpsDesk-AI rename is desired later"
   ],
   "blockers": [
     {

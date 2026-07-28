@@ -1,6 +1,6 @@
-# Portfolio Notes: OpsDesk AI
+# Portfolio Notes: OpsDesk
 
-Canonical **packaged story** for jobs and (later) client conversations. Loom and website case study come after polish; this file is the source of truth for wording.
+Canonical **packaged story** for jobs and (later) client conversations. Demo video and README polish track packaging; this file is the source of truth for wording.
 
 **Style:** no em dashes in portfolio copy.
 
@@ -30,10 +30,11 @@ Prefer the **end-to-end workflow** line for interviews.
 
 | | |
 |---|---|
-| Product name | **OpsDesk AI** |
+| Product name | **OpsDesk** |
 | First vertical | Property maintenance |
 | Fictional company | **Quayside Property Services** |
 | Live desk | https://opsdesk-quayside.vercel.app |
+| Case study | https://www.michaeljlow.com/projects/opsdesk-ai |
 | Repo | https://github.com/MichaelJLow/OpsDesk-AI |
 | Data | Synthetic Quayside lab data; real APIs (Gmail, HubSpot, Slack, Supabase) |
 
@@ -86,7 +87,7 @@ Client path (methodology only, no fake delivery claim): [`client-delivery/`](../
 
 ## Homepage / CV card (short)
 
-**OpsDesk AI:** end-to-end AI workflow for property-maintenance requests (Quayside): intake, rules-based routing, CRM context, grounded drafts, and human approval gates, with a full audit trail. Real Gmail, HubSpot, Slack, Supabase; synthetic data.
+**OpsDesk:** end-to-end AI workflow for property-maintenance requests (Quayside): intake, rules-based routing, CRM context, grounded drafts, and human approval gates, with a full audit trail. Real Gmail, HubSpot, Slack, Supabase; synthetic data.
 
 ---
 
@@ -121,16 +122,18 @@ Client path (methodology only, no fake delivery claim): [`client-delivery/`](../
 - [x] Demo walkthrough seed + one live email proof ([`demo/README.md`](demo/README.md))  
 - [x] Desk visual polish  
 - [ ] Run full scenario pack once on hosted stack (for video)  
-- [ ] Screenshots per scenario  
+- [ ] Screenshots per scenario (site uses real shots; keep evidence folder in sync if needed)  
 - [ ] Demo video (~3.5–4 min; Loom or Clipchamp)  
 - [x] CV bullets updated (Desktop `MichaelLowCV`)  
-- [ ] Website case study + README first impression  
+- [x] Website case study base: michaeljlow.com `/projects/opsdesk-ai`  
+- [x] GitHub README first impression (OpsDesk rename)  
 
 ---
 
 ## Notes
 
-- 2026-07-27: **End-session packaging:** Quayside desk UI, walkthrough email substance + stagger, draft edit, Sources tidy; Loom signup blocked (FAIL-012); resume video tomorrow.  
+- 2026-07-28: Product name **OpsDesk** (dropped “AI”); README rewritten for GitHub first impression.  
+- 2026-07-27: **End-session packaging:** Quayside desk UI, walkthrough email substance + stagger, draft edit, Sources tidy; Loom signup blocked (FAIL-012); resume video later.  
 - 2026-07-27: **Story locked**: problem / outcome / one-liner / six scenarios (portfolio packaging). No em dashes in copy.  
 - 2026-07-27: DEC-022: capability playbook over monolithic platform.  
 - 2026-07-24: Domain pivot SaaS → Quayside; company name for portfolio.  
