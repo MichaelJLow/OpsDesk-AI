@@ -59,6 +59,21 @@ Lab scripts and sample emails: [`docs/demo/README.md`](demo/README.md).
 
 ---
 
+## Website carousel (4 shots, post redesign)
+
+The case study carousel is **four moments**, not six separate screens. The command-centre layout combines intake, CRM context, and draft review on one workspace.
+
+| Carousel | Walkthrough seed | Covers |
+|---|---|---|
+| **Command centre** | `demo-grounding-access` | Gmail intake + HubSpot + grounded draft |
+| **Urgent routing** | `demo-urgent-electrics` | Hazard escalation + Slack |
+| **Approval gates** | `demo-chargeable-carpet` | Chargeable authority before spend |
+| **Failure recovery** | `demo-hubspot-failed` | Visible failure + retry + audit |
+
+Capture guide and filenames: [`docs/evidence/carousel-shots.md`](evidence/carousel-shots.md).
+
+---
+
 ## Architecture in one breath
 
 n8n (intake / Slack / draft) → automation-api (Zod + deterministic route + retrieve) → Supabase → Next.js operator desk (approve / send / execute lab / evidence). AI interprets; rules and humans control risk.
@@ -122,7 +137,7 @@ Client path (methodology only, no fake delivery claim): [`client-delivery/`](../
 - [x] Demo walkthrough seed + one live email proof ([`demo/README.md`](demo/README.md))  
 - [x] Desk visual polish  
 - [ ] Run full scenario pack once on hosted stack (for video)  
-- [ ] Screenshots per scenario (site uses real shots; keep evidence folder in sync if needed)  
+- [ ] Screenshots per carousel shot (4 + cover v5; see [`evidence/carousel-shots.md`](evidence/carousel-shots.md))  
 - [ ] Demo video (~3.5–4 min; Loom or Clipchamp)  
 - [x] CV bullets updated (Desktop `MichaelLowCV`)  
 - [x] Website case study base: michaeljlow.com `/projects/opsdesk-ai`  

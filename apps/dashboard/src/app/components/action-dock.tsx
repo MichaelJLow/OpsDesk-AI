@@ -31,11 +31,18 @@ type DockMode =
       requestId: string;
     }
   | {
+      kind: "hidden";
+    }
+  | {
       kind: "idle";
       message: string;
     };
 
 export function ActionDock({ mode }: { mode: DockMode }) {
+  if (mode.kind === "hidden") {
+    return null;
+  }
+
   if (mode.kind === "idle") {
     return (
       <div className="action-dock">

@@ -1,17 +1,19 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import type { ComponentProps } from "react";
+import { Suspense, type ComponentProps } from "react";
 import { ActionDock } from "@/app/components/action-dock";
+import { ActivityTimeline } from "@/app/components/activity-timeline";
 import { CaseTabs } from "@/app/components/case-tabs";
+import { EvidenceRail } from "@/app/components/evidence-rail";
 import { RequestQueue } from "@/app/components/request-queue";
+import { ResidentMessagePanel } from "@/app/components/resident-message-panel";
+import { describeActivityEvent } from "@/lib/activity";
 import { lookupHubSpotContactByEmail } from "@/lib/hubspot";
 import { loadInboxRequests, parseQueueFilter } from "@/lib/inbox";
 import { formatWhen } from "@/lib/format";
 import {
   caseStatusLabel,
   categoryLabel,
-  eventLabel,
-  requestStatusLabel,
   routeLabel,
   urgencyLabel,
 } from "@/lib/labels";
@@ -84,24 +86,77 @@ function ExtractionFields({ data }: { data: StructuredExtraction | null }) {
   );
 }
 
-function CaseFactsCompact({ data }: { data: StructuredExtraction | null }) {
-  const rows: Array<[string, string]> = [
-    ["Category", categoryLabel(data?.category ? String(data.category) : null)],
-    ["Site", String(data?.siteReference ?? "—")],
-    ["Unit", String(data?.unitReference ?? "—")],
-    ["Asset", String(data?.assetType ?? "—")],
-    ["Access", String(data?.accessNotes ?? "—")],
-  ];
-  return (
-    <dl className="kv">
-      {rows.map(([label, value]) => (
-        <div key={label} style={{ display: "contents" }}>
-          <dt>{label}</dt>
-          <dd>{value}</dd>
-        </div>
-      ))}
-    </dl>
-  );
+function nextStepForCase(input: {
+  isHazard: boolean;
+  needsAttention: boolean;
+  chargeableNeedsApproval: boolean;
+  chargeableReadyToExecute: boolean;
+  draftStatus: string | null;
+  citationCount: number;
+  accessNotes: string | null;
+  siteName: string | null;
+  unitName: string | null;
+  residentName: string;
+  residentMatched: boolean;
+  failedStepLabel: string | null;
+}): { title: string; detail: string } {
+  if (input.needsAttention) {
+    return {
+      title: "Retry the failed workflow step",
+      detail: input.failedStepLabel
+        ? `${input.failedStepLabel} failed — restore the integration path, then continue the case.`
+        : "Restore the integration path, then continue the case.",
+    };
+  }
+  if (input.chargeableNeedsApproval) {
+    return {
+      title: "Approve tenant-chargeable authority first",
+      detail:
+        "Chargeable work is blocked until authority is recorded. Use the action bar below — no invoice or dispatch.",
+    };
+  }
+  if (input.chargeableReadyToExecute) {
+    return {
+      title: "Create the simulated work order",
+      detail:
+        "Authority is approved. Use the action bar below to create a lab work order — no billing or contractor dispatch.",
+    };
+  }
+  if (input.isHazard) {
+    return {
+      title: "Escalate — do not send a routine reply",
+      detail:
+        "Treat as urgent hazard. Confirm Slack alert and urgent maintenance routing before any resident-facing message.",
+    };
+  }
+  if (input.draftStatus === "proposed") {
+    const place = [input.unitName, input.siteName].filter(Boolean).join(", ");
+    const policyLine =
+      input.citationCount > 0
+        ? `Grounded by ${input.citationCount} polic${input.citationCount === 1 ? "y" : "ies"}`
+        : "No policy citations attached";
+    const accessLine = input.accessNotes
+      ? ` · check access notes (${input.accessNotes}) match the draft`
+      : "";
+    return {
+      title: "Review the draft, then approve in Proposed reply",
+      detail: `${policyLine}${accessLine}${place ? ` · ${place}` : ""}. Edit the wording if needed before approving.`,
+    };
+  }
+  if (input.draftStatus === "approved") {
+    const recipient = input.residentMatched
+      ? input.residentName
+      : "the original sender";
+    const place = [input.unitName, input.siteName].filter(Boolean).join(", ");
+    return {
+      title: "Send the approved reply",
+      detail: `Ready for ${recipient}${place ? ` at ${place}` : ""}. Use Send in the Proposed reply panel — emails via n8n.`,
+    };
+  }
+  return {
+    title: "No blocking decision",
+    detail: "Review Activity if you need the full case history.",
+  };
 }
 
 export default async function RequestWorkspacePage({
@@ -315,43 +370,99 @@ export default async function RequestWorkspacePage({
       proposedActionId: chargeable.id,
       requestId: typedRequest.id,
     };
-  } else if (draft?.status === "proposed") {
-    dockMode = {
-      kind: "draft_approve",
-      proposedActionId: draft.id,
-      requestId: typedRequest.id,
-    };
-  } else if (draft?.status === "approved") {
-    dockMode = {
-      kind: "draft_send",
-      proposedActionId: draft.id,
-      requestId: typedRequest.id,
-    };
+  } else if (
+    (draft?.status === "proposed" || draft?.status === "approved") &&
+    !chargeableNeedsApproval
+  ) {
+    // Approve/send live in the Proposed reply panel — hide the bottom dock.
+    dockMode = { kind: "hidden" };
   }
 
+  const accessNotes =
+    typeof extraction?.structured_output?.accessNotes === "string"
+      ? extraction.structured_output.accessNotes
+      : null;
+
+  const nextStep = nextStepForCase({
+    isHazard,
+    needsAttention: typedRequest.status === "needs_attention",
+    chargeableNeedsApproval,
+    chargeableReadyToExecute,
+    draftStatus: draft?.status ?? null,
+    citationCount: draftCitations?.length ?? 0,
+    accessNotes,
+    siteName: extractedSite || site?.name || null,
+    unitName: extractedUnit,
+    residentName,
+    residentMatched: Boolean(contact || hubspot),
+    failedStepLabel: latestError?.step_name
+      ? latestError.step_name.replace(/_/g, " ")
+      : null,
+  });
+
+  const activityItems = timeline.map((event) =>
+    describeActivityEvent(event, {
+      residentName,
+      siteName: extractedSite || site?.name,
+      unitName: extractedUnit,
+      issueSummary:
+        typeof extraction?.structured_output?.issueSummary === "string"
+          ? extraction.structured_output.issueSummary
+          : typedRequest.subject,
+    }),
+  );
+
+  const evidenceRail = (
+    <EvidenceRail
+      siteName={extractedSite || site?.name || null}
+      unitName={extractedUnit}
+      assetType={
+        typeof extraction?.structured_output?.assetType === "string"
+          ? extraction.structured_output.assetType
+          : null
+      }
+      accessNotes={
+        typeof extraction?.structured_output?.accessNotes === "string"
+          ? extraction.structured_output.accessNotes
+          : null
+      }
+      category={
+        (typeof extraction?.structured_output?.category === "string"
+          ? extraction.structured_output.category
+          : typedRequest.category) || null
+      }
+      confidence={confidence}
+      residentName={residentName}
+      residentMatched={Boolean(contact || hubspot)}
+      hubspotMatched={Boolean(hubspot)}
+      opsdeskMatched={Boolean(contact && !hubspot)}
+      siteActive={site ? site.status === "active" : null}
+      siteLabel={extractedSite || site?.name || null}
+      authorisedChanges={
+        contact ? contact.authorised_for_account_changes : null
+      }
+      citations={draftCitations}
+      isHazard={isHazard}
+      isChargeable={isChargeable}
+      requestId={typedRequest.id}
+      filterQuery={filter !== "all" ? filter : ""}
+      nextStepTitle={nextStep.title}
+      nextStepDetail={nextStep.detail}
+    />
+  );
+
+  const activityHref = `/requests/${typedRequest.id}${filter !== "all" ? `?filter=${filter}&tab=activity` : "?tab=activity"}`;
+
   const overview = (
-    <div className="case-grid">
+    <div>
+      <div className="case-grid">
       <div>
-        <section className="section-block">
-          <h3>Resident message</h3>
-          <pre className="message-body">
-            {typedRequest.raw_body || "(empty body)"}
-          </pre>
-          <div className="attachment-row">
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              aria-hidden="true"
-            >
-              <path d="M21.44 11.05l-8.49 8.49a5 5 0 0 1-7.07-7.07l8.49-8.49a3.5 3.5 0 0 1 4.95 4.95l-8.49 8.49a2 2 0 1 1-2.83-2.83l7.78-7.78" />
-            </svg>
-            email-thread.txt
-          </div>
-        </section>
+        <ResidentMessagePanel
+          body={typedRequest.raw_body}
+          senderName={residentName}
+          senderEmail={typedRequest.sender_email}
+          receivedAt={typedRequest.received_at}
+        />
 
         {draft ? (
           <DraftReplyPanel
@@ -370,110 +481,37 @@ export default async function RequestWorkspacePage({
             sendLocked={sendLocked}
           />
         ) : (
-          <section className="section-block">
-            <h3>Proposed reply</h3>
-            <p className="muted" style={{ margin: 0 }}>
-              No draft reply proposed yet.
-            </p>
+          <section className="message-panel outbound">
+            <div className="message-panel-inner">
+              <h3>Proposed reply</h3>
+              <p className="muted" style={{ margin: 0 }}>
+                No draft reply proposed yet.
+              </p>
+            </div>
           </section>
         )}
       </div>
 
-      <aside className="evidence-rail" aria-label="Case evidence">
-        <div className="section-block flat">
-          <h3>Case facts</h3>
-          <CaseFactsCompact data={extraction?.structured_output ?? null} />
-        </div>
+      {evidenceRail}
+      </div>
 
-        <div className="section-block flat">
-          <h3>Verified context</h3>
-          <ul className="verify-list">
-            <li>
-              <span className="verify-ok" aria-hidden="true">
-                {contact || hubspot ? "✓" : "·"}
-              </span>
-              <span>
-                Resident{" "}
-                <strong>
-                  {contact || hubspot ? "Matched" : "Not matched"}
-                </strong>
-                {residentName ? ` · ${residentName}` : ""}
-              </span>
-            </li>
-            <li>
-              <span className="verify-ok" aria-hidden="true">
-                {site ? "✓" : "·"}
-              </span>
-              <span>
-                Site{" "}
-                <strong>
-                  {site
-                    ? site.status === "active"
-                      ? "Active"
-                      : site.status
-                    : extractedSite
-                      ? "Unverified"
-                      : "Unknown"}
-                </strong>
-                {extractedSite ? ` · ${extractedSite}` : ""}
-              </span>
-            </li>
-            <li>
-              <span className="verify-ok" aria-hidden="true">
-                ·
-              </span>
-              <span>
-                Authorised changes{" "}
-                <strong>
-                  {contact
-                    ? contact.authorised_for_account_changes
-                      ? "Yes"
-                      : "No"
-                    : "—"}
-                </strong>
-              </span>
-            </li>
-          </ul>
-        </div>
-
-        <div className="section-block flat" style={{ borderBottom: "none" }}>
-          <h3>Policy evidence</h3>
-          {draftCitations && draftCitations.length > 0 ? (
-            draftCitations.map((c, i) => (
-              <div className="policy-card" key={c.id || String(i)}>
-                <span className="badge">Policy</span>
-                <strong>{c.title || "Policy citation"}</strong>
-                <p>{c.snippet || "Internal policy used to ground this reply."}</p>
-              </div>
-            ))
-          ) : isChargeable ? (
-            <div className="policy-card">
-              <span className="badge">Policy</span>
-              <strong>Chargeable works policy</strong>
-              <p>
-                Tenant-chargeable work requires recorded operational authority
-                before a work order is created. No invoice or contractor
-                dispatch occurs at approval.
-              </p>
-            </div>
-          ) : (
-            <p className="muted" style={{ margin: 0, fontSize: "0.8rem" }}>
-              No policy citations attached to this draft.
-            </p>
-          )}
-        </div>
-      </aside>
+      <ActivityTimeline
+        items={activityItems}
+        limit={5}
+        compact
+        viewAllHref={activityHref}
+      />
     </div>
   );
 
   const conversation = (
     <div>
-      <section className="section-block">
-        <h3>Resident message</h3>
-        <pre className="message-body">
-          {typedRequest.raw_body || "(empty body)"}
-        </pre>
-      </section>
+      <ResidentMessagePanel
+        body={typedRequest.raw_body}
+        senderName={residentName}
+        senderEmail={typedRequest.sender_email}
+        receivedAt={typedRequest.received_at}
+      />
       {draft ? (
         <DraftReplyPanel
           proposedActionId={draft.id}
@@ -525,8 +563,23 @@ export default async function RequestWorkspacePage({
           </pre>
         </details>
       </section>
-      <aside className="evidence-rail">
-        <div className="section-block flat">
+      <div>
+        {evidenceRail}
+        <div style={{ marginTop: "0.85rem" }}>
+          <CaseToolsDisclosure>
+            <div className="case-tools-grid">
+              <div>
+                <h3 className="panel-subhead">Context retrieval</h3>
+                <RetrievalPanel requestId={typedRequest.id} />
+              </div>
+              <div>
+                <h3 className="panel-subhead">Evidence pack</h3>
+                <EvidencePackForm requestId={typedRequest.id} />
+              </div>
+            </div>
+          </CaseToolsDisclosure>
+        </div>
+        <section className="section-block" style={{ marginTop: "0.85rem" }}>
           <h3>Organisation</h3>
           <dl className="kv">
             <div style={{ display: "contents" }}>
@@ -542,66 +595,12 @@ export default async function RequestWorkspacePage({
               <dd>{company?.status || "—"}</dd>
             </div>
           </dl>
-        </div>
-        <CaseToolsDisclosure>
-          <div className="case-tools-grid">
-            <div>
-              <h3 className="panel-subhead">Context retrieval</h3>
-              <RetrievalPanel requestId={typedRequest.id} />
-            </div>
-            <div>
-              <h3 className="panel-subhead">Evidence pack</h3>
-              <EvidencePackForm requestId={typedRequest.id} />
-            </div>
-          </div>
-        </CaseToolsDisclosure>
-      </aside>
+        </section>
+      </div>
     </div>
   );
 
-  const activity = (
-    <section className="section-block">
-      <h3>Activity</h3>
-      <p className="muted" style={{ marginTop: 0, fontSize: "0.8rem" }}>
-        Operational timeline for this case. Who decided what, and when.
-      </p>
-      {timeline.length === 0 ? (
-        <p className="muted">No workflow events for this request.</p>
-      ) : (
-        <ul className="timeline">
-          {timeline.map((event) => (
-            <li
-              key={event.id}
-              className={event.status === "error" ? "timeline-error" : undefined}
-            >
-              <strong>
-                {eventLabel(event.event_type, event.step_name)}
-              </strong>
-              {" · "}
-              <span className={requestStatusBadgeClass(event.status)}>
-                {requestStatusLabel(event.status)}
-              </span>
-              <div className="activity-actor">
-                {formatWhen(event.occurred_at)}
-                {event.step_name
-                  ? ` · Actor: OpsDesk · ${event.step_name.replace(/_/g, " ")}`
-                  : " · Actor: OpsDesk"}
-              </div>
-              {event.error ? (
-                <div style={{ color: "var(--danger)", marginTop: "0.25rem" }}>
-                  {event.error}
-                </div>
-              ) : null}
-              <details className="tech-details">
-                <summary>Raw event</summary>
-                <pre>{JSON.stringify(event.payload ?? {}, null, 2)}</pre>
-              </details>
-            </li>
-          ))}
-        </ul>
-      )}
-    </section>
-  );
+  const activity = <ActivityTimeline items={activityItems} />;
 
   return (
     <div className="desk">
@@ -611,7 +610,9 @@ export default async function RequestWorkspacePage({
         filter={filter}
       />
 
-      <div className="case-canvas">
+      <div
+        className={`case-canvas${dockMode.kind === "hidden" ? " case-canvas--no-dock" : ""}`}
+      >
         <div className="case-scroll">
           {loadError ? (
             <div className="error-banner" role="alert">
@@ -779,12 +780,20 @@ export default async function RequestWorkspacePage({
             </div>
           ) : null}
 
-          <CaseTabs
-            overview={overview}
-            conversation={conversation}
-            evidence={evidence}
-            activity={activity}
-          />
+          <Suspense
+            fallback={
+              <p className="muted" style={{ margin: "1rem 0" }}>
+                Loading case sections…
+              </p>
+            }
+          >
+            <CaseTabs
+              overview={overview}
+              conversation={conversation}
+              evidence={evidence}
+              activity={activity}
+            />
+          </Suspense>
         </div>
 
         <ActionDock mode={dockMode} />

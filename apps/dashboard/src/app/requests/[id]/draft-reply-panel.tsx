@@ -5,6 +5,7 @@ import { useState, useTransition } from "react";
 import { updateDraftReply } from "./actions";
 import { DecisionForm } from "./decision-form";
 import { SendForm } from "./send-form";
+import { AiDraftMark } from "@/app/components/source-marks";
 import { actionStatusLabel } from "@/lib/labels";
 
 type Citation = {
@@ -77,110 +78,107 @@ export function DraftReplyPanel({
   }
 
   return (
-    <section className="section-block">
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: "0.75rem",
-          marginBottom: "0.55rem",
-        }}
-      >
-        <h3 style={{ margin: 0 }}>Proposed reply</h3>
-        <span className="muted" style={{ fontSize: "0.72rem" }}>
-          {actionStatusLabel(status)}
-          {riskLevel ? ` · Risk ${riskLevel}` : ""}
-          {editedBy ? " · Edited" : ""}
-        </span>
-      </div>
-
-      {citations && citations.length > 0 ? (
-        <p className="grounding-chip">
-          <span aria-hidden="true">✓</span>
-          Grounded by {citations.length} polic
-          {citations.length === 1 ? "y" : "ies"}
-        </p>
-      ) : null}
-
-      {editing ? (
-        <div className="draft-editor">
-          <textarea
-            id="draft-text"
-            className="draft-textarea"
-            value={text}
-            onChange={(event) => setText(event.target.value)}
-            rows={10}
-            disabled={pending}
-          />
-          <div className="actions">
-            <button
-              type="button"
-              className="btn btn-approve"
-              disabled={pending || !text.trim()}
-              onClick={saveEdit}
-            >
-              {pending ? "Saving…" : "Save draft"}
-            </button>
-            <button
-              type="button"
-              className="btn"
-              disabled={pending}
-              onClick={cancelEdit}
-            >
-              Cancel
-            </button>
+    <section className="message-panel outbound" aria-label="Proposed reply">
+      <div className="message-panel-inner">
+        <div className="section-heading-row">
+          <div className="section-heading-main">
+            <h3>Proposed reply</h3>
+            <AiDraftMark />
           </div>
+          <span className="muted section-heading-meta">
+            {actionStatusLabel(status)}
+            {riskLevel ? ` · Risk ${riskLevel}` : ""}
+            {editedBy ? " · Edited" : ""}
+          </span>
         </div>
-      ) : (
-        <>
-          <div className="draft-toolbar" aria-hidden="true">
-            <span className="draft-tool">B</span>
-            <span className="draft-tool">I</span>
-            <span className="draft-tool">List</span>
-            <span className="draft-tool">Link</span>
-          </div>
-          <pre className="draft-preview">
-            {draftText || "(no draft text in payload)"}
-          </pre>
-          <div className="actions">
-            {canEdit ? (
-              <button type="button" className="btn" onClick={startEdit}>
-                Edit reply
+
+        {citations && citations.length > 0 ? (
+          <p className="grounding-chip">
+            <span aria-hidden="true">✓</span>
+            Grounded by {citations.length} polic
+            {citations.length === 1 ? "y" : "ies"}
+          </p>
+        ) : null}
+
+        {editing ? (
+          <div className="draft-editor">
+            <textarea
+              id="draft-text"
+              className="draft-textarea"
+              value={text}
+              onChange={(event) => setText(event.target.value)}
+              rows={10}
+              disabled={pending}
+            />
+            <div className="actions">
+              <button
+                type="button"
+                className="btn btn-approve"
+                disabled={pending || !text.trim()}
+                onClick={saveEdit}
+              >
+                {pending ? "Saving…" : "Save draft"}
               </button>
-            ) : null}
-            {sendLocked ? (
-              <button type="button" className="btn btn-approve" disabled>
-                Approve &amp; send
+              <button
+                type="button"
+                className="btn"
+                disabled={pending}
+                onClick={cancelEdit}
+              >
+                Cancel
               </button>
-            ) : null}
+            </div>
           </div>
-        </>
-      )}
+        ) : (
+          <>
+            <div className="draft-toolbar" aria-hidden="true">
+              <span className="draft-tool">B</span>
+              <span className="draft-tool">I</span>
+              <span className="draft-tool">List</span>
+              <span className="draft-tool">Link</span>
+            </div>
+            <div className="draft-preview">
+              {draftText || "(no draft text in payload)"}
+            </div>
+            <div className="actions">
+              {canEdit ? (
+                <button type="button" className="btn" onClick={startEdit}>
+                  Edit reply
+                </button>
+              ) : null}
+              {sendLocked ? (
+                <button type="button" className="btn btn-approve" disabled>
+                  Approve &amp; send
+                </button>
+              ) : null}
+            </div>
+          </>
+        )}
 
-      {error ? (
-        <p className="error-banner" style={{ marginTop: "0.75rem" }} role="alert">
-          {error}
-        </p>
-      ) : null}
+        {error ? (
+          <p className="error-banner" style={{ marginTop: "0.75rem" }} role="alert">
+            {error}
+          </p>
+        ) : null}
 
-      {embedActions && !editing && status === "proposed" ? (
-        <DecisionForm
-          proposedActionId={proposedActionId}
-          requestId={requestId}
-          mode="draft_reply"
-        />
-      ) : null}
+        {embedActions && !editing && status === "proposed" ? (
+          <DecisionForm
+            proposedActionId={proposedActionId}
+            requestId={requestId}
+            mode="draft_reply"
+          />
+        ) : null}
 
-      {embedActions && !editing && status === "approved" && !sendLocked ? (
-        <SendForm proposedActionId={proposedActionId} requestId={requestId} />
-      ) : null}
+        {embedActions && !editing && status === "approved" && !sendLocked ? (
+          <SendForm proposedActionId={proposedActionId} requestId={requestId} />
+        ) : null}
 
-      {!editing && status === "sent" ? (
-        <p className="muted" style={{ marginBottom: 0, marginTop: "0.75rem" }}>
-          Reply sent. Check the recipient inbox / Sent folder.
-        </p>
-      ) : null}
+        {!editing && status === "sent" ? (
+          <p className="message-footer-note">
+            Reply sent. Check the recipient inbox / Sent folder.
+          </p>
+        ) : null}
+      </div>
     </section>
   );
 }

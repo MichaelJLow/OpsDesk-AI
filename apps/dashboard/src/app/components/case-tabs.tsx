@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const TABS = [
   { id: "overview", label: "Case overview" },
@@ -10,6 +11,18 @@ const TABS = [
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
+
+function parseTab(value: string | null): TabId | null {
+  if (
+    value === "overview" ||
+    value === "conversation" ||
+    value === "evidence" ||
+    value === "activity"
+  ) {
+    return value;
+  }
+  return null;
+}
 
 export function CaseTabs({
   overview,
@@ -22,7 +35,27 @@ export function CaseTabs({
   evidence: ReactNode;
   activity: ReactNode;
 }) {
-  const [tab, setTab] = useState<TabId>("overview");
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const fromUrl = parseTab(searchParams.get("tab")) ?? "overview";
+  const [tab, setTab] = useState<TabId>(fromUrl);
+
+  useEffect(() => {
+    setTab(fromUrl);
+  }, [fromUrl]);
+
+  function selectTab(next: TabId) {
+    setTab(next);
+    const params = new URLSearchParams(searchParams.toString());
+    if (next === "overview") {
+      params.delete("tab");
+    } else {
+      params.set("tab", next);
+    }
+    const qs = params.toString();
+    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+  }
 
   const panels: Record<TabId, ReactNode> = {
     overview,
@@ -41,7 +74,7 @@ export function CaseTabs({
             role="tab"
             aria-selected={tab === item.id}
             className={`case-tab${tab === item.id ? " active" : ""}`}
-            onClick={() => setTab(item.id)}
+            onClick={() => selectTab(item.id)}
           >
             {item.label}
           </button>
