@@ -645,8 +645,35 @@ export default async function RequestWorkspacePage({
             </div>
           </header>
 
+          {chargeable &&
+          chargeable.status === "approved" &&
+          chargeableJob ? (
+            <div className="section-block" style={{ marginBottom: "0.9rem" }}>
+              <h3>Simulated work order</h3>
+              <p className="muted" style={{ marginTop: 0 }}>
+                Lab execution only — no billing or contractor dispatch.
+              </p>
+              <dl className="kv">
+                <div style={{ display: "contents" }}>
+                  <dt>Job id</dt>
+                  <dd>
+                    <code>{chargeableJob.id}</code>
+                  </dd>
+                </div>
+                <div style={{ display: "contents" }}>
+                  <dt>Status</dt>
+                  <dd>{chargeableJob.status}</dd>
+                </div>
+                <div style={{ display: "contents" }}>
+                  <dt>Type</dt>
+                  <dd>{chargeableJob.job_type}</dd>
+                </div>
+              </dl>
+            </div>
+          ) : null}
+
           {chargeableNeedsApproval && chargeable ? (
-            <div className="decision-banner">
+            <div className="decision-banner decision-strip">
               <div>
                 <p className="decision-kicker">
                   <svg
@@ -663,10 +690,7 @@ export default async function RequestWorkspacePage({
                   Authority required
                 </p>
                 <h2>Tenant-chargeable work needs approval</h2>
-                <p>
-                  Approving records operational authority only. No invoice or
-                  contractor dispatch will occur.
-                </p>
+                <p>Records authority only · no invoice or dispatch</p>
                 <div className="decision-meta">
                   <span>
                     Risk: <strong>{chargeable.risk_level || "medium"}</strong>
@@ -717,7 +741,7 @@ export default async function RequestWorkspacePage({
           ) : null}
 
           {chargeableReadyToExecute && chargeable && !chargeableJob ? (
-            <div className="decision-banner">
+            <div className="decision-banner decision-strip">
               <div>
                 <p className="decision-kicker">
                   <svg
@@ -734,10 +758,7 @@ export default async function RequestWorkspacePage({
                   Ready to execute
                 </p>
                 <h2>Authority approved — create work order</h2>
-                <p>
-                  Create a simulated work order to record protected execution.
-                  No invoice or contractor dispatch will occur.
-                </p>
+                <p>Lab execution only · no invoice or contractor dispatch</p>
               </div>
               <div className="decision-actions">
                 <ExecuteWorkOrderForm
@@ -750,20 +771,17 @@ export default async function RequestWorkspacePage({
           ) : null}
 
           {isHazard && !chargeableNeedsApproval ? (
-            <div className="decision-banner hazard">
+            <div className="decision-banner decision-strip hazard">
               <div>
                 <p className="decision-kicker">Safety escalation</p>
                 <h2>Hazard reported — prioritise resident safety</h2>
-                <p>
-                  Water near electrics or similar hazards should be escalated
-                  immediately. Confirm Slack notification and next safe action.
-                </p>
+                <p>Confirm Slack alert and next safe action</p>
               </div>
             </div>
           ) : null}
 
           {typedRequest.status === "needs_attention" ? (
-            <div className="decision-banner failed">
+            <div className="decision-banner decision-strip failed">
               <div>
                 <p className="decision-kicker">Workflow failed</p>
                 <h2>Integration failure needs attention</h2>
@@ -788,33 +806,6 @@ export default async function RequestWorkspacePage({
                   compact
                 />
               </div>
-            </div>
-          ) : null}
-
-          {chargeable &&
-          chargeable.status === "approved" &&
-          chargeableJob ? (
-            <div className="section-block" style={{ marginBottom: "0.9rem" }}>
-              <h3>Simulated work order</h3>
-              <p className="muted" style={{ marginTop: 0 }}>
-                Lab execution only — no billing or contractor dispatch.
-              </p>
-              <dl className="kv">
-                <div style={{ display: "contents" }}>
-                  <dt>Job id</dt>
-                  <dd>
-                    <code>{chargeableJob.id}</code>
-                  </dd>
-                </div>
-                <div style={{ display: "contents" }}>
-                  <dt>Status</dt>
-                  <dd>{chargeableJob.status}</dd>
-                </div>
-                <div style={{ display: "contents" }}>
-                  <dt>Type</dt>
-                  <dd>{chargeableJob.job_type}</dd>
-                </div>
-              </dl>
             </div>
           ) : null}
 
