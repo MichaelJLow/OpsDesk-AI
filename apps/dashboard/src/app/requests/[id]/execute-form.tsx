@@ -57,9 +57,9 @@ export function ExecuteWorkOrderForm({
   return (
     <div>
       <p className="muted" style={{ marginBottom: "0.5rem" }}>
-        Authority is approved. Create a simulated work order to record protected
-        execution. This does <strong>not</strong> send invoices or dispatch
-        contractors.
+        Chargeable authority is already recorded. Create a lab work order to
+        record protected execution. This does <strong>not</strong> invoice the
+        tenant or dispatch a contractor.
       </p>
       <div className="actions">
         <button

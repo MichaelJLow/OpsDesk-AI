@@ -105,27 +105,27 @@ function nextStepForCase(input: {
     return {
       title: "Retry the failed workflow step",
       detail: input.failedStepLabel
-        ? `${input.failedStepLabel} failed — use Retry in the decision banner to restore the integration path.`
-        : "Use Retry in the decision banner to restore the integration path, then continue the case.",
+        ? `${input.failedStepLabel} failed. Use Retry in the action banner to restore the integration path.`
+        : "Use Retry in the action banner to restore the integration path, then continue the case.",
     };
   }
   if (input.chargeableNeedsApproval) {
     return {
       title: "Approve tenant-chargeable authority first",
       detail:
-        "Chargeable work is blocked until authority is recorded. Approve or reject in the decision banner — no invoice or dispatch.",
+        "Chargeable work stays blocked until you approve authority in the action banner. No invoice or contractor dispatch.",
     };
   }
   if (input.chargeableReadyToExecute) {
     return {
-      title: "Create the simulated work order",
+      title: "Create the lab work order",
       detail:
-        "Authority is approved. Use Create work order in the decision banner — lab execution only, no billing or contractor dispatch.",
+        "Chargeable authority is already recorded. Use Create work order in the action banner. Lab record only: no invoice or contractor dispatch.",
     };
   }
   if (input.isHazard) {
     return {
-      title: "Escalate — do not send a routine reply",
+      title: "Escalate. Do not send a routine reply",
       detail:
         "Treat as urgent hazard. Confirm Slack alert and urgent maintenance routing before any resident-facing message.",
     };
@@ -673,61 +673,14 @@ export default async function RequestWorkspacePage({
           ) : null}
 
           {chargeableNeedsApproval && chargeable ? (
-            <div className="decision-banner decision-strip">
+            <div className="decision-banner decision-strip" role="region" aria-label="Next action">
               <div>
-                <p className="decision-kicker">
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    aria-hidden="true"
-                  >
-                    <path d="M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4z" />
-                  </svg>
-                  Authority required
+                <p className="decision-kicker">Authority required</p>
+                <h2>Approve tenant-chargeable authority</h2>
+                <p>
+                  Your approval records operational authority only. It does not
+                  invoice the tenant or dispatch a contractor.
                 </p>
-                <h2>Tenant-chargeable work needs approval</h2>
-                <p>Records authority only · no invoice or dispatch</p>
-                <div className="decision-meta">
-                  <span>
-                    Risk: <strong>{chargeable.risk_level || "medium"}</strong>
-                  </span>
-                  <span>
-                    Policy: <strong>Chargeable works</strong>
-                  </span>
-                  <span>
-                    Resident authority:{" "}
-                    <strong>
-                      {contact?.authorised_for_account_changes
-                        ? "Verified"
-                        : "Not verified"}
-                    </strong>
-                  </span>
-                  <span>
-                    Site:{" "}
-                    <strong>
-                      {site?.status === "active" ? "Active" : site?.status || "—"}
-                    </strong>
-                  </span>
-                  <span>
-                    Route:{" "}
-                    <strong>
-                      {routeLabel(
-                        extraction?.structured_output?.suggestedRoute
-                          ? String(extraction.structured_output.suggestedRoute)
-                          : "approval_queue",
-                      )}
-                    </strong>
-                  </span>
-                  {confidence != null ? (
-                    <span>
-                      Confidence: <strong>{confidence}%</strong>
-                    </span>
-                  ) : null}
-                </div>
               </div>
               <div className="decision-actions">
                 <DecisionForm
@@ -741,24 +694,15 @@ export default async function RequestWorkspacePage({
           ) : null}
 
           {chargeableReadyToExecute && chargeable && !chargeableJob ? (
-            <div className="decision-banner decision-strip">
+            <div className="decision-banner decision-strip" role="region" aria-label="Next action">
               <div>
-                <p className="decision-kicker">
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    aria-hidden="true"
-                  >
-                    <path d="M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4z" />
-                  </svg>
-                  Ready to execute
+                <p className="decision-kicker">Work order</p>
+                <h2>Create the lab work order</h2>
+                <p>
+                  Chargeable authority is already recorded. Create a lab work
+                  order next. This does not invoice the tenant or dispatch a
+                  contractor.
                 </p>
-                <h2>Authority approved — create work order</h2>
-                <p>Lab execution only · no invoice or contractor dispatch</p>
               </div>
               <div className="decision-actions">
                 <ExecuteWorkOrderForm
@@ -771,17 +715,17 @@ export default async function RequestWorkspacePage({
           ) : null}
 
           {isHazard && !chargeableNeedsApproval ? (
-            <div className="decision-banner decision-strip hazard">
+            <div className="decision-banner decision-strip hazard" role="region" aria-label="Safety notice">
               <div>
                 <p className="decision-kicker">Safety escalation</p>
-                <h2>Hazard reported — prioritise resident safety</h2>
-                <p>Confirm Slack alert and next safe action</p>
+                <h2>Hazard reported. Prioritise resident safety</h2>
+                <p>Confirm Slack alert and the next safe action before sending a routine reply.</p>
               </div>
             </div>
           ) : null}
 
           {typedRequest.status === "needs_attention" ? (
-            <div className="decision-banner decision-strip failed">
+            <div className="decision-banner decision-strip failed" role="region" aria-label="Next action">
               <div>
                 <p className="decision-kicker">Workflow failed</p>
                 <h2>Integration failure needs attention</h2>
