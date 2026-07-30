@@ -32,8 +32,8 @@ export function SendForm({ proposedActionId, requestId }: Props) {
   return (
     <div>
       <p className="muted" style={{ marginBottom: "0.5rem" }}>
-        Approved — send is a separate protected step (will email the original
-        sender via n8n).
+        Reply approved. Send is a separate step and emails the original
+        resident via n8n.
       </p>
       <div className="actions">
         <button
@@ -42,7 +42,7 @@ export function SendForm({ proposedActionId, requestId }: Props) {
           disabled={pending}
           onClick={send}
         >
-          {pending ? "Sending…" : "Send reply"}
+          {pending ? "Sending…" : "Approve & send"}
         </button>
       </div>
       {error ? (

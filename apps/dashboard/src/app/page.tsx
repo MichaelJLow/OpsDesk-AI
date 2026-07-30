@@ -1,145 +1,63 @@
 import Link from "next/link";
-import { getSupabaseAdmin } from "@/lib/supabase/admin";
-import {
-  isChargeableRequest,
-  isUrgentRequest,
-  requestStatusBadgeClass,
-  urgencyBadgeClass,
-} from "@/lib/status";
-import type { OpsRequest } from "@/lib/types";
+import { redirect } from "next/navigation";
+import { RequestQueue } from "@/app/components/request-queue";
+import { loadInboxRequests, parseQueueFilter } from "@/lib/inbox";
 
 export const dynamic = "force-dynamic";
 
-function formatWhen(iso: string) {
-  try {
-    return new Intl.DateTimeFormat("en-GB", {
-      dateStyle: "medium",
-      timeStyle: "short",
-    }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-}
+type PageProps = {
+  searchParams: Promise<{ filter?: string | string[]; stay?: string }>;
+};
 
-export default async function OperationsInboxPage() {
-  let requests: OpsRequest[] = [];
-  let loadError: string | null = null;
-  let attentionCount = 0;
+export default async function OperationsInboxPage({ searchParams }: PageProps) {
+  const sp = await searchParams;
+  const filter = parseQueueFilter(sp.filter);
+  const { requests, loadError } = await loadInboxRequests();
 
-  try {
-    const supabase = getSupabaseAdmin();
-    const { data, error } = await supabase
-      .from("requests")
-      .select(
-        "id, external_message_id, sender_email, subject, raw_body, category, confidence, status, urgency, received_at, created_at",
-      )
-      .order("received_at", { ascending: false })
-      .limit(50);
+  const preferred =
+    requests.find((r) => r.status === "needs_attention") ||
+    requests.find(
+      (r) =>
+        r.category === "controlled_chargeable" && r.status === "proposed",
+    ) ||
+    requests.find((r) => r.category === "urgent_hazardous") ||
+    requests.find((r) => r.status === "proposed" || r.status === "approved") ||
+    requests[0];
 
-    if (error) {
-      loadError = error.message;
-    } else {
-      requests = (data ?? []) as OpsRequest[];
-      attentionCount = requests.filter(
-        (r) => r.status === "needs_attention",
-      ).length;
-    }
-  } catch (error) {
-    loadError =
-      error instanceof Error ? error.message : "Failed to load requests";
+  // Land operators on a live case so the desk matches the command-centre mock.
+  if (preferred && sp.stay !== "1") {
+    const qs = filter !== "all" ? `?filter=${filter}` : "";
+    redirect(`/requests/${preferred.id}${qs}`);
   }
 
   return (
-    <main>
-      <div className="inbox-header">
-        <div>
-          <h1>Operations inbox</h1>
-          <p className="lede">
-            Quayside maintenance requests: classify, route, approve, and keep an
-            audit trail.
-          </p>
+    <div className="desk">
+      <RequestQueue requests={requests} filter={filter} />
+      <div className="case-canvas">
+        <div className="case-scroll">
+          {loadError ? (
+            <div className="error-banner" role="alert">
+              Could not load requests: {loadError}
+            </div>
+          ) : null}
+          <div className="case-empty">
+            <h2>Select a request</h2>
+            <p className="muted" style={{ margin: "0 0 1rem", maxWidth: "22rem" }}>
+              Triage from the queue. Hazards and approvals surface first so you
+              can decide with evidence in view.
+            </p>
+            {preferred ? (
+              <Link
+                href={`/requests/${preferred.id}${filter !== "all" ? `?filter=${filter}` : ""}`}
+                className="btn btn-approve"
+                style={{ textDecoration: "none" }}
+              >
+                Open next case
+              </Link>
+            ) : null}
+          </div>
         </div>
       </div>
-
-      {loadError ? (
-        <div className="error-banner" role="alert">
-          Could not load requests: {loadError}
-        </div>
-      ) : null}
-
-      {!loadError && attentionCount > 0 ? (
-        <p className="attention-count">
-          <span className="badge badge-attention">{attentionCount}</span>{" "}
-          request{attentionCount === 1 ? "" : "s"} need
-          {attentionCount === 1 ? "s" : ""} attention (integration failure).
-        </p>
-      ) : null}
-
-      <section className="panel">
-        {requests.length === 0 && !loadError ? (
-          <p className="muted" style={{ margin: 0 }}>
-            No Quayside requests in the inbox yet. Seed the walkthrough cases, or
-            send a live email through the Gmail → n8n path.
-          </p>
-        ) : (
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Received</th>
-                <th>Sender</th>
-                <th>Subject</th>
-                <th>Urgency</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {requests.map((request) => (
-                <tr key={request.id}>
-                  <td className="mono">{formatWhen(request.received_at)}</td>
-                  <td>{request.sender_email}</td>
-                  <td>
-                    <Link href={`/requests/${request.id}`}>
-                      {request.subject?.trim() || "(no subject)"}
-                    </Link>
-                  </td>
-                  <td>
-                    {isUrgentRequest(request.urgency, request.category) ? (
-                      <span
-                        className={urgencyBadgeClass(
-                          request.urgency,
-                          request.category,
-                        )}
-                      >
-                        {request.category === "urgent_hazardous"
-                          ? "hazard"
-                          : request.urgency}
-                      </span>
-                    ) : isChargeableRequest(request.category) ? (
-                      <span
-                        className={urgencyBadgeClass(
-                          request.urgency,
-                          request.category,
-                        )}
-                      >
-                        chargeable
-                      </span>
-                    ) : (
-                      <span className="muted">
-                        {request.urgency?.trim() || "—"}
-                      </span>
-                    )}
-                  </td>
-                  <td>
-                    <span className={requestStatusBadgeClass(request.status)}>
-                      {request.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </section>
-    </main>
+    </div>
   );
 }

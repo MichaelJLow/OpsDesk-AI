@@ -8,17 +8,24 @@ type Props = {
   proposedActionId: string;
   requestId: string;
   mode?: "draft_reply" | "chargeable_work";
+  compact?: boolean;
+  showNote?: boolean;
 };
 
 export function DecisionForm({
   proposedActionId,
   requestId,
   mode = "draft_reply",
+  compact = false,
+  showNote = true,
 }: Props) {
   const router = useRouter();
   const [note, setNote] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+
+  const approveLabel =
+    mode === "chargeable_work" ? "Approve authority" : "Approve reply";
 
   function submit(decision: "approve" | "reject") {
     setError(null);
@@ -45,27 +52,59 @@ export function DecisionForm({
     });
   }
 
-  return (
-    <div>
-      <label className="muted" htmlFor="decision-note">
-        Note (optional)
-      </label>
-      <div className="actions">
-        <input
-          id="decision-note"
-          className="note-input"
-          value={note}
-          onChange={(event) => setNote(event.target.value)}
-          placeholder="Reason for decision"
-          disabled={pending}
-        />
+  if (compact) {
+    return (
+      <div className="actions" style={{ marginTop: 0 }}>
         <button
           type="button"
           className="btn btn-approve"
           disabled={pending}
           onClick={() => submit("approve")}
         >
-          {pending ? "Saving…" : "Approve"}
+          {pending ? "Saving…" : approveLabel}
+        </button>
+        <button
+          type="button"
+          className="btn btn-reject"
+          disabled={pending}
+          onClick={() => submit("reject")}
+        >
+          Reject
+        </button>
+        {error ? (
+          <p className="error-inline" role="alert">
+            {error}
+          </p>
+        ) : null}
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      {showNote ? (
+        <label className="muted" htmlFor="decision-note">
+          Reason for decision (optional)
+        </label>
+      ) : null}
+      <div className="actions">
+        {showNote ? (
+          <input
+            id="decision-note"
+            className="note-input"
+            value={note}
+            onChange={(event) => setNote(event.target.value)}
+            placeholder="Add a short note"
+            disabled={pending}
+          />
+        ) : null}
+        <button
+          type="button"
+          className="btn btn-approve"
+          disabled={pending}
+          onClick={() => submit("approve")}
+        >
+          {pending ? "Saving…" : approveLabel}
         </button>
         <button
           type="button"

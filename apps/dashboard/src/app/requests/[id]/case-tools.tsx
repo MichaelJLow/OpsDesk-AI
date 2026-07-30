@@ -7,7 +7,7 @@ export function CaseToolsDisclosure({ children }: { children: ReactNode }) {
   const panelId = useId();
 
   return (
-    <section className="panel panel-tools">
+    <div className="section-block flat" style={{ borderBottom: "none", paddingBottom: 0 }}>
       <button
         type="button"
         className="case-tools-trigger"
@@ -16,7 +16,7 @@ export function CaseToolsDisclosure({ children }: { children: ReactNode }) {
         onClick={() => setOpen((value) => !value)}
       >
         <span>
-          <strong>Case tools</strong>
+          <strong>Evidence and diagnostics</strong>
           <span className="muted case-tools-hint">
             Retrieval and evidence pack
           </span>
@@ -30,6 +30,6 @@ export function CaseToolsDisclosure({ children }: { children: ReactNode }) {
           {children}
         </div>
       ) : null}
-    </section>
+    </div>
   );
 }

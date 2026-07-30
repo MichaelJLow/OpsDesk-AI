@@ -5,7 +5,7 @@ import { useState, useTransition } from "react";
 import { updateDraftReply } from "./actions";
 import { DecisionForm } from "./decision-form";
 import { SendForm } from "./send-form";
-import { requestStatusBadgeClass } from "@/lib/status";
+import { actionStatusLabel } from "@/lib/labels";
 
 type Citation = {
   id?: string;
@@ -23,6 +23,10 @@ type Props = {
   draftText: string | null;
   citations: Citation[] | null;
   editedBy?: string | null;
+  /** Hide approve/send here when the action dock owns them */
+  embedActions?: boolean;
+  /** Chargeable authority must be approved before send */
+  sendLocked?: boolean;
 };
 
 export function DraftReplyPanel({
@@ -33,6 +37,8 @@ export function DraftReplyPanel({
   draftText,
   citations,
   editedBy,
+  embedActions = true,
+  sendLocked = false,
 }: Props) {
   const router = useRouter();
   const canEdit = status === "proposed" || status === "approved";
@@ -71,32 +77,42 @@ export function DraftReplyPanel({
   }
 
   return (
-    <>
-      <p className="muted" style={{ marginTop: 0 }}>
-        Status{" "}
-        <span className={requestStatusBadgeClass(status)}>{status}</span>
-        {riskLevel ? ` · risk ${riskLevel}` : null}
-        {editedBy ? (
-          <>
-            {" · "}
-            <span className="badge">edited</span>
-          </>
-        ) : null}
-      </p>
+    <section className="section-block">
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "0.75rem",
+          marginBottom: "0.55rem",
+        }}
+      >
+        <h3 style={{ margin: 0 }}>Proposed reply</h3>
+        <span className="muted" style={{ fontSize: "0.72rem" }}>
+          {actionStatusLabel(status)}
+          {riskLevel ? ` · Risk ${riskLevel}` : ""}
+          {editedBy ? " · Edited" : ""}
+        </span>
+      </div>
+
+      {citations && citations.length > 0 ? (
+        <p className="grounding-chip">
+          <span aria-hidden="true">✓</span>
+          Grounded by {citations.length} polic
+          {citations.length === 1 ? "y" : "ies"}
+        </p>
+      ) : null}
 
       {editing ? (
         <div className="draft-editor">
-          <label className="login-label" htmlFor="draft-text">
-            Edit draft
-            <textarea
-              id="draft-text"
-              className="draft-textarea"
-              value={text}
-              onChange={(event) => setText(event.target.value)}
-              rows={12}
-              disabled={pending}
-            />
-          </label>
+          <textarea
+            id="draft-text"
+            className="draft-textarea"
+            value={text}
+            onChange={(event) => setText(event.target.value)}
+            rows={10}
+            disabled={pending}
+          />
           <div className="actions">
             <button
               type="button"
@@ -118,14 +134,27 @@ export function DraftReplyPanel({
         </div>
       ) : (
         <>
-          <pre className="pre">{draftText || "(no draft text in payload)"}</pre>
-          {canEdit ? (
-            <div className="actions" style={{ marginTop: "0.75rem" }}>
+          <div className="draft-toolbar" aria-hidden="true">
+            <span className="draft-tool">B</span>
+            <span className="draft-tool">I</span>
+            <span className="draft-tool">List</span>
+            <span className="draft-tool">Link</span>
+          </div>
+          <pre className="draft-preview">
+            {draftText || "(no draft text in payload)"}
+          </pre>
+          <div className="actions">
+            {canEdit ? (
               <button type="button" className="btn" onClick={startEdit}>
-                Edit draft
+                Edit reply
               </button>
-            </div>
-          ) : null}
+            ) : null}
+            {sendLocked ? (
+              <button type="button" className="btn btn-approve" disabled>
+                Approve &amp; send
+              </button>
+            ) : null}
+          </div>
         </>
       )}
 
@@ -135,30 +164,7 @@ export function DraftReplyPanel({
         </p>
       ) : null}
 
-      {citations && citations.length > 0 ? (
-        <div className="grounding">
-          <h3 className="panel-subhead">Sources</h3>
-          <p className="muted grounding-hint">Internal only · not sent to customer</p>
-          <ul className="timeline grounding-list">
-            {citations.map((c, i) => (
-              <li key={c.id || String(i)}>
-                <strong>{c.title || c.id || "policy"}</strong>
-                {c.namespace ? (
-                  <>
-                    {" · "}
-                    <span className="badge">{c.namespace}</span>
-                  </>
-                ) : null}
-                {c.snippet ? (
-                  <p className="grounding-snippet">{c.snippet}</p>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
-
-      {!editing && status === "proposed" ? (
+      {embedActions && !editing && status === "proposed" ? (
         <DecisionForm
           proposedActionId={proposedActionId}
           requestId={requestId}
@@ -166,24 +172,15 @@ export function DraftReplyPanel({
         />
       ) : null}
 
-      {!editing && status === "approved" ? (
+      {embedActions && !editing && status === "approved" && !sendLocked ? (
         <SendForm proposedActionId={proposedActionId} requestId={requestId} />
       ) : null}
 
       {!editing && status === "sent" ? (
-        <p className="muted" style={{ marginBottom: 0 }}>
-          Reply marked as sent. Check the recipient inbox / Sent folder.
+        <p className="muted" style={{ marginBottom: 0, marginTop: "0.75rem" }}>
+          Reply sent. Check the recipient inbox / Sent folder.
         </p>
       ) : null}
-
-      {!editing &&
-      status !== "proposed" &&
-      status !== "approved" &&
-      status !== "sent" ? (
-        <p className="muted" style={{ marginBottom: 0 }}>
-          Decision recorded as <strong>{status}</strong>. No send available.
-        </p>
-      ) : null}
-    </>
+    </section>
   );
 }

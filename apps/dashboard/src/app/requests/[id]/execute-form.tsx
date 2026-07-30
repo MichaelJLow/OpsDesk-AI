@@ -32,9 +32,9 @@ export function ExecuteWorkOrderForm({ proposedActionId, requestId }: Props) {
   return (
     <div>
       <p className="muted" style={{ marginBottom: "0.5rem" }}>
-        Approval is complete. Create a lab work order to record protected
-        execution. This does <strong>not</strong> send invoices, create deals,
-        or dispatch contractors.
+        Authority is approved. Create a simulated work order to record protected
+        execution. This does <strong>not</strong> send invoices or dispatch
+        contractors.
       </p>
       <div className="actions">
         <button
@@ -43,7 +43,7 @@ export function ExecuteWorkOrderForm({ proposedActionId, requestId }: Props) {
           disabled={pending}
           onClick={create}
         >
-          {pending ? "Creating…" : "Create work order (lab)"}
+          {pending ? "Creating…" : "Create work order"}
         </button>
       </div>
       {error ? (

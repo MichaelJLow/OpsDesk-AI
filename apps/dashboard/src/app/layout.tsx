@@ -1,26 +1,13 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Fraunces, Source_Sans_3 } from "next/font/google";
-import { LabMenu } from "./lab-menu";
-import { SignOutButton } from "./sign-out-button";
+import { AppSidebar } from "./components/app-sidebar";
+import { AppTopbar } from "./components/app-topbar";
 import { getSessionUser } from "@/lib/supabase/server";
+import { loadInboxRequests } from "@/lib/inbox";
 import "./globals.css";
-
-const display = Fraunces({
-  subsets: ["latin"],
-  variable: "--font-display",
-  weight: ["500", "600", "700"],
-});
-
-const sans = Source_Sans_3({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  weight: ["400", "500", "600", "700"],
-});
 
 export const metadata: Metadata = {
   title: "OpsDesk | Quayside Property Services",
-  description: "Operator desk for Quayside Property Services (lab)",
+  description: "Maintenance command centre for Quayside Property Services",
 };
 
 export default async function RootLayout({
@@ -30,36 +17,34 @@ export default async function RootLayout({
 }>) {
   const user = await getSessionUser();
 
+  if (!user) {
+    return (
+      <html lang="en-GB">
+        <body>
+          <div className="app-shell guest">{children}</div>
+        </body>
+      </html>
+    );
+  }
+
+  const { requests, approvalCount } = await loadInboxRequests();
+  const openCount = requests.filter(
+    (r) => !["sent", "executed_lab", "rejected"].includes(r.status),
+  ).length;
+
   return (
-    <html lang="en-GB" className={`${display.variable} ${sans.variable}`}>
+    <html lang="en-GB">
       <body>
-        <div className="shell">
-          <header className="topbar">
-            <Link href={user ? "/" : "/login"} className="brand">
-              <span className="brand-mark" aria-hidden="true">
-                Q
-              </span>
-              <span className="brand-text">
-                <strong className="brand-name">Quayside Property Services</strong>
-                <span className="brand-product">OpsDesk</span>
-              </span>
-            </Link>
-            <nav className="nav topbar-actions">
-              {user ? (
-                <>
-                  <Link href="/" className="nav-link">
-                    Inbox
-                  </Link>
-                  <span className="muted mono topbar-email">
-                    {user.email ?? user.id}
-                  </span>
-                  <LabMenu />
-                  <SignOutButton />
-                </>
-              ) : null}
-            </nav>
-          </header>
-          {children}
+        <div className="app-shell">
+          <AppSidebar
+            requestCount={openCount}
+            approvalCount={approvalCount}
+            active="requests"
+          />
+          <div className="app-main">
+            <AppTopbar email={user.email} />
+            {children}
+          </div>
         </div>
       </body>
     </html>
