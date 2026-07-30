@@ -24,14 +24,14 @@ Lab controls need `DEMO_RESET_ENABLED=true` on Vercel (and local `.env`) for the
 
 ## Walkthrough cases (after seed)
 
-| Scenario | What to open / click |
-|---|---|
-| Routine | Draft → Approve → Send (optional) |
-| Urgent | Hazard badge + urgent draft |
-| Chargeable | Approved chargeable → **Create work order (lab)** |
-| Failure | `needs_attention` → **Retry** |
-| Grounding | Draft **Internal grounding** citations |
-| Evidence pack | **Generate evidence pack** |
+| Scenario | Subject | What to open / click |
+|---|---|---|
+| Routine | Boiler rattling - Flat 8 | Draft → **Approve reply** → Send (optional) |
+| Urgent | URGENT: water dripping onto light fitting | Hazard badge + Slack escalation on Activity |
+| Chargeable | Hallway carpet replacement (charge to tenant) | Action banner → **Approve authority** first, then Create work order |
+| Failure | Kitchen tap dripping - Flat 3 | Action banner → **Retry** |
+| Grounding | Contractor access times for Flat 8? | Policy citations + grounded draft |
+| Evidence pack | Re: Boiler service visit confirmation | Sent case → **Generate evidence pack** |
 
 Fixtures: [`walkthrough-cases.json`](walkthrough-cases.json).
 

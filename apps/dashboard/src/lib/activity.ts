@@ -98,7 +98,6 @@ export function describeActivityEvent(
   } else if (
     type === "request_stored" ||
     type === "received" ||
-    step.includes("demo_seed") ||
     step.includes("intake")
   ) {
     tone = "intake";
@@ -112,6 +111,7 @@ export function describeActivityEvent(
     actor = ctx.residentName || "Resident";
   } else if (
     type === "extraction_completed" ||
+    type === "extraction_validated" ||
     type === "extracted" ||
     step.includes("extract")
   ) {
@@ -120,9 +120,17 @@ export function describeActivityEvent(
     detail = "Category, site, unit and access notes captured";
     actor = "OpsDesk";
   } else if (
+    type === "retrieval_ran" ||
+    step.includes("retrieval")
+  ) {
+    tone = "system";
+    headline = "Policy evidence retrieved";
+    detail = "Relevant site and policy notes attached to the draft";
+    actor = "OpsDesk";
+  } else if (
     type === "hubspot_enriched" ||
     type === "crm_enriched" ||
-    step.includes("hubspot") ||
+    (step.includes("hubspot") && event.status !== "error") ||
     step.includes("crm")
   ) {
     tone = "success";

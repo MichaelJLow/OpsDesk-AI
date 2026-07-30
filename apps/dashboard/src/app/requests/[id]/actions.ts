@@ -30,7 +30,14 @@ export async function decideOnDraft(input: {
     allowedActionType: "draft_reply",
     onApproveRequestStatus: "approved",
     onRejectRequestStatus: "rejected",
-    timelineOnApprove: null,
+    timelineOnApprove: {
+      event_type: "draft_approved",
+      step_name: "draft_approval",
+      status: "success",
+      payload: {
+        note: "Resident reply approved before send.",
+      },
+    },
   });
 }
 

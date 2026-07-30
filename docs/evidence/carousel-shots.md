@@ -8,7 +8,7 @@ The old six-shot carousel showed separate screens for intake, CRM, and draft rev
 |---|--------|------------------|--------------|------------------|
 | 1 | **Command centre** | `demo-grounding-access` | Full Case overview: queue + resident message + proposed reply + evidence rail (HubSpot match, policy, recommended next step) | Gmail intake · HubSpot context · Draft review |
 | 2 | **Urgent routing** | `demo-urgent-electrics` | Hazard case: queue hazard pill, decision banner, Activity or Slack event on timeline | Urgent routing |
-| 3 | **Approval gates** | `demo-chargeable-carpet` | Chargeable authority held: action dock + evidence rail “approve authority first” next step | Chargeable work (+ draft approve lives in panel on shot 1) |
+| 3 | **Approval gates** | `demo-chargeable-carpet` | Chargeable authority still pending: action banner **Approve authority** + evidence rail next step | Chargeable work |
 | 4 | **Failure recovery** | `demo-hubspot-failed` | Needs-attention state: failed step on Activity, retry in dock, audit visible | Failure recovery |
 
 **Cover / card image:** crop or widen shot 1 (command centre) — same desk, no separate hero concept needed.
@@ -33,7 +33,7 @@ Eval scorecard image is unchanged: `eval-scorecard-editorial.png`.
 2. Log in as staff; set browser to **1440×900** (or 1280×800) for consistent framing.
 3. **Shot 1:** Open Contractor access times case → Case overview tab → capture full desk (sidebar + queue + canvas + evidence rail).
 4. **Shot 2:** Open URGENT water/light case → show hazard state; prefer Activity tab if Slack routing event reads clearly.
-5. **Shot 3:** Open chargeable carpet case → show proposed authority approval in bottom dock before approve.
+5. **Shot 3:** Open chargeable carpet case → show **Approve authority** in the action banner (do not approve before capture).
 6. **Shot 4:** Open HubSpot-failed case → needs_attention + Retry visible.
 7. Optional editorial pass: light crop, subtle warm background, no fake metrics.
 

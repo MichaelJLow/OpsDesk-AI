@@ -25,7 +25,7 @@
         "accessNotes": "Weekdays after 9am",
         "heatingStillWorking": true,
         "missingInformation": [],
-        "suggestedRoute": "maintenance_intake"
+        "suggestedRoute": "maintenance_inbox"
       },
       "draftText": "Hi Alex,\n\nThanks for letting us know about the rattling boiler in Flat 8 at Riverside Court. We've logged this as routine maintenance. Noted that heating and hot water are still working, and that weekday access after 9am suits you.\n\nWe'll arrange an engineer visit and confirm the appointment shortly.\n\nKind regards,\nQuayside Property Services",
       "citations": [
@@ -38,9 +38,10 @@
         }
       ],
       "timeline": [
-        { "event_type": "request_stored", "step_name": "demo_seed", "status": "success", "minutesAfterReceived": 0 },
-        { "event_type": "extraction_validated", "step_name": "demo_seed", "status": "success", "minutesAfterReceived": 1 },
-        { "event_type": "retrieval_ran", "step_name": "keyword_retrieval", "status": "success", "minutesAfterReceived": 2 }
+        { "event_type": "request_stored", "step_name": "intake", "status": "success", "minutesAfterReceived": 0 },
+        { "event_type": "extraction_validated", "step_name": "extraction", "status": "success", "minutesAfterReceived": 1 },
+        { "event_type": "retrieval_ran", "step_name": "keyword_retrieval", "status": "success", "minutesAfterReceived": 2 },
+        { "event_type": "draft_proposed", "step_name": "draft_reply", "status": "success", "minutesAfterReceived": 3 }
       ]
     },
     {
@@ -77,8 +78,10 @@
         }
       ],
       "timeline": [
-        { "event_type": "request_stored", "step_name": "demo_seed", "status": "success", "minutesAfterReceived": 0 },
-        { "event_type": "route_escalated", "step_name": "urgent_hazard_route", "status": "success", "minutesAfterReceived": 1 }
+        { "event_type": "request_stored", "step_name": "intake", "status": "success", "minutesAfterReceived": 0 },
+        { "event_type": "extraction_validated", "step_name": "extraction", "status": "success", "minutesAfterReceived": 1 },
+        { "event_type": "route_escalated", "step_name": "urgent_hazard_route", "status": "success", "minutesAfterReceived": 2 },
+        { "event_type": "draft_proposed", "step_name": "draft_reply", "status": "success", "minutesAfterReceived": 3 }
       ]
     },
     {
@@ -89,7 +92,7 @@
       "rawBody": "Hi team,\n\nCould you please arrange replacement of the worn hallway carpet in Flat 8 at Riverside Court?\n\nThe tenant has agreed this is a rechargeable improvement rather than a landlord repair. Please charge the cost to the tenant once the work is approved and completed.\n\nAccess is available weekdays after 10am. Photos attached in the original thread if useful (not included in this lab seed).\n\nThanks,\nAlex Resident\n(on behalf of the tenancy at Flat 8)",
       "category": "controlled_chargeable",
       "urgency": "normal",
-      "status": "awaiting_execution",
+      "status": "proposed",
       "extraction": {
         "vertical": "property-maintenance",
         "category": "controlled_chargeable",
@@ -105,7 +108,7 @@
         "suggestedRoute": "approval_queue"
       },
       "chargeable": {
-        "status": "approved",
+        "status": "proposed",
         "summary": "Replace hallway carpet and charge to tenant. Approval records authority only; no invoice or dispatch yet.",
         "risk_level": "medium"
       },
@@ -120,9 +123,10 @@
         }
       ],
       "timeline": [
-        { "event_type": "request_stored", "step_name": "demo_seed", "status": "success", "minutesAfterReceived": 0 },
-        { "event_type": "execution_deferred", "step_name": "chargeable_approval", "status": "success", "minutesAfterReceived": 4 },
-        { "event_type": "chargeable_approved", "step_name": "chargeable_approval", "status": "success", "minutesAfterReceived": 8 }
+        { "event_type": "request_stored", "step_name": "intake", "status": "success", "minutesAfterReceived": 0 },
+        { "event_type": "extraction_validated", "step_name": "extraction", "status": "success", "minutesAfterReceived": 1 },
+        { "event_type": "execution_deferred", "step_name": "chargeable_approval", "status": "success", "minutesAfterReceived": 2 },
+        { "event_type": "draft_proposed", "step_name": "draft_reply", "status": "success", "minutesAfterReceived": 3 }
       ]
     },
     {
@@ -146,16 +150,16 @@
         "accessNotes": null,
         "heatingStillWorking": null,
         "missingInformation": [],
-        "suggestedRoute": "maintenance_intake"
+        "suggestedRoute": "maintenance_inbox"
       },
       "draftText": null,
       "timeline": [
-        { "event_type": "request_stored", "step_name": "demo_seed", "status": "success", "minutesAfterReceived": 0 },
+        { "event_type": "request_stored", "step_name": "intake", "status": "success", "minutesAfterReceived": 0 },
         {
           "event_type": "integration_failed",
           "step_name": "hubspot_contact_lookup",
           "status": "error",
-          "error": "HubSpot contact lookup failed — service unavailable.",
+          "error": "HubSpot contact lookup failed. Service unavailable.",
           "minutesAfterReceived": 1
         }
       ]
@@ -181,7 +185,7 @@
         "accessNotes": "Weekdays",
         "heatingStillWorking": null,
         "missingInformation": [],
-        "suggestedRoute": "maintenance_intake"
+        "suggestedRoute": "maintenance_inbox"
       },
       "draftText": "Hi Alex,\n\nFor Riverside Court, preferred contractor access is weekdays after 09:00 unless you state otherwise. We'll confirm Flat 8 arrangements when booking any visit.\n\nIf a different window suits you better, reply with the times that work and we'll note them on the case.\n\nKind regards,\nQuayside Property Services",
       "citations": [
@@ -194,8 +198,10 @@
         }
       ],
       "timeline": [
-        { "event_type": "request_stored", "step_name": "demo_seed", "status": "success", "minutesAfterReceived": 0 },
-        { "event_type": "retrieval_ran", "step_name": "keyword_retrieval", "status": "success", "minutesAfterReceived": 2 }
+        { "event_type": "request_stored", "step_name": "intake", "status": "success", "minutesAfterReceived": 0 },
+        { "event_type": "extraction_validated", "step_name": "extraction", "status": "success", "minutesAfterReceived": 1 },
+        { "event_type": "retrieval_ran", "step_name": "keyword_retrieval", "status": "success", "minutesAfterReceived": 2 },
+        { "event_type": "draft_proposed", "step_name": "draft_reply", "status": "success", "minutesAfterReceived": 3 }
       ]
     },
     {
@@ -219,12 +225,15 @@
         "accessNotes": null,
         "heatingStillWorking": true,
         "missingInformation": [],
-        "suggestedRoute": "maintenance_intake"
+        "suggestedRoute": "maintenance_inbox"
       },
       "draftStatus": "sent",
       "draftText": "Hi Alex,\n\nThanks for confirming the Flat 8 boiler service at Riverside Court. We've closed this as routine follow-up, with heating reported fine after the visit.\n\nIf the rattling returns, reply to this thread and we'll reopen the case.\n\nKind regards,\nQuayside Property Services",
       "timeline": [
-        { "event_type": "request_stored", "step_name": "demo_seed", "status": "success", "minutesAfterReceived": 0 },
+        { "event_type": "request_stored", "step_name": "intake", "status": "success", "minutesAfterReceived": 0 },
+        { "event_type": "extraction_validated", "step_name": "extraction", "status": "success", "minutesAfterReceived": 1 },
+        { "event_type": "draft_proposed", "step_name": "draft_reply", "status": "success", "minutesAfterReceived": 2 },
+        { "event_type": "draft_approved", "step_name": "draft_approval", "status": "success", "minutesAfterReceived": 8 },
         { "event_type": "draft_sent", "step_name": "protected_send", "status": "success", "minutesAfterReceived": 12 }
       ]
     }

@@ -48,7 +48,7 @@ In a Loom or interview, a **beat** is just one short scene you walk through, not
 |---|---|---|
 | 1 | **Routine** | Boiler email → draft → Approve → Send |
 | 2 | **Urgent** | Water near electrics → urgent channel + hazard on desk |
-| 3 | **Chargeable** | Charge-to-tenant → approve authority, then separate lab execute (no invoice) |
+| 3 | **Chargeable** | Charge-to-tenant → **Approve authority** in the action banner, then **Create work order** (lab only, no invoice) |
 | 4 | **Failure** | HubSpot fails → needs attention → Retry |
 | 5 | **Grounding** | Desk shows which policies informed the draft (customer email stays clean) |
 | 6 | **Evidence pack** | One export of the case: who did what, when |
