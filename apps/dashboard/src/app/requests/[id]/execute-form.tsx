@@ -7,9 +7,14 @@ import { createLabWorkOrder } from "./actions";
 type Props = {
   proposedActionId: string;
   requestId: string;
+  compact?: boolean;
 };
 
-export function ExecuteWorkOrderForm({ proposedActionId, requestId }: Props) {
+export function ExecuteWorkOrderForm({
+  proposedActionId,
+  requestId,
+  compact = false,
+}: Props) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
@@ -27,6 +32,26 @@ export function ExecuteWorkOrderForm({ proposedActionId, requestId }: Props) {
       }
       router.refresh();
     });
+  }
+
+  if (compact) {
+    return (
+      <div className="actions" style={{ marginTop: 0 }}>
+        <button
+          type="button"
+          className="btn btn-approve"
+          disabled={pending}
+          onClick={create}
+        >
+          {pending ? "Creating…" : "Create work order"}
+        </button>
+        {error ? (
+          <p className="error-inline" role="alert">
+            {error}
+          </p>
+        ) : null}
+      </div>
+    );
   }
 
   return (

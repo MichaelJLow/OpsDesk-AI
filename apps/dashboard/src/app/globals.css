@@ -1847,7 +1847,6 @@ code,
 
 /* —— Banners / login / lab —— */
 
-.failure-banner,
 .error-banner {
   border: 1px solid color-mix(in srgb, var(--danger) 35%, var(--line));
   color: var(--ink);

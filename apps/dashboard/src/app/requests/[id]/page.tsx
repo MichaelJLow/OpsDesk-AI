@@ -32,9 +32,10 @@ import type {
 import { CaseToolsDisclosure } from "./case-tools";
 import { DraftReplyPanel } from "./draft-reply-panel";
 import { EvidencePackForm } from "./evidence-pack-form";
-import { FailureBanner } from "./failure-banner";
+import { RetryFailureButton } from "./retry-form";
 import { RetrievalPanel } from "./retrieval-panel";
 import { DecisionForm } from "./decision-form";
+import { ExecuteWorkOrderForm } from "./execute-form";
 import { requestStatusBadgeClass } from "@/lib/status";
 
 export const dynamic = "force-dynamic";
@@ -104,22 +105,22 @@ function nextStepForCase(input: {
     return {
       title: "Retry the failed workflow step",
       detail: input.failedStepLabel
-        ? `${input.failedStepLabel} failed — restore the integration path, then continue the case.`
-        : "Restore the integration path, then continue the case.",
+        ? `${input.failedStepLabel} failed — use Retry in the decision banner to restore the integration path.`
+        : "Use Retry in the decision banner to restore the integration path, then continue the case.",
     };
   }
   if (input.chargeableNeedsApproval) {
     return {
       title: "Approve tenant-chargeable authority first",
       detail:
-        "Chargeable work is blocked until authority is recorded. Use the action bar below — no invoice or dispatch.",
+        "Chargeable work is blocked until authority is recorded. Approve or reject in the decision banner — no invoice or dispatch.",
     };
   }
   if (input.chargeableReadyToExecute) {
     return {
       title: "Create the simulated work order",
       detail:
-        "Authority is approved. Use the action bar below to create a lab work order — no billing or contractor dispatch.",
+        "Authority is approved. Use Create work order in the decision banner — lab execution only, no billing or contractor dispatch.",
     };
   }
   if (input.isHazard) {
@@ -357,19 +358,13 @@ export default async function RequestWorkspacePage({
     message: "No pending decision on this case.",
   };
   if (typedRequest.status === "needs_attention") {
-    dockMode = { kind: "retry", requestId: typedRequest.id };
-  } else if (chargeableNeedsApproval && chargeable) {
-    dockMode = {
-      kind: "chargeable_approve",
-      proposedActionId: chargeable.id,
-      requestId: typedRequest.id,
-    };
-  } else if (chargeableReadyToExecute && chargeable) {
-    dockMode = {
-      kind: "chargeable_execute",
-      proposedActionId: chargeable.id,
-      requestId: typedRequest.id,
-    };
+    dockMode = { kind: "hidden" };
+  } else if (
+    chargeableNeedsApproval ||
+    chargeableReadyToExecute
+  ) {
+    // Chargeable approve / execute live in the decision banner — hide the bottom dock.
+    dockMode = { kind: "hidden" };
   } else if (
     (draft?.status === "proposed" || draft?.status === "approved") &&
     !chargeableNeedsApproval
@@ -650,12 +645,6 @@ export default async function RequestWorkspacePage({
             </div>
           </header>
 
-          <FailureBanner
-            requestId={typedRequest.id}
-            requestStatus={typedRequest.status}
-            latestError={latestError}
-          />
-
           {chargeableNeedsApproval && chargeable ? (
             <div className="decision-banner">
               <div>
@@ -727,6 +716,39 @@ export default async function RequestWorkspacePage({
             </div>
           ) : null}
 
+          {chargeableReadyToExecute && chargeable && !chargeableJob ? (
+            <div className="decision-banner">
+              <div>
+                <p className="decision-kicker">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4z" />
+                  </svg>
+                  Ready to execute
+                </p>
+                <h2>Authority approved — create work order</h2>
+                <p>
+                  Create a simulated work order to record protected execution.
+                  No invoice or contractor dispatch will occur.
+                </p>
+              </div>
+              <div className="decision-actions">
+                <ExecuteWorkOrderForm
+                  proposedActionId={chargeable.id}
+                  requestId={typedRequest.id}
+                  compact
+                />
+              </div>
+            </div>
+          ) : null}
+
           {isHazard && !chargeableNeedsApproval ? (
             <div className="decision-banner hazard">
               <div>
@@ -749,6 +771,22 @@ export default async function RequestWorkspacePage({
                   {latestError?.error?.trim() ||
                     "A connected system failed. Retry the failed step to continue."}
                 </p>
+                {latestError?.step_name ? (
+                  <div className="decision-meta">
+                    <span>
+                      Failed step:{" "}
+                      <strong>
+                        {latestError.step_name.replace(/_/g, " ")}
+                      </strong>
+                    </span>
+                  </div>
+                ) : null}
+              </div>
+              <div className="decision-actions">
+                <RetryFailureButton
+                  requestId={typedRequest.id}
+                  compact
+                />
               </div>
             </div>
           ) : null}
