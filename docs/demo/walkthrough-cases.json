@@ -154,7 +154,7 @@
           "event_type": "integration_failed",
           "step_name": "hubspot_contact_lookup",
           "status": "error",
-          "error": "Demo seed: HubSpot lookup failed (simulated for walkthrough).",
+          "error": "HubSpot contact lookup failed — service unavailable.",
           "minutesAfterReceived": 1
         }
       ]
