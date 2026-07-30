@@ -121,7 +121,8 @@
       ],
       "timeline": [
         { "event_type": "request_stored", "step_name": "demo_seed", "status": "success", "minutesAfterReceived": 0 },
-        { "event_type": "execution_deferred", "step_name": "chargeable_approval", "status": "success", "minutesAfterReceived": 4 }
+        { "event_type": "execution_deferred", "step_name": "chargeable_approval", "status": "success", "minutesAfterReceived": 4 },
+        { "event_type": "chargeable_approved", "step_name": "chargeable_approval", "status": "success", "minutesAfterReceived": 8 }
       ]
     },
     {

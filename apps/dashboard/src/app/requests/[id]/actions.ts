@@ -46,11 +46,11 @@ export async function decideOnChargeableWork(input: {
     onApproveRequestStatus: "awaiting_execution",
     onRejectRequestStatus: "rejected",
     timelineOnApprove: {
-      event_type: "execution_deferred",
+      event_type: "chargeable_approved",
       step_name: "chargeable_approval",
       status: "success",
       payload: {
-        note: "Chargeable work approved — execution deferred (no auto-invoice or dispatch)",
+        note: "Chargeable authority recorded. Execution deferred (no auto-invoice or dispatch).",
       },
     },
   });

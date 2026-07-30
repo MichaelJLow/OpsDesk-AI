@@ -150,14 +150,6 @@ export function describeActivityEvent(
     detail = "Email delivered to the original resident";
     actor = "OpsDesk";
   } else if (
-    type === "execution_deferred" ||
-    step.includes("chargeable")
-  ) {
-    tone = "system";
-    headline = "Automatic execution paused";
-    detail = "Tenant-chargeable work waiting for authority approval";
-    actor = "OpsDesk";
-  } else if (
     type === "chargeable_approved" ||
     (type.includes("approv") && step.includes("chargeable"))
   ) {
@@ -165,8 +157,24 @@ export function describeActivityEvent(
     headline = "Authority approved";
     detail = editedBy
       ? `Authority recorded by ${editedBy}`
-      : "Operational authority recorded — no invoice or dispatch";
+      : "Operational authority recorded. No invoice or contractor dispatch.";
     actor = editedBy || "Operator";
+  } else if (
+    type === "chargeable_rejected" ||
+    (type.includes("reject") && step.includes("chargeable"))
+  ) {
+    tone = "failed";
+    headline = "Authority rejected";
+    detail = "Tenant-chargeable work was not authorised";
+    actor = editedBy || "Operator";
+  } else if (
+    type === "execution_deferred" ||
+    step.includes("chargeable")
+  ) {
+    tone = "system";
+    headline = "Automatic execution paused";
+    detail = "Tenant-chargeable work waiting for authority approval";
+    actor = "OpsDesk";
   } else if (type === "work_order_created" || step.includes("work_order")) {
     tone = "success";
     headline = "Work order created";
